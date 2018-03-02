@@ -1,6 +1,6 @@
 all: messages.pb.c types.pb.c messages_map.h
 
-PYTHON ?= python
+PYTHON ?= python3
 
 %.pb.c: %.pb %.options
 	$(PYTHON) ../../vendor/nanopb/generator/nanopb_generator.py $< -L '#include "%s"' -T

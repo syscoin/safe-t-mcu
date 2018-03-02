@@ -1,7 +1,7 @@
 TOP_DIR       := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 TOOLCHAIN_DIR ?= $(TOP_DIR)vendor/libopencm3
 
-PYTHON ?= python
+PYTHON ?= python3
 
 ifeq ($(EMULATOR),1)
 CC       ?= gcc
