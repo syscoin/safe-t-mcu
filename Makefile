@@ -31,7 +31,24 @@ libtrezor.a: $(OBJS)
 
 include Makefile.include
 
-.PHONY: vendor
+.PHONY: vendor bootloader firmware
 
 vendor:
 	git submodule update --init
+
+firmware:
+	FP_FLAGS="-mfloat-abi=soft" make -C vendor/libopencm3
+	make -C vendor/nanopb/generator/proto
+	make -C firmware/protob
+	make libtrezor.a
+	make -C firmware sign
+
+bootloader:
+	FP_FLAGS="-mfloat-abi=soft" make -C vendor/libopencm3
+	make libtrezor.a
+	make -C bootloader align
+
+allclean: clean
+	make -C vendor/libopencm3 clean
+	make -C bootloader clean
+
