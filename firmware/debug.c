@@ -50,7 +50,11 @@ void debugLog(int level, const char *bucket, const char *text)
 #if EMULATOR
 	puts(text);
 #else
+#if DEBUG_GDB
+	(void)text;
+#else
 	oledDebug(text);
+#endif
 #endif
 }
 

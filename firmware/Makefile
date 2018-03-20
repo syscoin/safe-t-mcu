@@ -95,12 +95,14 @@ endif
 
 DEBUG_LINK ?= 0
 DEBUG_LOG  ?= 0
+DEBUG_GDB  ?= 0
 
 CFLAGS += -Wno-sequence-point
 CFLAGS += -I../vendor/nanopb -Iprotob -DPB_FIELD_16BIT=1
 CFLAGS += -DQR_MAX_VERSION=0
 CFLAGS += -DDEBUG_LINK=$(DEBUG_LINK)
 CFLAGS += -DDEBUG_LOG=$(DEBUG_LOG)
+CFLAGS += -DDEBUG_GDB=$(DEBUG_GDB)
 CFLAGS += -DSCM_REVISION='"$(shell git rev-parse HEAD | sed 's:\(..\):\\x\1:g')"'
 CFLAGS += -DUSE_ETHEREUM=1
 CFLAGS += -DUSE_NEM=1
