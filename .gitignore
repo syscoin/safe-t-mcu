@@ -1,6 +1,7 @@
 .cache/
 .vscode/
 _attic/
+.settings
 build/
 *.o
 *.a
@@ -12,3 +13,4 @@ build/
 *.list
 *.srec
 *.log
+*.launch
