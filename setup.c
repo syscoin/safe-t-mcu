@@ -116,6 +116,12 @@ void setup(void)
 	rcc_periph_clock_enable(RCC_OTGFS);
 	// clear USB OTG_FS peripheral dedicated RAM
 	memset_reg((void *) 0x50020000, (void *) 0x50020500, 0);
+
+#ifdef CRYPTOMEM
+	// enable crypto memory I2C
+	gpio_mode_setup(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO6 | GPIO7);
+	gpio_set_output_options(GPIOB, GPIO_OTYPE_OD, GPIO_OSPEED_2MHZ, GPIO6 | GPIO7);
+#endif
 }
 
 void setupApp(void)
