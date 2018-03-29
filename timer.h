@@ -35,4 +35,8 @@ static inline uint32_t timer_ms(void) {
 }
 #endif
 
+static inline int timer_expired(uint32_t timeout) {
+	return (((int32_t)timeout - (int32_t)timer_ms()) <= 0);
+}
+
 #endif
