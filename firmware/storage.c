@@ -304,7 +304,7 @@ static void storage_compute_u2froot(const char* mnemonic, StorageHDNode *u2froot
 }
 
 // if storage is filled in - update fields that has has_field set to true
-// if storage is NULL - do not backup original content - essentialy a wipe
+// if storage is NULL - do not backup original content - essentially a wipe
 static void storage_commit_locked(bool update)
 {
 	if (update) {

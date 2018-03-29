@@ -500,7 +500,7 @@ static void hid_rx_callback(usbd_device *dev, uint8_t ep)
 				flash_wait_for_last_operation();
 				flash_lock();
 
-				// check that metadata was succesfully erased
+				// check that metadata was successfully erased
 				// flash status register should show now error and
 				// the config block should contain only \xff.
 				uint8_t hash[32];

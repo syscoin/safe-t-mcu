@@ -2,6 +2,7 @@ ifneq ($(EMULATOR),1)
 OBJS += startup.o
 endif
 
+OBJS += at88sc0104.o
 OBJS += buttons.o
 OBJS += layout.o
 OBJS += oled.o
