@@ -34,19 +34,19 @@ vendor:
 	git submodule update --init
 
 firmware: libopencm3
-	make -C vendor/nanopb/generator/proto
-	make -C firmware/protob
-	make libtrezor.a
-	make -C firmware sign
+	$(MAKE) -C vendor/nanopb/generator/proto
+	$(MAKE) -C firmware/protob
+	$(MAKE) libtrezor.a
+	$(MAKE) -C firmware sign
 
 bootloader: libopencm3
-	make libtrezor.a
-	make -C bootloader align
+	$(MAKE) libtrezor.a
+	$(MAKE) -C bootloader align
 
 allclean: clean
-	make -C vendor/libopencm3 clean
-	make -C bootloader clean
+	$(MAKE) -C vendor/libopencm3 clean
+	$(MAKE) -C bootloader clean
 
 libopencm3:
-	FP_FLAGS="-mfloat-abi=soft" V=1 make -C vendor/libopencm3
+	FP_FLAGS="-mfloat-abi=soft" V=1 $(MAKE) -C vendor/libopencm3
 
