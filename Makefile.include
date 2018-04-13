@@ -104,6 +104,8 @@ endif
 
 CFLAGS   += -DEMULATOR=0
 
+CFLAGS	 += -DCRYPTOMEM=1
+
 LDFLAGS  += --static \
             -Wl,--start-group \
             -lc \
