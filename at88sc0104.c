@@ -38,30 +38,6 @@ static uint8_t CM_Encrypt;
 static uint8_t CM_Authenticate;
 
 
-/*****************************************************************
-           Partial Configuration Area Register Definition
- ****************************************************************/
-#define DCR_ADDR      (0x18)
-#define DCR_SME       (0x80)
-#define DCR_UCR       (0x40)
-#define DCR_UAT       (0x20)
-#define DCR_ETA       (0x10)
-#define DCR_CS        (0x0F)
-
-#define CM_AR_ADDR	  (0x20)
-#define CM_PR_ADDR	  (0x21)
-
-#define CM_CI_ADDR    (0x50)
-#define CM_Sk_ADDR    (0x58)
-#define CM_G_ADDR     (0x90)
-
-#define CM_FAB        (0x06)
-#define CM_CMA        (0x04)
-#define CM_PER        (0x00)
-
-#define CM_PSW_ADDR   (0xB0)
-#define CM_PWREAD     (1)
-#define CM_PWWRITE    (0)
 
 #define CM_PWRON_CLKS (15)
 
@@ -96,7 +72,6 @@ static uint8_t cm_ReceiveData(uint8_t *ReceiveData, uint8_t Length);
 static uint8_t cm_SendData(const uint8_t *SendData, uint8_t Length);
 static uint8_t cm_WaitAckPolling(uint8_t timeout);
 static uint8_t cm_SendCmdByte(uint8_t Command);
-static void cm_PowerOn(void);
 
 static uint8_t cm_ReadCommand(uint8_t *InsBuff, uint8_t *RetVal, uint8_t Len);
 static uint8_t cm_WriteCommand(uint8_t *InsBuff, const uint8_t *SendVal, uint8_t Len);
@@ -206,7 +181,7 @@ uint8_t cm_ActivateSecurity(uint8_t KeySet, uint8_t * Key, uint8_t * Random,
 
 
 /* Chip communication test function */
-static uint8_t cm_aCommunicationTest(void)
+uint8_t cm_aCommunicationTest(void)
 {
     uint8_t write_data[2] = {0x55, 0xaa};//Test Data
     uint8_t read_data[2];
@@ -467,7 +442,7 @@ static uint8_t cm_SendCmdByte(uint8_t Command)
     return CM_SUCCESS;
 }
 
-static void cm_PowerOn(void)
+void cm_PowerOn(void)
 {
     cm_ResetCrypto();
     CM_UserZone = CM_AntiTearing = 0;
@@ -1074,97 +1049,5 @@ static void cm_GPAencrypt(uint8_t Encrypt, uint8_t *Buffer, uint8_t Count)
 	}
 }
 
-uint8_t cm_init_manufacturing(uint8_t seed[4][8])
-{
-	// FIXME: this needs to be called from prodtest during manufacturing
-
-	cm_PowerOn();
-
-	uint8_t ret = cm_aCommunicationTest();
-	if (ret != CM_SUCCESS) {
-		return ret;
-	}
-
-	/* disable authentication - just in case... */
-	if ((ret = cm_DeactivateSecurity()) != CM_SUCCESS) {
-		return ret;
-	}
-
-	/* Verify security password  - table 6-3 AT88SC0104CA DD 42 97 */
-	/* this is PW 7 "secure code" - it allows "access all areas" */
-	uint8_t write_buffer[8] = { 0xDD, 0x42, 0x97 };
-	if ((ret = cm_VerifySecurePasswd(write_buffer)) != CM_SUCCESS) {
-		return ret;
-	}
-
-	/* set passwords to all ones */
-
-	memset(write_buffer, 0xFF, 3);
-
-	for (int i = 0; i < 7; i++) {
-		// write Pw
-		if ((ret = cm_WriteConfigZone(CM_PSW_ADDR + (i << 3) + 1, write_buffer,
-				3, TRUE)) != CM_SUCCESS) {
-			return ret;
-		}
-		// read PW
-		if ((ret = cm_WriteConfigZone(CM_PSW_ADDR + (i << 3) + 5, write_buffer,
-				3, TRUE)) != CM_SUCCESS) {
-			return ret;
-		}
-	}
-
-	/* FIXME: initialize the crypto seeds for authentication  - need to be provided by calling code, random and stored somewhere */
-
-	for (int i = 0; i < 4; i++) {
-		if ((ret = cm_WriteConfigZone(CM_G_ADDR + (i << 3), seed[i], 8, TRUE))
-				!= CM_SUCCESS) {
-			return ret;
-		}
-
-		/* set zone configuration */
-		uint8_t AR = 0x57; // R/W PW, R/W auth, encryption
-
-		uint8_t PR = (i << 6) | (i << 4) | i;	  // auth key i, POK key i, pw i
-
-		if ((ret = cm_WriteConfigZone(CM_AR_ADDR + (i << 1), &AR, 1, TRUE))
-				!= CM_SUCCESS) {
-			return ret;
-		}
-
-		if ((ret = cm_WriteConfigZone(CM_PR_ADDR + (i << 1), &PR, 1, TRUE))
-				!= CM_SUCCESS) {
-			return ret;
-		}
-
-		if ((ret = cm_ReadConfigZone(CM_AR_ADDR + (i << 1), &AR, 1))
-				!= CM_SUCCESS) {
-			return ret;
-		}
-
-		if ((ret = cm_ReadConfigZone(CM_PR_ADDR + (i << 1), &PR, 1))
-				!= CM_SUCCESS) {
-			return ret;
-		}
-
-	}
-
-	memcpy(write_buffer, (uint8_t[] ) { 0x40, 0x53, 0x30, 0x00 }, 4); // set Mfg Code to "AS0"
-	if ((ret = cm_WriteConfigZone(0x0B, write_buffer, 4, TRUE)) != CM_SUCCESS) {
-		return ret;
-	}
-
-	// TODO: change PW7?
-	// TODO: set security Fuse!
-
-	return ret;
-}
-
-uint8_t cm_prodtest(void)
-{
-	cm_PowerOn();
-
-	return cm_aCommunicationTest();
-}
 #endif /* CRYPTOMEM */
 
