@@ -10,11 +10,66 @@
 #include "at88sc0104.h"
 #include "rng.h"
 
+#include <libopencm3/stm32/flash.h>
+
 #ifndef FALSE
 #define FALSE       (0)
 #define TRUE        (!FALSE)
 #endif
 
+
+#define OTP_START_ADDR		(0x1FFF7800U)
+#define OTP_LOCK_ADDR		(0x1FFF7A00U)
+
+/*!
+ *
+ * \brief 	Store the seed for the cryptomem in OTP part of the CPU
+ *
+ * \note 	CPU specific. Can be called only once (because it locks the OTP)
+ * 			OTP Block 1 is used (out of 16 possible)
+ *
+ * \param	seed: 4 sets of crypto seeds
+ *
+ * returns CM_SUCCESS
+ */
+uint8_t cm_store_seed_in_OTP(uint8_t seed[4][8])
+{
+	/* this code needs write access to 0x1FFF78xx - so use with MPU disabled
+	 * or before calling config_mpu() ! */
+
+	/* store seed in OTP Block 1 */
+#ifdef STM32F2
+	/* code is processor specific! */
+	flash_unlock();
+	for (int i = 0; i < 4; i++) {
+		for (int l=0; l<8; l++)
+			flash_program_byte(OTP_START_ADDR + 0x20 + l + i*8, seed[i][l]);
+	}
+
+	/* set LOCK byte for OTP Block 1 */
+	flash_program_byte(OTP_START_ADDR + 0x200 + 0x01, 0x00);
+
+	flash_lock();
+	return CM_SUCCESS;
+#else
+	return CM_FAIL;
+#endif
+}
+
+/*!
+ *
+ * \brief 	Read the seed for the cryptomem authentication
+ *
+ * \param	seed: will contain a copy of the seed
+ * \param	index: index of the seed (0..3)
+ *
+ * returns CM_SUCCESS
+ */
+uint8_t cm_get_seed_in_OTP(uint8_t *seed, uint8_t index )
+{
+	memcpy( seed, (const uint8_t *)OTP_START_ADDR + 0x20 + index*8, 8);
+	return CM_SUCCESS;
+}
 
 /*!
  *

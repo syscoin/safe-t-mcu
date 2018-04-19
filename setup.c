@@ -147,6 +147,7 @@ void setupApp(void)
 	gpio_set_af(GPIOA, GPIO_AF10, GPIO10);
 }
 
+#define MPU_RASR_SIZE_512B  (0x08UL << MPU_RASR_SIZE_LSB)
 #define MPU_RASR_SIZE_32KB  (0x0EUL << MPU_RASR_SIZE_LSB)
 #define MPU_RASR_SIZE_64KB  (0x0FUL << MPU_RASR_SIZE_LSB)
 #define MPU_RASR_SIZE_128KB (0x10UL << MPU_RASR_SIZE_LSB)
@@ -161,6 +162,7 @@ void setupApp(void)
 #define FLASH_BASE	(0x08000000U)
 #define SRAM_BASE	(0x20000000U)
 
+#define FLASH_OTP_BASE	(0x1FFF7800U)
 // Never use in bootloader! Disables access to PPB (including MPU, NVIC, SCB)
 void mpu_config(void)
 {
@@ -190,6 +192,12 @@ void mpu_config(void)
 	// Peripherals (0x40000000 - 0x5FFFFFFF, read-write, execute never)
 	MPU_RBAR = PERIPH_BASE | MPU_RBAR_VALID | (6 << MPU_RBAR_REGION_LSB);
 	MPU_RASR = MPU_RASR_ENABLE | MPU_RASR_ATTR_PERIPH | MPU_RASR_SIZE_512MB | MPU_RASR_ATTR_AP_PRW_URW | MPU_RASR_ATTR_XN;
+
+#if CRYPTOMEM
+	// Flash OTP (0x1FFF780 - 0x1FF79FF, 512 B, read-only, execute never)
+	MPU_RBAR = FLASH_OTP_BASE | MPU_RBAR_VALID | (7 << MPU_RBAR_REGION_LSB);
+	MPU_RASR = MPU_RASR_ENABLE | MPU_RASR_ATTR_PERIPH | MPU_RASR_SIZE_512B | MPU_RASR_ATTR_AP_PRO_URO | MPU_RASR_ATTR_XN;
+#endif
 
 	// Enable MPU
 	MPU_CTRL = MPU_CTRL_ENABLE;
