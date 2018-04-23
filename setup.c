@@ -169,8 +169,9 @@ void setupApp(void)
 #define SRAM_BASE	(0x20000000U)
 
 #define FLASH_OTP_BASE	(0x1FFF7800U)
-// Never use in bootloader! Disables access to PPB (including MPU, NVIC, SCB)
-void mpu_config(void)
+
+/* enable access to sensitive areas only if "secure" is set, e.g. not for unsigned firmware */
+static void mpu_config_int(int secure)
 {
 #if MEMORY_PROTECT
 	// Disable MPU
@@ -205,12 +206,13 @@ void mpu_config(void)
 	MPU_RBAR = 0x50000000 | MPU_RBAR_VALID | (6 << MPU_RBAR_REGION_LSB);
 	MPU_RASR = MPU_RASR_ENABLE | MPU_RASR_ATTR_PERIPH | MPU_RASR_SIZE_512KB | MPU_RASR_ATTR_AP_PRW_URW | MPU_RASR_ATTR_XN;
 
+	if (secure) {
 #if CRYPTOMEM
 	// Flash OTP (0x1FFF780 - 0x1FF79FF, 512 B, read-only, execute never)
 	MPU_RBAR = FLASH_OTP_BASE | MPU_RBAR_VALID | (7 << MPU_RBAR_REGION_LSB);
 	MPU_RASR = MPU_RASR_ENABLE | MPU_RASR_ATTR_PERIPH | MPU_RASR_SIZE_512B | MPU_RASR_ATTR_AP_PRO_URO | MPU_RASR_ATTR_XN;
 #endif
-
+	}
 	// Enable MPU
 	MPU_CTRL = MPU_CTRL_ENABLE;
 
@@ -222,5 +224,17 @@ void mpu_config(void)
 
 	// Switch to unprivileged software execution to prevent access to MPU
 	set_mode_unprivileged();
+#else
+	(void)secure;
 #endif
+}
+
+void mpu_config(void)
+{
+	mpu_config_int(1); // access all areas
+}
+
+void mpu_config_untrusted(void)
+{
+	mpu_config_int(0);
 }

@@ -28,5 +28,6 @@ void setup(void);
 void setupApp(void);
 
 void mpu_config(void);
+void mpu_config_untrusted(void);
 
 #endif
