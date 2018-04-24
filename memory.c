@@ -61,9 +61,11 @@ void memory_protect(void)
 // Read protection is unaffected and always stays locked to the desired value.
 void memory_write_unlock(void)
 {
+#if MEMORY_PROTECT
 	flash_unlock_option_bytes();
 	flash_program_option_bytes(0x0FFFCCEC);
 	flash_lock_option_bytes();
+#endif
 }
 
 int memory_bootloader_hash(uint8_t *hash)
