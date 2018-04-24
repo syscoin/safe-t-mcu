@@ -266,11 +266,53 @@ uint8_t cm_init_manufacturing(uint8_t seed[4][8])
 	return ret;
 }
 
-uint8_t cm_prodtest(void)
+uint8_t cm_prodtest_communication_test(void)
 {
 	cm_PowerOn();
 
 	return cm_aCommunicationTest();
+}
+
+uint8_t cm_prodtest_initialization(void)
+{
+	uint8_t ret;
+	uint8_t crypto_seed[4][8];
+	uint8_t i = 0, l = 0;
+
+	/* generate random seed using hardware RNG */
+	for (i = 0; i < 4; i++) {
+		for (l = 0; l < 8; l += 4) {
+			uint32_t r = random32();
+			memcpy((uint8_t *) &crypto_seed[i] + l, &r, 4);
+		}
+	}
+
+	ret = cm_init_manufacturing(crypto_seed);
+	if (ret == CM_SUCCESS) {
+		/* store in OTP, too */
+		ret = cm_store_seed_in_OTP(crypto_seed);
+		if (ret == CM_FAILED) {
+			return ret;
+		}
+	} else {
+		if (ret == CM_ALREADY_PGMD) {
+			/* just check */
+			ret = cm_check_programming(crypto_seed);
+			if (ret != CM_SUCCESS) {
+				return CM_FAILED;
+			}
+			for (i = 0; i < 4; i++) {
+				uint8_t seed[8];
+				cm_get_seed_in_OTP(seed, i);
+
+				/* check if stored correctly in OTP */
+				if (memcmp(seed, crypto_seed[i], 8) != 0) {
+					return CM_FAILED;
+				}
+			}
+		}
+	}
+	return CM_SUCCESS;
 }
 
 #endif /* CRYPTMEM */

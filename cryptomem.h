@@ -13,7 +13,8 @@ enum { CM_SUCCESS = 0, CM_FAILED=1, CM_FAIL_CMDSTART, CM_FAIL_CMDSEND, CM_FAIL_W
 
 uint8_t cm_init_manufacturing(uint8_t seed[4][8]);
 uint8_t cm_check_programming(uint8_t seed[4][8]);
-uint8_t cm_prodtest(void);
+uint8_t cm_prodtest_communication_test(void);
+uint8_t cm_prodtest_initialization(void);
 
 uint8_t cm_get_seed_in_OTP(uint8_t *seed, uint8_t index );
 uint8_t cm_store_seed_in_OTP(uint8_t seed[4][8]);
