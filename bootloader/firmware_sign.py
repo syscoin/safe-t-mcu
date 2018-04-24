@@ -21,7 +21,7 @@ pubkeys = {
     5: '047384c51ae81add0a523adbb186c91b906ffb64c2c765802bf26dbd13bdf12c319e80c2213a136c8ee03d7874fd22b70d68e7dee469decfbbb510ee9a460cda45',
 }
 
-INDEXES_START = len('TRZR') + struct.calcsize('<I')
+INDEXES_START = len('SAFT') + struct.calcsize('<I')
 SIG_START = INDEXES_START + SLOTS + 1 + 52
 
 def parse_args():
@@ -37,8 +37,8 @@ def prepare(data):
     # Takes raw OR signed firmware and clean out metadata structure
     # This produces 'clean' data for signing
 
-    meta = b'TRZR'  # magic
-    if data[:4] == b'TRZR':
+    meta = b'SAFT'  # magic
+    if data[:4] == b'SAFT':
         meta += data[4:4 + struct.calcsize('<I')]
     else:
         meta += struct.pack('<I', len(data))  # length of the code
@@ -47,7 +47,7 @@ def prepare(data):
     meta += b'\x00' * 52  # reserved
     meta += b'\x00' * 64 * SLOTS  # signature #1-#3
 
-    if data[:4] == b'TRZR':
+    if data[:4] == b'SAFT':
         # Replace existing header
         out = meta + data[len(meta):]
     else:
@@ -174,11 +174,11 @@ def main(args):
     data = open(args.path, 'rb').read()
     assert len(data) % 4 == 0
 
-    if data[:4] != b'TRZR':
+    if data[:4] != b'SAFT':
         print("Metadata has been added...")
         data = prepare(data)
 
-    if data[:4] != b'TRZR':
+    if data[:4] != b'SAFT':
         raise Exception("Firmware header expected")
 
     print("Firmware size %d bytes" % len(data))

@@ -37,7 +37,7 @@
 #include "secp256k1.h"
 #include "memzero.h"
 
-#define FIRMWARE_MAGIC "TRZR"
+#define FIRMWARE_MAGIC "SAFT"
 
 #define ENDPOINT_ADDRESS_IN         (0x81)
 #define ENDPOINT_ADDRESS_OUT        (0x01)
@@ -641,7 +641,7 @@ static void hid_rx_callback(usbd_device *dev, uint8_t ep)
 		}
 		// copy new firmware header
 		memcpy(meta_backup, (void *)FLASH_META_START, FLASH_META_DESC_LEN);
-		// write "TRZR" in header only when hash was confirmed
+		// write "SAFT" in header only when hash was confirmed
 		if (hash_check_ok) {
 			memcpy(meta_backup, FIRMWARE_MAGIC, 4);
 		} else {
