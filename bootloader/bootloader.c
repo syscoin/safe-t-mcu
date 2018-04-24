@@ -46,7 +46,7 @@ void layoutFirmwareHash(const uint8_t *hash)
 
 void show_halt(void)
 {
-	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Unofficial firmware", "aborted.", NULL, "Unplug your TREZOR", "contact our support.", NULL);
+	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Unofficial firmware", "aborted.", NULL, "Unplug your Safe-T", "contact our support.", NULL);
 	shutdown();
 }
 
@@ -88,7 +88,7 @@ void __attribute__((noreturn)) load_app(int signed_firmware)
 bool firmware_present(void)
 {
 #ifndef APPVER
-	if (memcmp(FLASH_PTR(FLASH_META_MAGIC), "TRZR", 4)) { // magic does not match
+	if (memcmp(FLASH_PTR(FLASH_META_MAGIC), "SAFT", 4)) { // magic does not match
 		return false;
 	}
 	if (*((const uint32_t *)FLASH_PTR(FLASH_META_CODELEN)) < 4096) { // firmware reports smaller size than 4kB
@@ -106,7 +106,7 @@ void bootloader_loop(void)
 	oledClear();
 	oledDrawBitmap(0, 0, &bmp_logo64);
 	if (firmware_present()) {
-		oledDrawString(52, 0, "TREZOR", FONT_STANDARD);
+		oledDrawString(52, 0, "Safe-T", FONT_STANDARD);
 		static char serial[25];
 		fill_serialno_fixed(serial);
 		oledDrawString(52, 20, "Serial No.", FONT_STANDARD);
@@ -117,7 +117,7 @@ void bootloader_loop(void)
 	} else {
 		oledDrawString(52, 10, "Welcome!", FONT_STANDARD);
 		oledDrawString(52, 30, "Please visit", FONT_STANDARD);
-		oledDrawString(52, 50, "trezor.io/start", FONT_STANDARD);
+		oledDrawString(52, 50, "safe-t.io/start", FONT_STANDARD);
 	}
 	oledRefresh();
 

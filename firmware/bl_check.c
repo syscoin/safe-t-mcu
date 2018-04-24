@@ -49,7 +49,7 @@ void check_bootloader(void)
 	int r = memory_bootloader_hash(hash);
 
 	if (!known_bootloader(r, hash)) {
-		layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Unknown bootloader", "detected.", NULL, "Unplug your TREZOR", "contact our support.", NULL);
+		layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Unknown bootloader", "detected.", NULL, "Unplug your Safe-T", "contact our support.", NULL);
 		shutdown();
 	}
 
