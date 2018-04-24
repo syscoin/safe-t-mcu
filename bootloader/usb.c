@@ -53,8 +53,8 @@ static const struct usb_device_descriptor dev_descr = {
 	.bDeviceSubClass = 0,
 	.bDeviceProtocol = 0,
 	.bMaxPacketSize0 = 64,
-	.idVendor = 0x534c,
-	.idProduct = 0x0001,
+	.idVendor = 0x0e79,
+	.idProduct = 0x6001,
 	.bcdDevice = 0x0100,
 	.iManufacturer = 1,
 	.iProduct = 2,
@@ -150,8 +150,8 @@ static const struct usb_config_descriptor config = {
 };
 
 static const char *usb_strings[] = {
-	"SatoshiLabs",
-	"TREZOR",
+	"Archos",
+	"Safe-T Mini",
 	"", // empty serial
 };
 

@@ -45,11 +45,11 @@
 #define ENDPOINT_ADDRESS_U2F_OUT    (0x03)
 
 #define USB_STRINGS \
-	X(MANUFACTURER, "SatoshiLabs") \
-	X(PRODUCT, "TREZOR") \
+	X(MANUFACTURER, "Archos") \
+	X(PRODUCT, "Safe-T Mini") \
 	X(SERIAL_NUMBER, storage_uuid_str) \
-	X(INTERFACE_MAIN,  "TREZOR Interface") \
-	X(INTERFACE_DEBUG, "TREZOR Debug Link Interface") \
+	X(INTERFACE_MAIN,  "Safe-T Interface") \
+	X(INTERFACE_DEBUG, "Safe-T Debug Link Interface") \
 	X(INTERFACE_U2F,   "U2F Interface")
 
 #define X(name, value) USB_STRING_##name,
@@ -73,8 +73,8 @@ static const struct usb_device_descriptor dev_descr = {
 	.bDeviceSubClass = 0,
 	.bDeviceProtocol = 0,
 	.bMaxPacketSize0 = 64,
-	.idVendor = 0x534c,
-	.idProduct = 0x0001,
+	.idVendor = 0x0e79,		// Archos
+	.idProduct = 0x6000,
 	.bcdDevice = 0x0100,
 	.iManufacturer = USB_STRING_MANUFACTURER,
 	.iProduct = USB_STRING_PRODUCT,
