@@ -96,11 +96,15 @@ int main(void)
 	__stack_chk_guard = random32(); // this supports compiler provided unpredictable stack protection checks
 #endif
 
-	timer_init();
+	/* only call timer_init() if we are in privileged mode */
+	if (check_mode_priviledged())
+		timer_init();
 
 #ifdef APPVER
 	// enable MPU (Memory Protection Unit)
-	mpu_config();
+	/* only call if we are in privileged mode */
+	if (check_mode_priviledged())
+		mpu_config();
 #endif
 
 #if DEBUG_LINK
