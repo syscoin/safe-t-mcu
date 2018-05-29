@@ -1040,6 +1040,9 @@ void storage_setU2FCounter(uint32_t u2fcounter)
 
 void storage_wipe(void)
 {
+#if CRYPTOMEM
+	cm_wipe_zone();
+#endif
 	session_clear(true);
 	storage_generate_uuid();
 

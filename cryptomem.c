@@ -558,4 +558,42 @@ int8_t cm_set_PIN(uint32_t pw)
 	return cm_WriteConfigZone(CM_PSW_ADDR + (zone_index << 3) + 1, pin, 3, TRUE);
 }
 
+int8_t cm_wipe_zone( void )
+{
+	uint8_t ret;
+	/* we can only easily wipe if the cryptomem password has been provided */
+	if(cm_state != CMSTATE_PW_ENTERED) {
+
+		if (cm_state == CMSTATE_IDLE) {
+			ret = cm_activate_security();
+			if (ret != CM_SUCCESS) {
+				return CM_FAILED;
+			}
+			cm_state = CMSTATE_AUTHENTICATED;
+		}
+		// try the default PW
+		ret = cm_send_default_PW();
+		if (ret != CM_SUCCESS) {
+			return CM_FAILED;
+		}
+		cm_state = CMSTATE_PW_ENTERED;
+	}
+
+	/* wipe the user zone */
+	uint8_t wipe_key[32];
+	memzero(wipe_key, 32);
+
+	/* store in user zone */
+	cm_write_key_to_user_zone(wipe_key);
+
+	/* overwrite pw by default pw */
+	ret = cm_set_PIN( CM_DEFAULT_PW );
+
+	/* disable authentication */
+	cm_DeactivateSecurity();
+
+	cm_state = CMSTATE_IDLE;
+	return ret;
+}
+
 #endif /* CRYPTMEM */
