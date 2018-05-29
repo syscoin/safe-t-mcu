@@ -315,4 +315,12 @@ uint8_t cm_prodtest_initialization(void)
 	return CM_SUCCESS;
 }
 
+
+void cm_init( void )
+{
+	cm_PowerOn();
+	cm_DeactivateSecurity();
+
+}
+
 #endif /* CRYPTMEM */

@@ -44,6 +44,7 @@
 #include "u2f.h"
 #include "memzero.h"
 #include "supervise.h"
+#include "cryptomem.h"
 
 /* magic constant to check validity of storage block */
 static const uint32_t storage_magic = 0x726f7473;   // 'stor' as uint32_t
@@ -227,6 +228,9 @@ bool storage_from_flash(void)
 
 void storage_init(void)
 {
+#if CRYPTOMEM
+	cm_init();
+#endif
 	if (!storage_from_flash()) {
 		storage_wipe();
 	}

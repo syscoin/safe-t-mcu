@@ -17,6 +17,8 @@ uint8_t cm_check_programming(uint8_t seed[4][8]);
 uint8_t cm_prodtest_communication_test(void);
 uint8_t cm_prodtest_initialization(void);
 
+void cm_init( void );
+
 uint8_t cm_get_seed_in_OTP(uint8_t *seed, uint8_t index );
 uint8_t cm_store_seed_in_OTP(uint8_t seed[4][8]);
 
