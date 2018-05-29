@@ -79,6 +79,19 @@ static inline void set_mode_unprivileged(void)
 	// http://infocenter.arm.com/help/topic/com.arm.doc.dui0552a/CHDBIBGJ.html
 	__asm__ volatile("msr control, %0" :: "r" (0x1));
 }
+
+static inline int check_mode_priviledged(void)
+{
+	uint32_t result;
+
+	__asm__ volatile ("mrs %0, ipsr" : "=r" (result) );
+	if (result)
+		return 1;
+
+	__asm__ volatile ("mrs %0, control" : "=r" (result) );
+
+	return (!(result & 0x1));
+}
 #endif
 
 #endif
