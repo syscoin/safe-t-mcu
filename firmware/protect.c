@@ -146,10 +146,15 @@ const char *requestPin(PinMatrixRequestType type, const char *text)
 	}
 }
 
+#if CRYPTOMEM
+static void protectCheckMaxTry(uint32_t attempts) {
+	if (attempts > 0)
+		return;
+#else
 static void protectCheckMaxTry(uint32_t wait) {
 	if (wait < (1 << MAX_WRONG_PINS))
 		return;
-
+#endif
 	storage_wipe();
 	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Too many wrong PIN"), _("attempts. Storage has"), _("been wiped."), NULL, _("Please unplug"), _("the device."));
 	for (;;) {} // loop forever
@@ -161,6 +166,31 @@ bool protectPin(bool use_cached)
 		return true;
 	}
 	uint32_t fails = storage_getPinFailsOffset();
+#if CRYPTOMEM
+	uint32_t attempts = storage_getPinRemainingAttempts();
+
+	protectCheckMaxTry(attempts);
+	usbTiny(1);
+	if (attempts < PIN_MAX_ATTEMPTS) {
+		char attemptstrbuf[20];
+		if (attempts == 1)
+			strlcpy(attemptstrbuf, _("only 1 attempt left"), sizeof(attemptstrbuf));
+		else {
+			strlcpy(attemptstrbuf, _("   0 attempts left"), sizeof(attemptstrbuf));
+			attemptstrbuf[3] = attempts + '0';
+		}
+		layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Wrong PIN entered"), NULL, _("Please wait"), _("to continue ..."), NULL, attemptstrbuf);
+		// wait 5 seconds
+		usbSleep(5000);
+		if (msg_tiny_id == MessageType_MessageType_Initialize) {
+			protectAbortedByInitialize = true;
+			msg_tiny_id = 0xFFFF;
+			usbTiny(0);
+			fsm_sendFailure(FailureType_Failure_PinCancelled, NULL);
+			return false;
+		}
+	}
+#else
 	uint32_t wait = storage_getPinWait(fails);
 	protectCheckMaxTry(wait);
 	usbTiny(1);
@@ -190,6 +220,7 @@ bool protectPin(bool use_cached)
 		}
 		wait--;
 	}
+#endif
 	usbTiny(0);
 	const char *pin;
 	pin = requestPin(PinMatrixRequestType_PinMatrixRequestType_Current, _("Please enter current PIN:"));
@@ -197,16 +228,22 @@ bool protectPin(bool use_cached)
 		fsm_sendFailure(FailureType_Failure_PinCancelled, NULL);
 		return false;
 	}
+#if !CRYPTOMEM
 	if (!storage_increasePinFails(fails)) {
 		fsm_sendFailure(FailureType_Failure_PinInvalid, NULL);
 		return false;
 	}
+#endif
 	if (storage_containsPin(pin)) {
 		session_cachePin();
 		storage_resetPinFails(fails);
 		return true;
 	} else {
+#if CRYPTOMEM
+		protectCheckMaxTry(storage_getPinRemainingAttempts());
+#else
 		protectCheckMaxTry(storage_getPinWait(fails));
+#endif
 		fsm_sendFailure(FailureType_Failure_PinInvalid, NULL);
 		return false;
 	}

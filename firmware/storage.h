@@ -132,7 +132,12 @@ bool session_isPinCached(void);
 void storage_clearPinArea(void);
 void storage_resetPinFails(uint32_t flash_pinfails);
 bool storage_increasePinFails(uint32_t flash_pinfails);
+#if CRYPTOMEM
+#define PIN_MAX_ATTEMPTS	4
+uint32_t storage_getPinRemainingAttempts(void);
+#else
 uint32_t storage_getPinWait(uint32_t flash_pinfails);
+#endif
 uint32_t storage_getPinFailsOffset(void);
 
 uint32_t storage_nextU2FCounter(void);

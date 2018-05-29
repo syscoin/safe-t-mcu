@@ -27,4 +27,5 @@ int8_t cm_set_PIN(uint32_t pw);
 int8_t cm_open_zone(uint32_t pw);
 int8_t cm_initialize_new_zone( void );
 int8_t cm_deactivate_security( void );
+int8_t cm_get_remaining_PIN_attempts(void);
 #endif /* CRYPTOMEM_H_ */

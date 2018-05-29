@@ -777,6 +777,8 @@ bool storage_containsPin(const char *pin)
 #if CRYPTOMEM
 	uint32_t pw = PinStringToHex(pin);
 
+	//FIXME: if cm_open_zone() returns CM_DEFAULT_Pw_NOK and it was the last attempt, we would
+	// silently use the next zone next time... need to handle this case separately!
 	return (cm_open_zone( pw ) == CM_SUCCESS);
 #else
 	/* The execution time of the following code only depends on the
@@ -923,6 +925,11 @@ void storage_resetPinFails(uint32_t flash_pinfails)
 
 bool storage_increasePinFails(uint32_t flash_pinfails)
 {
+#if CRYPTOMEM
+	(void)flash_pinfails;
+	// PinFails is increased inside the cryptomem already
+	return (cm_get_remaining_PIN_attempts() > 0);
+#else
 	uint32_t newctr = *(const uint32_t*)FLASH_PTR(flash_pinfails) << 1;
 	// counter already at maximum, we do not increase it any more
 	// return success so that a good pin is accepted
@@ -935,14 +942,27 @@ bool storage_increasePinFails(uint32_t flash_pinfails)
 	storage_check_flash_errors(svc_flash_lock());
 
 	return *(const uint32_t*)FLASH_PTR(flash_pinfails) == newctr;
+#endif
 }
 
+#if CRYPTOMEM
+uint32_t storage_getPinRemainingAttempts(void)
+{
+	int8_t attempts = cm_get_remaining_PIN_attempts();
+
+	if (attempts<0) // error
+		return 0;
+	else return attempts;
+}
+
+#else
 uint32_t storage_getPinWait(uint32_t flash_pinfails)
 {
 	// The pin failure word is the inverted wait time in seconds.
 	// It's inverted because flash allows changing 1 to 0 but not vice versa.
 	return ~*(const uint32_t*)FLASH_PTR(flash_pinfails);
 }
+#endif
 
 uint32_t storage_getPinFailsOffset(void)
 {

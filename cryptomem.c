@@ -362,6 +362,22 @@ static int8_t cm_get_zone_index(void)
 	return CM_FAILED;
 }
 
+int8_t cm_get_remaining_PIN_attempts(void)
+{
+	uint8_t ret = cm_get_zone_index();
+	if (ret != CM_SUCCESS) {
+		return -1;
+	}
+
+	uint8_t PAC;
+
+	cm_CheckPAC(zone_index, CM_PWWRITE, &PAC);
+	if (ret != CM_SUCCESS) {
+		return -1;
+	}
+	return PAC;
+}
+
 static int8_t cm_activate_security (void)
 {
 	if (cm_state == CMSTATE_AUTHENTICATED || cm_state == CMSTATE_PW_ENTERED)
