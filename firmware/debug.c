@@ -43,15 +43,15 @@ void oledDebug(const char *line)
 	id = (id + 1) % 10;
 }
 
-void debugLog(int level, const char *bucket, const char *text)
+void __attribute__ ((noinline)) debugLog(int level, const char *bucket, const char *text)
 {
+#if DEBUG_GDB
+	asm volatile(""::"r" (level), "r" (bucket), "r" (text)); // to prevent the compiler from optimizing away calls to the function
+#else
 	(void)level;
 	(void)bucket;
 #if EMULATOR
 	puts(text);
-#else
-#if DEBUG_GDB
-	(void)text;
 #else
 	oledDebug(text);
 #endif
@@ -69,4 +69,37 @@ char *debugInt(const uint32_t i)
 	return ret;
 }
 
+
+void debugHex(const uint8_t i)
+{
+#define NIBBLE_TO_HEX(x) (x) > 9 ? 'A' + ((x)-10) : '0' + (x)
+
+	static char s[3];
+
+	s[0] = NIBBLE_TO_HEX(i>>4);
+	s[1] = NIBBLE_TO_HEX(i&0xF);
+	s[2] = 0;
+	debugLog(0, "", s);
+}
+
+void debugHexDump(const char *text, const uint8_t *p, const uint8_t len)
+{
+	{
+		static char s[256];
+#include <string.h>
+		strcpy(s, text);
+		char *hex_string = s + strlen(s);
+
+		for (int i=0; i<len;i ++) {
+			*hex_string++ = NIBBLE_TO_HEX(*p>>4);
+			*hex_string++ = NIBBLE_TO_HEX((*p)&0xF);
+			*hex_string++ = ' ';
+			p++;
+		}
+		--hex_string;
+		*hex_string = 0;
+
+		debugLog(0, "", s);
+	}
+}
 #endif

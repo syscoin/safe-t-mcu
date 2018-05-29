@@ -27,12 +27,15 @@
 
 void debugLog(int level, const char *bucket, const char *text);
 char *debugInt(const uint32_t i);
+void debugHex(const uint8_t i);
+void debugHexDump(const char *text, const uint8_t *p, const uint8_t len);
 
 #else
 
 #define debugLog(L, B, T) do{}while(0)
 #define debugInt(I) do{}while(0)
-
+#define debugHex(x) do{}while(0)
+#define debugHexDump(t,p,l) do{}while(0)
 #endif
 
 #endif
