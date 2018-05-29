@@ -258,6 +258,9 @@ void session_clear(bool clear_pin)
 	memzero(&sessionPassphrase, sizeof(sessionPassphrase));
 	if (clear_pin) {
 		sessionPinCached = false;
+#if CRYPTOMEM
+		cm_deactivate_security();
+#endif
 	}
 }
 
