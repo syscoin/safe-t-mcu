@@ -17,6 +17,9 @@
 #define TRUE        (!FALSE)
 #endif
 
+static const uint8_t default_pw[3] = { 0xFF, 0xFF, 0xFF };
+#define CM_DEFAULT_PW 0xFFFFFF
+
 
 #define OTP_START_ADDR		(0x1FFF7800U)
 #define OTP_LOCK_ADDR		(0x1FFF7A00U)
@@ -118,7 +121,6 @@ uint8_t cm_check_programming(uint8_t seed[4][8])
 		if (ret != CM_SUCCESS)
 			return ret;
 
-		uint8_t default_pw[8] = { 0xFF, 0xFF, 0xFF };
 		ret = cm_VerifyPassword(default_pw, i, CM_PWWRITE);
 		if (ret != CM_SUCCESS)
 			return ret;
