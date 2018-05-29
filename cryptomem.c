@@ -9,6 +9,7 @@
 #include <string.h>
 #include "at88sc0104.h"
 #include "rng.h"
+#include "memzero.h"
 
 #include <libopencm3/stm32/flash.h>
 
@@ -315,12 +316,171 @@ uint8_t cm_prodtest_initialization(void)
 	return CM_SUCCESS;
 }
 
+/*
+ * We have 4 zones in the cryptomem we can use. Initially all 4 areas are unused and protected
+ * by the same default PW 0xFFFFFF.
+ * After we have initialized one zone (=stored the AES key inside), we set one byte in OTP.
+ * Now we assume that the PW is set. storage.c handles the case that no PIN is used by setting the
+ * password again to 0xFFFFFF, this case is not handled here.
+ *
+ *
+ */
+static enum { CMSTATE_IDLE, CMSTATE_AUTHENTICATED, CMSTATE_PW_ENTERED } cm_state;
+
+/* zone to use */
+static int zone_index = -1;
+
 
 void cm_init( void )
 {
 	cm_PowerOn();
 	cm_DeactivateSecurity();
 
+	cm_state = CMSTATE_IDLE;
+	zone_index = -1;
+}
+
+static int8_t cm_get_zone_index(void)
+{
+	if (zone_index >=0 ) /* we already have a zone index */
+		return CM_SUCCESS;
+
+	uint8_t ret;
+
+	/* read PAC for PW 0..3*/
+	uint8_t PAC;
+	for (int i=0; i<4; i++) {
+		ret = cm_CheckPAC(i, CM_PWWRITE, &PAC);
+		if (ret != CM_SUCCESS)
+			while(1);
+		//continue;
+		if (PAC > 0) {
+			zone_index = i;
+			return CM_SUCCESS;
+		}
+	}
+	return CM_FAILED;
+}
+
+static int8_t cm_activate_security (void)
+{
+	if (cm_state == CMSTATE_AUTHENTICATED || cm_state == CMSTATE_PW_ENTERED)
+		return CM_SUCCESS;
+
+	uint8_t ret = cm_get_zone_index();
+	if (ret != CM_SUCCESS) {
+		return ret;
+	}
+
+	uint8_t seed[8];
+	cm_get_seed_in_OTP(seed, zone_index);
+
+	cm_state = CMSTATE_IDLE;
+
+	/* disable authentication - just in case... */
+	if ((ret = cm_DeactivateSecurity()) != CM_SUCCESS) {
+		return ret;
+	}
+
+	cm_ResetPassword();
+
+	uint8_t rnd_buffer[16];
+	random_buffer(rnd_buffer, 16);
+
+
+	ret = cm_ActivateSecurity( zone_index, seed, rnd_buffer, TRUE); // with encryption
+	memzero (rnd_buffer, 16);
+
+	if (ret != CM_SUCCESS)
+		return ret;
+	cm_state = CMSTATE_AUTHENTICATED;
+
+	return CM_SUCCESS;
+}
+
+int8_t cm_deactivate_security( void )
+{
+	/* disable authentication - just in case... */
+	cm_DeactivateSecurity();
+
+	cm_state = CMSTATE_IDLE;
+	zone_index = -1;
+
+	return CM_SUCCESS;
+}
+
+int8_t cm_open_zone(uint32_t pw)
+{
+	uint8_t ret = cm_activate_security();
+
+	if (ret != CM_SUCCESS)
+		return ret;
+
+	uint8_t pin[3];
+	pin[0] =  pw      & 0xFF;
+	pin[1] = (pw>>8 ) & 0xFF;
+	pin[2] = (pw>>16) & 0xFF;
+
+	ret = cm_VerifyPassword(pin, zone_index, CM_PWWRITE);
+	if (ret != CM_SUCCESS) {
+		// wrong password de-authenticates
+		cm_deactivate_security();
+		return ret;
+	}
+	cm_state = CMSTATE_PW_ENTERED;
+
+	return CM_SUCCESS;
+}
+
+
+static int8_t cm_write_key_to_user_zone( uint8_t *key)
+{
+	cm_SetUserZone(zone_index, TRUE);
+	cm_WriteUserZone( 0, key, 8); // 8 byte at a time...
+	cm_SendChecksum(NULL);
+	cm_WriteUserZone( 8, key+8, 8);
+	cm_SendChecksum(NULL);
+	cm_WriteUserZone( 16, key+16, 8);
+	cm_SendChecksum(NULL);
+	cm_WriteUserZone( 24, key+24, 8);
+	cm_SendChecksum(NULL);
+
+	return CM_SUCCESS;
+}
+
+int8_t cm_initialize_new_zone( void )
+{
+	uint8_t ret = cm_activate_security();
+
+	if (cm_state == CMSTATE_AUTHENTICATED) {
+		// need to send password - try default one
+		ret = cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+		if (ret != CM_SUCCESS) {
+			/* could not open the zone by default PW */
+			// FIXME burn zone... and use next one
+			cm_deactivate_security();
+			while(1);
+			return CM_DEFAULT_Pw_NOK;
+		}
+		cm_state = CMSTATE_PW_ENTERED;
+	}
+
+	if (cm_state != CMSTATE_PW_ENTERED)
+		return CM_FAILED;
+
+
+	/* generate random AES256 key using hardware RNG */
+	uint8_t random_key[32];
+	random_buffer(random_key, 32);
+
+	/* store in user zone */
+	cm_write_key_to_user_zone(random_key);
+
+	/* erase key in memory */
+	memzero(random_key, 32);
+
+	//FIXME set OTP?
+	return ret;
 }
 
 #endif /* CRYPTMEM */
