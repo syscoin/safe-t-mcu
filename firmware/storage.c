@@ -669,11 +669,7 @@ void storage_setPin(const char *pin)
 	storageUpdate.has_pin = true;
 	strlcpy(storageUpdate.pin, pin, sizeof(storageUpdate.pin));
 	sessionPinCached = false;
-}
 
-const char *storage_getPin(void)
-{
-	return storageRom->has_pin ? storageRom->pin : 0;
 }
 
 void session_cachePassphrase(const char *passphrase)

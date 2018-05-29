@@ -117,7 +117,6 @@ void storage_dumpNode(HDNodeType *node);
 
 bool storage_containsPin(const char *pin);
 bool storage_hasPin(void);
-const char *storage_getPin(void);
 void storage_setPin(const char *pin);
 void session_cachePin(void);
 bool session_isPinCached(void);
