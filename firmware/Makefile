@@ -102,11 +102,12 @@ define GENERATE_CODE
 # $(2) - Dependencies
 # $(3) - Additional output files
 
-$(1).h $(3): $(1).py $(2)
-	$(PYTHON) $(1).py
+ifneq ($(3),)
+$(3): $(1).h
+endif
 
-# Serialize build for parallel Make
-$(1).h: $(3)
+$(1).h: $(1).py $(2)
+	$(PYTHON) $(1).py
 
 clean::
 	rm -f $(1).h $(3)
