@@ -393,6 +393,9 @@ void fsm_msgChangePin(ChangePin *msg)
 void fsm_msgWipeDevice(WipeDevice *msg)
 {
 	(void)msg;
+#if CRYPTOMEM
+	CHECK_PIN_UNCACHED
+#endif
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("wipe the device?"), NULL, _("All data will be lost."), NULL, NULL);
 	if (!protectButton(ButtonRequestType_ButtonRequest_WipeDevice, false)) {
 		fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
