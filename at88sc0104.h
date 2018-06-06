@@ -5,7 +5,7 @@
  Return value definition
  ****************************************************************/
 enum { CM_SUCCESS = 0, CM_FAILED=1, CM_FAIL_CMDSTART, CM_FAIL_CMDSEND, CM_FAIL_WRDATA, CM_FAIL_RDDATA,
-	CM_FAIL_PwD_NOK, CM_ACK_POLL_FAIL, CM_ALREADY_PGMD, CM_DEFAULT_Pw_NOK };
+	CM_FAIL_PwD_NOK, CM_DEAUTH, CM_ACK_POLL_FAIL, CM_ALREADY_PGMD, CM_DEFAULT_Pw_NOK };
 
 /*****************************************************************
  interface functions

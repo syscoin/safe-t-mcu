@@ -700,9 +700,12 @@ uint8_t cm_CheckPAC(uint8_t Set, uint8_t rw, uint8_t *attempts)
 	case 0x88:
 		*attempts = 1;
 		break;
-	default:
+	case 0x00:
 		*attempts = 0;
 		break;
+	default:
+		// weird PAC usually means that we lost the authentication/encryption
+		return CM_DEAUTH;
 	}
 	return CM_SUCCESS;
 }
@@ -762,7 +765,15 @@ uint8_t cm_VerifyPassword(const uint8_t * Password, uint8_t Set, uint8_t rw)
 	// Read PAC
 	if (Return == CM_SUCCESS) {
 		uint8_t attempts;
-		if ((Return = cm_CheckPAC(Set, rw, &attempts)) != CM_SUCCESS)
+		Return = cm_CheckPAC(Set, rw, &attempts);
+		if (Return == CM_DEAUTH) {
+			// sometimes reading the PAC yields useless data. Turn off security and retry
+			if (CM_Authenticate) {
+				cm_DeactivateSecurity();
+			}
+			if ((Return = cm_CheckPAC(Set, rw, &attempts) ) != CM_SUCCESS)
+					return Return;
+		} else if (Return != CM_SUCCESS)
 			return Return;
 		if (attempts != 4) {
 			Return = CM_FAIL_PwD_NOK;
