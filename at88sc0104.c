@@ -756,9 +756,12 @@ uint8_t cm_VerifyPassword(const uint8_t * Password, uint8_t Set, uint8_t rw)
 
 	// Initiate certification
 
-	if ((Return = cm_WriteCommand(CmdPassword, pwd, 3)) != CM_SUCCESS)
+	if ((Return = cm_WriteCommand(CmdPassword, pwd, 3)) != CM_SUCCESS) {
+		if (Return == CM_FAIL_CMDSEND)
+			// if a section is already blocked, because PAC=0, we get CM_FAIL_CMDSEND here
+			return CM_PWD_NOK_LOCKED;
 		return Return;
-
+	}
 	/* ACK polling for 10ms - see table 8-2 */
 	Return = cm_WaitAckPolling(10);
 
@@ -775,7 +778,9 @@ uint8_t cm_VerifyPassword(const uint8_t * Password, uint8_t Set, uint8_t rw)
 					return Return;
 		} else if (Return != CM_SUCCESS)
 			return Return;
-		if (attempts != 4) {
+		if (attempts == 0) {
+			Return = CM_PWD_NOK_LOCKED;
+		} else if (attempts != 4) {
 			Return = CM_FAIL_PwD_NOK;
 		}
 	}

@@ -777,8 +777,6 @@ bool storage_containsPin(const char *pin)
 #if CRYPTOMEM
 	uint32_t pw = PinStringToHex(pin);
 
-	//FIXME: if cm_open_zone() returns CM_DEFAULT_Pw_NOK and it was the last attempt, we would
-	// silently use the next zone next time... need to handle this case separately!
 	return (cm_open_zone( pw ) == CM_SUCCESS);
 #else
 	/* The execution time of the following code only depends on the

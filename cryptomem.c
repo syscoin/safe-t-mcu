@@ -325,7 +325,7 @@ uint8_t cm_prodtest_initialization(void)
  *
  *
  */
-static enum { CMSTATE_IDLE, CMSTATE_AUTHENTICATED, CMSTATE_PW_ENTERED } cm_state;
+static enum { CMSTATE_IDLE, CMSTATE_AUTHENTICATED, CMSTATE_PW_ENTERED, CMSTATE_ZONE_LOCKED } cm_state;
 
 /* zone to use */
 static int zone_index = -1;
@@ -364,6 +364,9 @@ static int8_t cm_get_zone_index(void)
 
 int8_t cm_get_remaining_PIN_attempts(void)
 {
+	if (cm_state == CMSTATE_ZONE_LOCKED)
+		return 0; // 0 attempts remaining in current zone as it was locked by wrong PIN entry
+
 	uint8_t ret = cm_get_zone_index();
 	if (ret != CM_SUCCESS) {
 		return -1;
@@ -420,7 +423,6 @@ int8_t cm_deactivate_security( void )
 	cm_DeactivateSecurity();
 
 	cm_state = CMSTATE_IDLE;
-	zone_index = -1;
 
 	return CM_SUCCESS;
 }
@@ -441,6 +443,8 @@ int8_t cm_open_zone(uint32_t pw)
 	if (ret != CM_SUCCESS) {
 		// wrong password de-authenticates
 		cm_deactivate_security();
+		if (ret == CM_PWD_NOK_LOCKED)
+			cm_state = CMSTATE_ZONE_LOCKED;
 		return ret;
 	}
 	cm_state = CMSTATE_PW_ENTERED;
@@ -564,6 +568,14 @@ int8_t cm_wipe_zone( void )
 	/* we can only easily wipe if the cryptomem password has been provided */
 	if(cm_state != CMSTATE_PW_ENTERED) {
 
+		if (cm_state == CMSTATE_ZONE_LOCKED) {
+			// previous Pin entry locked the zone invalidate it
+			cm_deactivate_security();
+			zone_index = -1; // need to check for next zone for next operation
+
+			// no need to wipe, zone is locked already anyway
+			return 0;
+		}
 		if (cm_state == CMSTATE_IDLE) {
 			ret = cm_activate_security();
 			if (ret != CM_SUCCESS) {
