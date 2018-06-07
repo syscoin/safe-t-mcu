@@ -488,13 +488,9 @@ static int8_t cm_write_key_to_user_zone( uint8_t *key)
 {
 	cm_SetUserZone(zone_index, TRUE);
 	cm_WriteUserZone( 0, key, 8); // 8 byte at a time...
-	cm_SendChecksum(NULL);
 	cm_WriteUserZone( 8, key+8, 8);
-	cm_SendChecksum(NULL);
 	cm_WriteUserZone( 16, key+16, 8);
-	cm_SendChecksum(NULL);
 	cm_WriteUserZone( 24, key+24, 8);
-	cm_SendChecksum(NULL);
 
 	return CM_SUCCESS;
 }

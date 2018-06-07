@@ -639,9 +639,15 @@ uint8_t cm_WriteUserZone(uint8_t CryptoAddr, const uint8_t * Buffer, uint8_t Cou
 	cm_GPAencrypt(CM_Encrypt, buf2, Count);
 
 	// Write data
-	Return = cm_WriteCommand(CmdWriteUserZone, buf2, Count);
+	if ((Return = cm_WriteCommand(CmdWriteUserZone, buf2, Count)) != CM_SUCCESS)
+			return Return;
 
 	memzero(buf2, Count);
+
+	/* if encryption is on, send the checksum first. Ack polling will be done there */
+	if (CM_Encrypt) {
+		return cm_SendChecksum(NULL);
+	}
 	/* ACK polling for 5ms - see table 8-2 */
 	/* If anti-tearing is used, you need to wait 20ms */
 	if ((Return = cm_WaitAckPolling(CM_AntiTearing ? 20 : 5)) != CM_SUCCESS)
