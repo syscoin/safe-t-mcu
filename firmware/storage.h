@@ -117,7 +117,7 @@ bool session_getState(const uint8_t *salt, uint8_t *state, const char *passphras
 void storage_setMnemonic(const char *mnemonic);
 bool storage_containsMnemonic(const char *mnemonic);
 bool storage_hasMnemonic(void);
-const char *storage_getMnemonic(void);
+const char *storage_getMnemonic(char *mnemonic_buf);
 
 bool storage_hasNode(void);
 #if DEBUG_LINK

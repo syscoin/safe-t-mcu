@@ -29,6 +29,7 @@
 #include "bip39.h"
 #include "util.h"
 #include "gettext.h"
+#include "memzero.h"
 
 static uint32_t strength;
 static uint8_t  int_entropy[32];
@@ -118,8 +119,13 @@ void reset_backup(bool separated)
 	if (separated) {
 		storage_update();
 	}
+#if CRYPTOMEM
+	char mnemonic[ sizeof( ((Storage *)0)->mnemonic) ];
+	storage_getMnemonic(mnemonic);
+#else
+	const char *mnemonic = storage_getMnemonic(NULL);
+#endif
 
-	const char *mnemonic = storage_getMnemonic();
 
 	for (int pass = 0; pass < 2; pass++) {
 		int i = 0, word_pos = 1;
@@ -142,12 +148,18 @@ void reset_backup(bool separated)
 				}
 				layoutHome();
 				fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
+#if CRYPTOMEM
+				memzero(mnemonic, sizeof(mnemonic));
+#endif
 				return;
 			}
 			word_pos++;
 		}
 	}
 
+#if CRYPTOMEM
+	memzero(mnemonic, sizeof(mnemonic));
+#endif
 	if (separated) {
 		fsm_sendSuccess(_("Seed successfully backed up"));
 	} else {

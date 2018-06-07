@@ -727,10 +727,20 @@ bool storage_hasMnemonic(void)
 	return storageRom->has_mnemonic;
 }
 
-const char *storage_getMnemonic(void)
+const char *storage_getMnemonic(char * decoded_mnemonic)
 {
-	return storageUpdate.has_mnemonic ? storageUpdate.mnemonic
-		: storageRom->has_mnemonic ? storageRom->mnemonic : 0;
+	const char *mnemonic = storageUpdate.has_mnemonic ? storageUpdate.mnemonic
+			: storageRom->has_mnemonic ? storageRom->mnemonic : 0;
+#if CRYPTOMEM
+	//reset_backup() uses this
+	if (decoded_mnemonic && mnemonic) {
+		decode_mnemonic(mnemonic, decoded_mnemonic);
+		return decoded_mnemonic;
+	}
+	return NULL;
+#else
+	return mnemonic;
+#endif
 }
 
 /* Check whether mnemonic matches storage. The mnemonic must be
