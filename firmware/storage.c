@@ -313,7 +313,12 @@ static void storage_commit_locked(bool update)
 			storageUpdate.has_node = storageRom->has_node;
 			memcpy(&storageUpdate.node, &storageRom->node, sizeof(StorageHDNode));
 			storageUpdate.has_mnemonic = storageRom->has_mnemonic;
+#if CRYPTOMEM
+			// after encryption we cannot use strcpy anymore... copy everything
+			memcpy(storageUpdate.mnemonic, storageRom->mnemonic, sizeof(storageUpdate.mnemonic));
+#else
 			strlcpy(storageUpdate.mnemonic, storageRom->mnemonic, sizeof(storageUpdate.mnemonic));
+#endif
 			storageUpdate.has_u2froot = storageRom->has_u2froot;
 			memcpy(&storageUpdate.u2froot, &storageRom->u2froot, sizeof(StorageHDNode));
 		} else if (storageUpdate.has_mnemonic) {
