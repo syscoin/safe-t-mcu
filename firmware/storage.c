@@ -761,16 +761,26 @@ const char *storage_getMnemonic(char * decoded_mnemonic)
 /* Check whether mnemonic matches storage. The mnemonic must be
  * a null-terminated string.
  */
+// CRYPTOMEM - recovery_done() calls this and only with PIN checked, so we can safely call decode_mnemonic()
 bool storage_containsMnemonic(const char *mnemonic) {
 	/* The execution time of the following code only depends on the
 	 * (public) input.  This avoids timing attacks.
 	 */
 	char diff = 0;
 	uint32_t i = 0;
+#if CRYPTOMEM
+	char stored_mnemonic[ sizeof(storageRom->mnemonic) ];
+	decode_mnemonic(storageRom->mnemonic, stored_mnemonic);
+#else
+	const char *stored_mnemonic = storageRom->mnemonic;
+#endif
 	for (; mnemonic[i]; i++) {
-		diff |= (storageRom->mnemonic[i] - mnemonic[i]);
+		diff |= (stored_mnemonic[i] - mnemonic[i]);
 	}
-	diff |= storageRom->mnemonic[i];
+	diff |= stored_mnemonic[i];
+#if CRYPTOMEM
+	memzero( stored_mnemonic, sizeof(stored_mnemonic));
+#endif
 	return diff == 0;
 }
 
