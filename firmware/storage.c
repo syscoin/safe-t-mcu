@@ -323,7 +323,17 @@ static void storage_commit_locked(bool update)
 			memcpy(&storageUpdate.u2froot, &storageRom->u2froot, sizeof(StorageHDNode));
 		} else if (storageUpdate.has_mnemonic) {
 			storageUpdate.has_u2froot = true;
+#if CRYPTOMEM
+			if (!storage_hasPin() || (session_isPinCached() )) {
+				char mnemonic[ sizeof(storageUpdate.mnemonic) ];
+				storage_getMnemonic(mnemonic);
+				storage_compute_u2froot(mnemonic, &storageUpdate.u2froot);
+				memzero(mnemonic, sizeof(mnemonic));
+			} else
+				storageUpdate.has_u2froot = false; // we can't do anything without PIN...
+#else
 			storage_compute_u2froot(storageUpdate.mnemonic, &storageUpdate.u2froot);
+#endif
 		}
 		if (!storageUpdate.has_passphrase_protection) {
 			storageUpdate.has_passphrase_protection = storageRom->has_passphrase_protection;
