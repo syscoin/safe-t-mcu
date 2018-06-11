@@ -156,7 +156,22 @@ static void protectCheckMaxTry(uint32_t wait) {
 		return;
 #endif
 	storage_wipe();
+#if CRYPTOMEM
+	int remaining_zones = storage_remaining_zones();
+	char remaining_zones_str[20];
+	if (remaining_zones > 1) {
+		strlcpy(remaining_zones_str, _("x crypto zones left"), sizeof(remaining_zones_str));
+		remaining_zones_str[0] = remaining_zones + '0';
+	} else if (remaining_zones == 1)
+		strlcpy(remaining_zones_str, _("1 crypto zone left"), sizeof(remaining_zones_str));
+	else
+		strlcpy(remaining_zones_str, _("no crypto zone left"), sizeof(remaining_zones_str));
+
+	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Too many wrong PIN"), _("attempts. Storage has"), _("been wiped."),
+			remaining_zones_str, _("Please unplug"), _("the device."));
+#else
 	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Too many wrong PIN"), _("attempts. Storage has"), _("been wiped."), NULL, _("Please unplug"), _("the device."));
+#endif
 	for (;;) {} // loop forever
 }
 

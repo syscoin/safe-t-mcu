@@ -1103,3 +1103,10 @@ void storage_wipe(void)
 
 	storage_clearPinArea();
 }
+
+#if CRYPTOMEM
+int storage_remaining_zones(void)
+{
+	return cm_get_remaining_zones();
+}
+#endif

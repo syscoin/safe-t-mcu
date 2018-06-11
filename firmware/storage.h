@@ -155,7 +155,9 @@ void storage_applyFlags(uint32_t flags);
 uint32_t storage_getFlags(void);
 
 void storage_wipe(void);
-
+#if CRYPTOMEM
+int storage_remaining_zones(void);
+#endif
 extern char storage_uuid_str[25];
 
 #endif
