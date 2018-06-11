@@ -31,5 +31,6 @@ int8_t cm_initialize_new_zone( void );
 
 int8_t cm_deactivate_security( void );
 int8_t cm_get_remaining_PIN_attempts(void);
+int8_t cm_get_remaining_zones(void);
 
 #endif /* CRYPTOMEM_H_ */

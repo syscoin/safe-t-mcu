@@ -381,6 +381,17 @@ int8_t cm_get_remaining_PIN_attempts(void)
 	return PAC;
 }
 
+int8_t cm_get_remaining_zones(void)
+{
+
+	uint8_t ret = cm_get_zone_index();
+	if (ret != CM_SUCCESS) {
+		return 0;
+	}
+	return (4 - zone_index);
+}
+
+
 static int8_t cm_activate_security (void)
 {
 	if (cm_state == CMSTATE_AUTHENTICATED || cm_state == CMSTATE_PW_ENTERED)
