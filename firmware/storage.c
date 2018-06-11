@@ -456,6 +456,11 @@ void storage_dumpNode(HDNodeType *node) {
 }
 #endif
 
+#if CRYPTOMEM
+static bool encrypt_and_store_mnemonic(const char *mnemonic);
+static uint32_t PinStringToHex(const char *pin);
+#endif
+
 void storage_loadDevice(LoadDevice *msg)
 {
 	session_clear(true);
@@ -472,10 +477,23 @@ void storage_loadDevice(LoadDevice *msg)
 		storage_setNode(&(msg->node));
 		sessionSeedCached = false;
 		memzero(&sessionSeed, sizeof(sessionSeed));
+		// FIXME CRYPTOMEM: currently we only protect seeds by encryption, not nodes
 	} else if (msg->has_mnemonic) {
 		storageUpdate.has_mnemonic = true;
 		storageUpdate.has_node = false;
+		// FIXME CRYPTOMEM: how do we treat U2F node here?
+#if CRYPTOMEM
+		// send PIN if needed
+		uint8_t ret = CM_SUCCESS;
+		if (storageUpdate.has_pin) {
+			uint32_t pw = PinStringToHex(msg->pin);
+			ret = cm_open_zone(pw);
+		}
+		if (ret != CM_SUCCESS || !encrypt_and_store_mnemonic(msg->mnemonic))
+				storageUpdate.has_mnemonic = false;
+#else
 		strlcpy(storageUpdate.mnemonic, msg->mnemonic, sizeof(storageUpdate.mnemonic));
+#endif
 		sessionSeedCached = false;
 		memzero(&sessionSeed, sizeof(sessionSeed));
 	}
