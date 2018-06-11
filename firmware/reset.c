@@ -90,8 +90,10 @@ void reset_entropy(const uint8_t *ext_entropy, uint32_t len)
 	sha256_Update(&ctx, ext_entropy, len);
 	sha256_Final(&ctx, int_entropy);
 	storage_setNeedsBackup(true);
-	storage_setMnemonic(mnemonic_from_data(int_entropy, strength / 8));
+	const char* mnemo = mnemonic_from_data(int_entropy, strength / 8);
+	storage_setMnemonic(mnemo);
 	memset(int_entropy, 0, 32);
+	memzero((char *)mnemo, 24*10*sizeof(char));
 	awaiting_entropy = false;
 
 	if (skip_backup) {
