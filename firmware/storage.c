@@ -113,7 +113,7 @@ static bool sessionPinCached;
 static bool sessionPassphraseCached;
 static char CONFIDENTIAL sessionPassphrase[51];
 
-#define STORAGE_VERSION 9
+#define STORAGE_VERSION 0x10001
 
 void storage_show_error(void)
 {
