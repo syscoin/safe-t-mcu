@@ -156,6 +156,7 @@ bool storage_from_flash(void)
 	memcpy(storage_uuid, FLASH_PTR(FLASH_STORAGE_START + sizeof(storage_magic)), sizeof(storage_uuid));
 	data2hex(storage_uuid, sizeof(storage_uuid), storage_uuid_str);
 
+#ifdef SUPPORT_LEGACY_VERSION
 #define OLD_STORAGE_SIZE(last_member) (((offsetof(Storage, last_member) + pb_membersize(Storage, last_member)) + 3) & ~3)
 
 	// copy storage
@@ -223,6 +224,12 @@ bool storage_from_flash(void)
 	if (version != STORAGE_VERSION) {
 		storage_update();
 	}
+#else
+	if (version != STORAGE_VERSION) {
+		return false;
+	}
+#endif
+
 	return true;
 }
 
