@@ -315,7 +315,9 @@ void fsm_msgGetFeatures(GetFeatures *msg)
 	resp->has_needs_backup = true; resp->needs_backup = storage_needsBackup();
 	resp->has_flags = true; resp->flags = storage_getFlags();
 	resp->has_model = true; strlcpy(resp->model, "1", sizeof(resp->model));
-
+#if CRYPTOMEM
+	resp->has_pin_remaining_zones = true; resp->pin_remaining_zones = storage_remaining_zones();
+#endif
 	msg_write(MessageType_MessageType_Features, resp);
 }
 
