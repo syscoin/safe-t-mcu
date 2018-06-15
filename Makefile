@@ -34,20 +34,24 @@ libtrezor.a: $(OBJS)
 
 include Makefile.include
 
-.PHONY: ALL vendor bootloader firmware
+.PHONY: ALL vendor bootloader firmware nanopb
 
 vendor:
 	git submodule update --init
 
-firmware: libopencm3 bootloader
+nanopb:
 	$(MAKE) -C vendor/nanopb/generator/proto
+
+firmware_protob: nanopb
 	$(MAKE) -C firmware/protob
-	$(MAKE) libtrezor.a
+
+firmware: firmware_protob bootloader libtrezor.a
 	$(MAKE) -C firmware sign
 
-bootloader: libopencm3
-	$(MAKE) libtrezor.a
+bootloader/bootloader.bin: libtrezor.a
 	$(MAKE) -C bootloader align
+
+bootloader: bootloader/bootloader.bin
 
 mostlyclean: clean
 	$(MAKE) -C bootloader clean
