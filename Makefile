@@ -45,9 +45,12 @@ bootloader: libopencm3
 	$(MAKE) libtrezor.a
 	$(MAKE) -C bootloader align
 
-allclean: clean
-	$(MAKE) -C vendor/libopencm3 clean
+mostlyclean: clean
 	$(MAKE) -C bootloader clean
+	$(MAKE) -C firmware clean
+
+allclean: mostlyclean
+	$(MAKE) -C vendor/libopencm3 clean
 
 libopencm3:
 	FP_FLAGS="-mfloat-abi=soft" V=1 $(MAKE) -C vendor/libopencm3
