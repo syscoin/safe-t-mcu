@@ -27,6 +27,8 @@ OBJS += gen/fonts.o
 
 ALL: firmware
 
+$(OBJS): libopencm3
+
 libtrezor.a: $(OBJS)
 	$(AR) rcs libtrezor.a $(OBJS)
 
