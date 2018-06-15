@@ -25,12 +25,14 @@ endif
 OBJS += gen/bitmaps.o
 OBJS += gen/fonts.o
 
+ALL: firmware
+
 libtrezor.a: $(OBJS)
 	$(AR) rcs libtrezor.a $(OBJS)
 
 include Makefile.include
 
-.PHONY: vendor bootloader firmware
+.PHONY: ALL vendor bootloader firmware
 
 vendor:
 	git submodule update --init
