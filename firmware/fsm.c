@@ -72,6 +72,12 @@ static uint8_t msg_resp[MSG_OUT_SIZE] __attribute__ ((aligned));
 		return; \
 	}
 
+#define CHECK_NO_PIN \
+	if (storage_hasPin()) { \
+		fsm_sendFailure(FailureType_Failure_UnexpectedMessage, _("Device has PIN set. Remove first.")); \
+		return; \
+	}
+
 #define CHECK_NOT_INITIALIZED \
 	if (storage_isInitialized()) { \
 		fsm_sendFailure(FailureType_Failure_UnexpectedMessage, _("Device is already initialized. Use Wipe first.")); \
@@ -482,6 +488,10 @@ void fsm_msgGetPublicKey(GetPublicKey *msg)
 
 void fsm_msgLoadDevice(LoadDevice *msg)
 {
+#if CRYPTOMEM
+	CHECK_NO_PIN
+#endif
+
 	CHECK_NOT_INITIALIZED
 
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("I take the risk"), NULL, _("Loading private seed"), _("is not recommended."), _("Continue only if you"), _("know what you are"), _("doing!"), NULL);
@@ -506,6 +516,10 @@ void fsm_msgLoadDevice(LoadDevice *msg)
 
 void fsm_msgResetDevice(ResetDevice *msg)
 {
+#if CRYPTOMEM
+	CHECK_NO_PIN
+#endif
+
 	CHECK_NOT_INITIALIZED
 
 	CHECK_PARAM(!msg->has_strength || msg->strength == 128 || msg->strength == 192 || msg->strength == 256, _("Invalid seed strength"));
@@ -1215,6 +1229,9 @@ void fsm_msgRecoveryDevice(RecoveryDevice *msg)
 	if (dry_run) {
 		CHECK_PIN
 	} else {
+#if CRYPTOMEM
+		CHECK_NO_PIN
+#endif
 		CHECK_NOT_INITIALIZED
 	}
 
