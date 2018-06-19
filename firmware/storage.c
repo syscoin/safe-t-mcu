@@ -325,6 +325,8 @@ static void storage_commit_locked(bool update)
 			storageUpdate.has_u2froot = true;
 #if CRYPTOMEM
 			if (!storage_hasPin() || (session_isPinCached() )) {
+				if (!storage_hasPin())
+					cm_open_zone( CM_DEFAULT_PW ); // make sure cryptomem is open
 				char mnemonic[ sizeof(storageUpdate.mnemonic) ];
 				storage_getMnemonic(mnemonic);
 				storage_compute_u2froot(mnemonic, &storageUpdate.u2froot);
@@ -469,6 +471,15 @@ void storage_loadDevice(LoadDevice *msg)
 	storageUpdate.imported = true;
 
 	storage_setPin(msg->has_pin ? msg->pin : "");
+#if CRYPTOMEM
+	// open cryptomem with PW supplied or default PW
+	uint32_t pw;
+	if (storageUpdate.has_pin && storageUpdate.pin) {
+		pw = PinStringToHex(msg->pin);
+	} else
+		pw = CM_DEFAULT_PW;
+	uint8_t cm_ret = cm_open_zone(pw);
+#endif
 	storage_setPassphraseProtection(msg->has_passphrase_protection && msg->passphrase_protection);
 
 	if (msg->has_node) {
@@ -484,12 +495,7 @@ void storage_loadDevice(LoadDevice *msg)
 		// FIXME CRYPTOMEM: how do we treat U2F node here?
 #if CRYPTOMEM
 		// send PIN if needed
-		uint8_t ret = CM_SUCCESS;
-		if (storageUpdate.has_pin) {
-			uint32_t pw = PinStringToHex(msg->pin);
-			ret = cm_open_zone(pw);
-		}
-		if (ret != CM_SUCCESS || !encrypt_and_store_mnemonic(msg->mnemonic))
+		if (cm_ret != CM_SUCCESS || !encrypt_and_store_mnemonic(msg->mnemonic))
 				storageUpdate.has_mnemonic = false;
 #else
 		strlcpy(storageUpdate.mnemonic, msg->mnemonic, sizeof(storageUpdate.mnemonic));
@@ -590,7 +596,11 @@ static void decode_mnemonic(const char *mnemonic_encrypted, char *mnemonic_decry
 	memset ( &dec_ctx, 0, sizeof(aes_decrypt_ctx));
 
 	uint8_t secret[32], essiv[32];
-	cm_get_aes_key( secret );
+	if (cm_get_aes_key( secret ) != CM_SUCCESS) {
+		// could not get key
+		mnemonic_decrypted[0] = 0;
+		return;
+	}
 
 	// Use ESSIV generated from the MCUs serial number and the secret key used for encryption
 	storage_generate_essiv(secret, essiv);
