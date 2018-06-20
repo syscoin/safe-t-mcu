@@ -165,7 +165,15 @@ static void recovery_done(void) {
 		// New mnemonic is valid.
 		if (!dry_run) {
 			// Update mnemonic on storage.
-			storage_setMnemonic(new_mnemonic);
+			if (storage_setMnemonic(new_mnemonic) == false) {
+				layoutDialog(&bmp_icon_error, NULL, _("Confirm"), NULL,
+					_("Seed could not be"),
+					_("stored on the device."),
+					NULL, NULL, NULL, NULL);
+				protectButton(ButtonRequestType_ButtonRequest_Other, true);
+				fsm_sendFailure(FailureType_Failure_DataError,
+					_("The seed is valid but could not be stored on the device."));
+			}
 			memzero(new_mnemonic, sizeof(new_mnemonic));
 			if (!enforce_wordlist) {
 				// not enforcing => mark storage as imported

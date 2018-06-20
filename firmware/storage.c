@@ -749,15 +749,18 @@ static bool encrypt_and_store_mnemonic(const char *mnemonic)
 }
 #endif
 
-void storage_setMnemonic(const char *mnemonic)
+bool storage_setMnemonic(const char *mnemonic)
 {
 	storageUpdate.has_mnemonic = true;
 #if CRYPTOMEM
-	if (!encrypt_and_store_mnemonic(mnemonic))
+	if (!encrypt_and_store_mnemonic(mnemonic)) {
 		storageUpdate.has_mnemonic = false; // something went wrong
+		return false;
+	}
 #else
 	strlcpy(storageUpdate.mnemonic, mnemonic, sizeof(storageUpdate.mnemonic));
 #endif
+	return true;
 }
 
 bool storage_hasNode(void)

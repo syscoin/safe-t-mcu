@@ -91,11 +91,16 @@ void reset_entropy(const uint8_t *ext_entropy, uint32_t len)
 	sha256_Final(&ctx, int_entropy);
 	storage_setNeedsBackup(true);
 	const char* mnemo = mnemonic_from_data(int_entropy, strength / 8);
-	storage_setMnemonic(mnemo);
+	bool ret = storage_setMnemonic(mnemo);
+
 	memset(int_entropy, 0, 32);
 	memzero((char *)mnemo, 24*10*sizeof(char));
 	awaiting_entropy = false;
-
+	if (ret == false) {
+		storage_setNeedsBackup(false);
+		fsm_sendFailure(FailureType_Failure_UnexpectedMessage, _("Seed cannot be stored on device"));
+		return;
+	}
 	if (skip_backup) {
 		storage_update();
 		fsm_sendSuccess(_("Device successfully initialized"));
