@@ -330,14 +330,17 @@ static enum { CMSTATE_IDLE, CMSTATE_AUTHENTICATED, CMSTATE_PW_ENTERED, CMSTATE_Z
 /* zone to use */
 static int zone_index = -1;
 
+int8_t cm_get_remaining_zones(void);
 
-void cm_init( void )
+bool cm_init( void )
 {
 	cm_PowerOn();
 	cm_DeactivateSecurity();
 
 	cm_state = CMSTATE_IDLE;
 	zone_index = -1;
+
+	return (cm_get_remaining_zones() > 0);
 }
 
 static int8_t cm_get_zone_index(void)

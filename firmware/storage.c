@@ -113,6 +113,10 @@ static bool sessionPinCached;
 static bool sessionPassphraseCached;
 static char CONFIDENTIAL sessionPassphrase[51];
 
+#if CRYPTOMEM
+static bool cm_init_successful;
+#endif
+
 #define STORAGE_VERSION 0x10001
 
 void storage_show_error(void)
@@ -236,12 +240,18 @@ bool storage_from_flash(void)
 void storage_init(void)
 {
 #if CRYPTOMEM
-	cm_init();
+	cm_init_successful = cm_init();
 #endif
 	if (!storage_from_flash()) {
 		storage_wipe();
 	}
 }
+
+#if CRYPTOMEM
+bool storage_cm_init_successful(void) {
+	return cm_init_successful;
+}
+#endif
 
 void storage_generate_uuid(void)
 {

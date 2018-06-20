@@ -86,6 +86,7 @@ typedef struct _Storage {
 extern Storage storageUpdate;
 
 void storage_init(void);
+bool storage_cm_init_successful(void);
 void storage_generate_uuid(void);
 void storage_clear_update(void);
 void storage_update(void);

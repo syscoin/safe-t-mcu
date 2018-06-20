@@ -215,6 +215,9 @@ void layoutHome(void)
 	}
 	layoutLast = layoutHome;
 	const char *label = storage_isInitialized() ? storage_getLabel() : _("Go to safe-t.io/start");
+#if CRYPTOMEM
+	if (storage_cm_init_successful()) {
+#endif
 	const uint8_t *homescreen = storage_getHomescreen();
 	if (homescreen) {
 		BITMAP b;
@@ -234,8 +237,12 @@ void layoutHome(void)
 		oledBox(0, 0, 127, 8, false);
 		oledDrawStringCenter(0, "NEEDS BACKUP!", FONT_STANDARD);
 	}
+#if CRYPTOMEM
+	} else {
+		layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Secure storage zones", "exhausted.", NULL, "Device unusable.", NULL, _("Go to safe-t.io/start"));
+	}
+#endif
 	oledRefresh();
-
 	// Reset lock screen timeout
 	system_millis_lock_start = timer_ms();
 }
