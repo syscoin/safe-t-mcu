@@ -373,6 +373,9 @@ void fsm_msgChangePin(ChangePin *msg)
 		if (storage_hasPin()) {
 			layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("change current PIN?"), NULL, NULL, NULL, NULL);
 		} else {
+			/* only allow to set a PIN on an initialized device */
+			CHECK_INITIALIZED
+
 			layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("set new PIN?"), NULL, NULL, NULL, NULL);
 		}
 	}
