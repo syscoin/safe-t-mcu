@@ -54,7 +54,7 @@ void check_bootloader(void)
 		// all OK -> done
 		return;
 	}
-
+#if UPDATE_BOOTLOADER
 	// ENABLE THIS AT YOUR OWN RISK
 	// ATTEMPTING TO OVERWRITE BOOTLOADER WITH UNSIGNED FIRMWARE MAY BRICK
 	// YOUR DEVICE.
@@ -76,5 +76,6 @@ void check_bootloader(void)
 	// show info and halt
 	layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Update finished"), _("successfully."), NULL, _("Please reconnect"), _("the device."), NULL);
 	shutdown();
+#endif
 #endif
 }
