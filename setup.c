@@ -56,6 +56,14 @@ void mem_manage_handler(void) {
 	fault_handler("Memory fault");
 }
 
+void setupUSB(void)
+{
+	// enable OTG_FS
+	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO10);
+	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO11 | GPIO12);
+	gpio_set_af(GPIOA, GPIO_AF10, GPIO10 | GPIO11 | GPIO12);
+}
+
 void setup(void)
 {
 	// set SCB_CCR STKALIGN bit to make sure 8-byte stack alignment on exception entry is in effect.
@@ -107,10 +115,10 @@ void setup(void)
 //	spi_clear_mode_fault(SPI1);
 	spi_enable(SPI1);
 
-	// enable OTG_FS
-	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO10);
-	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO11 | GPIO12);
-	gpio_set_af(GPIOA, GPIO_AF10, GPIO10 | GPIO11 | GPIO12);
+	// Disable USB until we really support it. Otherwise the Host will try to enumerate the device and abort after a timeout.
+	// Keep the DP/DM lines low (no device connected to the host) until we can react upon enumeration requests.
+	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO10 | GPIO11 | GPIO12);
+	gpio_clear(GPIOA, GPIO10 | GPIO11 | GPIO12);
 
 	// enable OTG FS clock
 	rcc_periph_clock_enable(RCC_OTGFS);
@@ -143,8 +151,11 @@ void setupApp(void)
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO9);
 	spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE, SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
 
-	gpio_mode_setup(GPIOA, GPIO_MODE_AF, GPIO_PUPD_PULLUP, GPIO10);
-	gpio_set_af(GPIOA, GPIO_AF10, GPIO10);
+	// Disable USB until we really support it. Otherwise the Host will try to enumerate the device and abort after a timeout.
+	// Keep the DP/DM lines low (no device connected to the host) until we can react upon enumeration requests.
+	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO10 | GPIO11 | GPIO12);
+	gpio_clear(GPIOA, GPIO10 | GPIO11 | GPIO12);
+
 }
 
 #define MPU_RASR_SIZE_32B   (0x04UL << MPU_RASR_SIZE_LSB)

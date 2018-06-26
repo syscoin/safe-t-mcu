@@ -81,7 +81,9 @@ void __attribute__((noreturn)) load_app(int signed_firmware)
 {
 	// zero out SRAM
 	memset_reg(_ram_start, _ram_end, 0);
-
+	if (signed_firmware == 0) {
+		setupUSB();
+	}
 	jump_to_firmware((const vector_table_t *) FLASH_PTR(FLASH_APP_START), signed_firmware);
 }
 
@@ -156,7 +158,7 @@ int main(void)
 		load_app(signed_firmware);
 	}
 #endif
-
+	setupUSB();
 	bootloader_loop();
 
 	return 0;

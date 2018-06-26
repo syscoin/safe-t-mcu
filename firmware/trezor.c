@@ -86,6 +86,7 @@ void check_lock_screen(void)
 
 int main(void)
 {
+	uint32_t starttime = timer_ms();
 #ifndef APPVER
 	setup();
 	__stack_chk_guard = random32(); // this supports compiler provided unpredictable stack protection checks
@@ -117,6 +118,9 @@ int main(void)
 
 	storage_init();
 	layoutHome();
+	// allow 10ms for USB to settle
+	while (!timer_expired(starttime + 10));
+	setupUSB();
 	usbInit();
 	for (;;) {
 		usbPoll();

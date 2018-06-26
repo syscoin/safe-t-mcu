@@ -26,6 +26,7 @@ extern uint32_t __stack_chk_guard;
 
 void setup(void);
 void setupApp(void);
+void setupUSB(void);
 
 void mpu_config(void);
 void mpu_config_untrusted(void);
