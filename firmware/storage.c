@@ -639,6 +639,9 @@ const uint8_t *storage_getSeed(bool usePassphrase)
 			return NULL;
 		}
 #if CRYPTOMEM
+		if (!storage_hasPin()) {
+			cm_open_zone( CM_DEFAULT_PW ); // make sure cryptomem is open
+		}
 		char mnemonic[ sizeof(storageRom->mnemonic) ];
 		decode_mnemonic(storageRom->mnemonic, mnemonic );
 #else
