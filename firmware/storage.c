@@ -893,7 +893,6 @@ void storage_setPin(const char *pin)
 
 	if (cm_set_PIN(pw) != CM_SUCCESS)
 		storageUpdate.has_pin = false; // did not work
-	cm_deactivate_security();
 #else
 	strlcpy(storageUpdate.pin, pin, sizeof(storageUpdate.pin));
 #endif

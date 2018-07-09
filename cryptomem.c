@@ -562,6 +562,7 @@ int8_t cm_set_PIN(uint32_t pw)
 		if (ret != CM_SUCCESS) {
 			return CM_FAILED;
 		}
+		cm_state = CMSTATE_PW_ENTERED;
 	}
 
 	uint8_t pin[3];
