@@ -479,6 +479,7 @@ static int8_t cm_send_default_PW( void )
 
 		zone_index = -1;
 		cm_activate_security();
+		cm_state = CMSTATE_ZONE_LOCKED;
 		return cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
 	}
 	return ret;
