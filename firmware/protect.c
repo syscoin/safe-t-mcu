@@ -178,6 +178,12 @@ static void protectCheckMaxTry(uint32_t wait) {
 bool protectPin(bool use_cached)
 {
 	if (!storage_hasPin() || (use_cached && session_isPinCached())) {
+#if CRYPTOMEM
+		if (!storage_hasPin()) {
+			if (storage_containsPin("")) // send empty PW = default PW
+				session_cachePin();
+		}
+#endif
 		return true;
 	}
 	uint32_t fails = storage_getPinFailsOffset();
