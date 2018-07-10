@@ -443,6 +443,9 @@ int8_t cm_deactivate_security( void )
 
 int8_t cm_open_zone(uint32_t pw)
 {
+	if(cm_state == CMSTATE_PW_ENTERED)
+		return CM_SUCCESS;
+
 	uint8_t ret = cm_activate_security();
 
 	if (ret != CM_SUCCESS)
