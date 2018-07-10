@@ -55,5 +55,6 @@ void oledHLine(int y);
 void oledFrame(int x1, int y1, int x2, int y2);
 void oledSwipeLeft(void);
 void oledSwipeRight(void);
+void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom);
 
 #endif

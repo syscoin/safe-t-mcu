@@ -420,3 +420,24 @@ void oledSwipeRight(void)
 		oledRefresh();
 	}
 }
+
+void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom)
+{
+	uint8_t s[6] = {
+		OLED_SETCONTRAST,
+		contrast,
+		OLED_SETPRECHARGE,
+		precharge,
+		OLED_SETVCOMDETECT,
+		vcom,
+	};
+
+	gpio_clear(OLED_DC_PORT, OLED_DC_PIN);		// set to CMD
+	
+	// init
+	gpio_clear(OLED_CS_PORT, OLED_CS_PIN);		// SPI select
+	SPISend(SPI_BASE, s, 6);
+	gpio_set(OLED_CS_PORT, OLED_CS_PIN);		// SPI deselect
+
+	oledRefresh();
+}
