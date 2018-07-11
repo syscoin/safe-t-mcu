@@ -30,6 +30,11 @@
 #define OLED_HEIGHT  64
 #define OLED_BUFSIZE (OLED_WIDTH * OLED_HEIGHT / 8)
 
+#define OLED_BRIGHTNESS_RESET 0
+#define OLED_BRIGHTNESS_LOW 1
+#define OLED_BRIGHTNESS_MEDIUM 2
+#define OLED_BRIGHTNESS_HIGH 3
+
 void oledInit(void);
 void oledClear(void);
 void oledRefresh(void);
@@ -55,6 +60,6 @@ void oledHLine(int y);
 void oledFrame(int x1, int y1, int x2, int y2);
 void oledSwipeLeft(void);
 void oledSwipeRight(void);
-void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom);
+void oledChangeBrightness(uint8_t brightness_level);
 
 #endif

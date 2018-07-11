@@ -65,6 +65,7 @@
 
 static uint8_t _oledbuffer[OLED_BUFSIZE];
 static bool is_debug_link = 0;
+static void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom);
 
 /*
  * macros to convert coordinate to bit position
@@ -421,7 +422,25 @@ void oledSwipeRight(void)
 	}
 }
 
-void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom)
+void oledChangeBrightness(uint8_t brightness_level)
+{
+	switch (brightness_level) {
+		case OLED_BRIGHTNESS_LOW:
+			oledSetBrightness(0x00, 0x11, 0x00);
+			break;
+		case OLED_BRIGHTNESS_MEDIUM:
+			oledSetBrightness(0x00, 0xF1, 0x00);
+			break;
+		case OLED_BRIGHTNESS_HIGH:
+			oledSetBrightness(0xFF, 0xFF, 0x70);
+			break;
+		case OLED_BRIGHTNESS_RESET:
+		default:
+			oledSetBrightness(0xCF, 0xF1, 0x40);
+	}
+}
+
+static void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom)
 {
 	uint8_t s[6] = {
 		OLED_SETCONTRAST,
