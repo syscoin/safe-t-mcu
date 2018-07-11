@@ -510,9 +510,11 @@ void layoutAddress(const char *address, const char *desc, bool qrcode, bool igno
 
 	if (!qrcode) {
 		layoutButtonNo(_("QR Code"));
+		layoutButtonYes(_("Continue"));
+	} else {
+		layoutButtonYes(_("Brightness"));
 	}
-
-	layoutButtonYes(_("Continue"));
+	
 	oledRefresh();
 }
 

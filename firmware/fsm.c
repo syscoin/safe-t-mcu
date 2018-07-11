@@ -229,14 +229,21 @@ static bool fsm_layoutAddress(const char *address, const char *desc, bool ignore
 	for (;;) {
 		layoutAddress(address, desc, qrcode, ignorecase, address_n, address_n_count);
 		if (protectButton(ButtonRequestType_ButtonRequest_Address, false)) {
-			return true;
+			if (qrcode) {
+				oledChangeBrightnessLevel();
+			} else {
+				oledChangeBrightness(OLED_BRIGHTNESS_RESET);
+				return true;
+			}
+		} else {
+			oledChangeBrightness(OLED_BRIGHTNESS_RESET);
+			qrcode = !qrcode;
 		}
 		if (protectAbortedByInitialize) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();
 			return false;
 		}
-		qrcode = !qrcode;
 	}
 }
 

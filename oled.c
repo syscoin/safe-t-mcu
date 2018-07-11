@@ -422,6 +422,32 @@ void oledSwipeRight(void)
 	}
 }
 
+void oledChangeBrightnessLevel(void)
+{
+	static uint8_t current_brightness = OLED_BRIGHTNESS_RESET;
+	switch (current_brightness) {
+		case OLED_BRIGHTNESS_RESET:
+			oledChangeBrightness(OLED_BRIGHTNESS_LOW);
+			current_brightness = OLED_BRIGHTNESS_LOW;
+			break;
+		case OLED_BRIGHTNESS_LOW:
+			oledChangeBrightness(OLED_BRIGHTNESS_MEDIUM);
+			current_brightness = OLED_BRIGHTNESS_MEDIUM;
+			break;
+		case OLED_BRIGHTNESS_MEDIUM:
+			oledChangeBrightness(OLED_BRIGHTNESS_HIGH);
+			current_brightness = OLED_BRIGHTNESS_HIGH;
+			break;
+		case OLED_BRIGHTNESS_HIGH:
+			oledChangeBrightness(OLED_BRIGHTNESS_LOW);
+			current_brightness = OLED_BRIGHTNESS_LOW;
+			break;
+		default:
+			oledChangeBrightness(OLED_BRIGHTNESS_RESET);
+			current_brightness = OLED_BRIGHTNESS_RESET;
+	}
+}
+
 void oledChangeBrightness(uint8_t brightness_level)
 {
 	switch (brightness_level) {

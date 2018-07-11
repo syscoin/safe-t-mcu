@@ -61,5 +61,6 @@ void oledFrame(int x1, int y1, int x2, int y2);
 void oledSwipeLeft(void);
 void oledSwipeRight(void);
 void oledChangeBrightness(uint8_t brightness_level);
+void oledChangeBrightnessLevel(void);
 
 #endif
