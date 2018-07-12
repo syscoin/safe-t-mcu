@@ -334,15 +334,15 @@ static void storage_commit_locked(bool update)
 		} else if (storageUpdate.has_mnemonic) {
 			storageUpdate.has_u2froot = true;
 #if CRYPTOMEM
-			if (!storage_hasPin() || (session_isPinCached() )) {
-				if (!storage_hasPin())
-					cm_open_zone( CM_DEFAULT_PW ); // make sure cryptomem is open
-				char mnemonic[ sizeof(storageUpdate.mnemonic) ];
-				storage_getMnemonic(mnemonic);
+
+			char mnemonic[ sizeof(storageUpdate.mnemonic) ] = { 0 };
+			storage_getMnemonic(mnemonic);
+			if (mnemonic[0]) {
 				storage_compute_u2froot(mnemonic, &storageUpdate.u2froot);
-				memzero(mnemonic, sizeof(mnemonic));
-			} else
-				storageUpdate.has_u2froot = false; // we can't do anything without PIN...
+			} else {
+				storageUpdate.has_u2froot = false;
+			}
+			memzero(mnemonic, sizeof(mnemonic));
 #else
 			storage_compute_u2froot(storageUpdate.mnemonic, &storageUpdate.u2froot);
 #endif
