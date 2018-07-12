@@ -856,6 +856,8 @@ bool storage_containsPin(const char *pin)
 #if CRYPTOMEM
 	uint32_t pw = PinStringToHex(pin);
 
+	cm_deactivate_security();
+
 	return (cm_open_zone( pw ) == CM_SUCCESS);
 #else
 	/* The execution time of the following code only depends on the
