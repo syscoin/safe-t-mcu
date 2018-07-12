@@ -482,9 +482,10 @@ void storage_loadDevice(LoadDevice *msg)
 
 	storage_setPin(msg->has_pin ? msg->pin : "");
 #if CRYPTOMEM
+	storage_update();
 	// open cryptomem with PW supplied or default PW
 	uint32_t pw;
-	if (storageUpdate.has_pin && storageUpdate.pin) {
+	if (storage_hasPin()) {
 		pw = PinStringToHex(msg->pin);
 	} else
 		pw = CM_DEFAULT_PW;
