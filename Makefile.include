@@ -16,13 +16,13 @@ DBGFLAGS ?= -g3 -ggdb3
 CPUFLAGS ?=
 FPUFLAGS ?=
 else
-PREFIX   ?= arm-none-eabi-
-CC       := $(PREFIX)gcc
-LD       := $(PREFIX)gcc
-OBJCOPY  := $(PREFIX)objcopy
-OBJDUMP  := $(PREFIX)objdump
-AR       := $(PREFIX)ar
-AS       := $(PREFIX)as
+PREFIX   ?= arm-none-eabi
+CC       := $(PREFIX)-gcc
+LD       := $(PREFIX)-gcc
+OBJCOPY  := $(PREFIX)-objcopy
+OBJDUMP  := $(PREFIX)-objdump
+AR       := $(PREFIX)-ar
+AS       := $(PREFIX)-as
 OPENOCD  := openocd -f interface/stlink-v2.cfg -c "transport select hla_swd" -f target/stm32f2x.cfg
 
 OPTFLAGS ?= -O3
