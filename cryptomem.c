@@ -297,18 +297,16 @@ uint8_t cm_prodtest_initialization(void)
 	} else {
 		if (ret == CM_ALREADY_PGMD) {
 			/* just check */
-			ret = cm_check_programming(crypto_seed);
-			if (ret != CM_SUCCESS) {
-				return CM_FAILED;
-			}
+			uint8_t seed[4][8];
 			for (i = 0; i < 4; i++) {
-				uint8_t seed[8];
-				cm_get_seed_in_OTP(seed, i);
+				cm_get_seed_in_OTP(seed[i], i);
+			}
 
-				/* check if stored correctly in OTP */
-				if (memcmp(seed, crypto_seed[i], 8) != 0) {
-					return CM_FAILED;
-				}
+			ret = cm_check_programming(seed);
+			if (ret == 0) {
+				return CM_SUCCESS;
+			} else {
+				return CM_FAILED;
 			}
 		}
 	}
