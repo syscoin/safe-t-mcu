@@ -35,7 +35,7 @@ include Makefile.include
 vendor:
 	git submodule update --init
 
-firmware: libopencm3
+firmware: libopencm3 bootloader
 	$(MAKE) -C vendor/nanopb/generator/proto
 	$(MAKE) -C firmware/protob
 	$(MAKE) libtrezor.a
