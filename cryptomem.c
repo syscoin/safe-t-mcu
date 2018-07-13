@@ -377,6 +377,8 @@ static int8_t cm_get_zone_index(void)
 	return CM_FAILED;
 }
 
+int8_t cm_deactivate_security( void );
+
 int8_t cm_get_remaining_PIN_attempts(void)
 {
 	if (cm_state == CMSTATE_ZONE_LOCKED)
@@ -384,7 +386,12 @@ int8_t cm_get_remaining_PIN_attempts(void)
 
 	uint8_t ret = cm_get_zone_index();
 	if (ret != CM_SUCCESS) {
-		return -1;
+		// retry with authentication reset
+		cm_deactivate_security();
+		ret = cm_get_zone_index();
+
+		if (ret != CM_SUCCESS)
+			return -1;
 	}
 
 	uint8_t PAC;
