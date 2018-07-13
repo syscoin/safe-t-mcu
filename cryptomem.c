@@ -432,6 +432,37 @@ int8_t cm_open_zone(uint32_t pw)
 	return CM_SUCCESS;
 }
 
+static int8_t cm_send_default_PW( void )
+{
+	int8_t ret = cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+	if (ret != CM_SUCCESS) {
+		/* could not open the zone by default PW */
+		cm_deactivate_security();
+		/* send default PW 3 more times to kill the zone */
+		cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+		cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+		cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+
+		zone_index = -1;
+		cm_activate_security();
+		return cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+	}
+	return ret;
+}
+
+int8_t cm_get_aes_key( uint8_t *key )
+{
+	if (key == NULL)
+		return CM_FAILED;
+
+	if(cm_state != CMSTATE_PW_ENTERED) {
+		return CM_FAILED;
+	}
+
+	cm_SetUserZone(zone_index, FALSE);
+	return cm_ReadUserZone( 0, key, 32);
+}
+
 
 static int8_t cm_write_key_to_user_zone( uint8_t *key)
 {
@@ -454,20 +485,15 @@ int8_t cm_initialize_new_zone( void )
 
 	if (cm_state == CMSTATE_AUTHENTICATED) {
 		// need to send password - try default one
-		ret = cm_VerifyPassword(default_pw, zone_index, CM_PWWRITE);
+		ret = cm_send_default_PW();
 		if (ret != CM_SUCCESS) {
-			/* could not open the zone by default PW */
-			// FIXME burn zone... and use next one
-			cm_deactivate_security();
-			while(1);
-			return CM_DEFAULT_Pw_NOK;
+			return CM_FAILED;
 		}
 		cm_state = CMSTATE_PW_ENTERED;
 	}
 
 	if (cm_state != CMSTATE_PW_ENTERED)
 		return CM_FAILED;
-
 
 	/* generate random AES256 key using hardware RNG */
 	uint8_t random_key[32];
@@ -481,6 +507,39 @@ int8_t cm_initialize_new_zone( void )
 
 	//FIXME set OTP?
 	return ret;
+
+}
+
+/*
+ * can be called only after the old (or default) password has been send and secure communication enabled
+ */
+int8_t cm_set_PIN(uint32_t pw)
+{
+	uint8_t ret;
+
+	/* we can only program if the current password has been send before */
+	if(cm_state != CMSTATE_PW_ENTERED) {
+
+		if (cm_state == CMSTATE_IDLE) {
+			ret = cm_activate_security();
+			if (ret != CM_SUCCESS) {
+				return CM_FAILED;
+			}
+			cm_state = CMSTATE_AUTHENTICATED;
+		}
+		// try the default PW
+		ret = cm_send_default_PW();
+		if (ret != CM_SUCCESS) {
+			return CM_FAILED;
+		}
+	}
+
+	uint8_t pin[3];
+	pin[0] =  pw      & 0xFF;
+	pin[1] = (pw>>8 ) & 0xFF;
+	pin[2] = (pw>>16) & 0xFF;
+
+	return cm_WriteConfigZone(CM_PSW_ADDR + (zone_index << 3) + 1, pin, 3, TRUE);
 }
 
 #endif /* CRYPTMEM */

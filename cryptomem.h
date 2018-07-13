@@ -22,6 +22,8 @@ void cm_init( void );
 uint8_t cm_get_seed_in_OTP(uint8_t *seed, uint8_t index );
 uint8_t cm_store_seed_in_OTP(uint8_t seed[4][8]);
 
+int8_t cm_get_aes_key( uint8_t *key );
+int8_t cm_set_PIN(uint32_t pw);
 int8_t cm_open_zone(uint32_t pw);
 int8_t cm_initialize_new_zone( void );
 int8_t cm_deactivate_security( void );

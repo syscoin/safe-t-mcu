@@ -60,10 +60,19 @@ typedef struct _Storage {
     uint32_t version;
 
     STORAGE_NODE   (node)
+#if CRYPTOMEM
+    STORAGE_STRING (mnemonic, 256) 	// we need a block size that is a multiple of AES_BLOCK_SIZE
+#else
     STORAGE_STRING (mnemonic, 241)
+#endif
     STORAGE_BOOL   (passphrase_protection)
-    STORAGE_UINT32 (pin_failed_attempts)
-    STORAGE_STRING (pin, 10)
+//    STORAGE_UINT32 (pin_failed_attempts)    - not in use anymore
+#if CRYPTOMEM
+	STORAGE_BOOL   (pin)
+	STORAGE_BOOL   (zone_is_initialized)
+#else
+	STORAGE_STRING (pin, 10)
+#endif
     STORAGE_STRING (language, 17)
     STORAGE_STRING (label, 33)
     STORAGE_BOOL   (imported)

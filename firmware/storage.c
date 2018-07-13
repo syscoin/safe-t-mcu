@@ -326,10 +326,15 @@ static void storage_commit_locked(bool update)
 		}
 		if (!storageUpdate.has_pin) {
 			storageUpdate.has_pin = storageRom->has_pin;
+#if CRYPTOMEM
+			storageUpdate.pin = storageRom->pin;
+#else
 			strlcpy(storageUpdate.pin, storageRom->pin, sizeof(storageUpdate.pin));
 		} else if (!storageUpdate.pin[0]) {
 			storageUpdate.has_pin = false;
+#endif
 		}
+
 		if (!storageUpdate.has_language) {
 			storageUpdate.has_language = storageRom->has_language;
 			strlcpy(storageUpdate.language, storageRom->language, sizeof(storageUpdate.language));
@@ -451,13 +456,13 @@ void storage_loadDevice(LoadDevice *msg)
 		storageUpdate.has_mnemonic = false;
 		storage_setNode(&(msg->node));
 		sessionSeedCached = false;
-		memset(&sessionSeed, 0, sizeof(sessionSeed));
+		memzero(&sessionSeed, sizeof(sessionSeed));
 	} else if (msg->has_mnemonic) {
 		storageUpdate.has_mnemonic = true;
 		storageUpdate.has_node = false;
 		strlcpy(storageUpdate.mnemonic, msg->mnemonic, sizeof(storageUpdate.mnemonic));
 		sessionSeedCached = false;
-		memset(&sessionSeed, 0, sizeof(sessionSeed));
+		memzero(&sessionSeed, sizeof(sessionSeed));
 	}
 
 	if (msg->has_language) {
@@ -524,6 +529,49 @@ static void get_root_node_callback(uint32_t iter, uint32_t total)
 	layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 
+// Generate an IV by hashing the key with sha256 and then encrypting the serial number of the MCU with it.
+static void storage_generate_essiv(const uint8_t secret[32], uint8_t essiv[32]) {
+	aes_encrypt_ctx enc_ctx;
+	uint8_t essiv_key[32], serial[32];
+	int i=0;
+
+	memset ( &enc_ctx, 0, sizeof(aes_decrypt_ctx));
+
+	sha256_Raw(secret, 32, essiv_key);
+
+	for (i = 0; i < 32 ; i++) {
+		serial[i] = *((uint8_t *)DESIG_UNIQUE_ID_BASE + (i%12));
+	}
+	aes_encrypt_key256(essiv_key, &enc_ctx);
+	aes_ecb_encrypt((const unsigned char *)serial, (unsigned char *)essiv, 32, &enc_ctx);
+
+	memzero( &enc_ctx, sizeof(aes_encrypt_ctx));
+	memzero( essiv_key, 32);
+
+}
+
+static void decode_mnemonic(const char *mnemonic_encrypted, char *mnemonic_decrypted)
+{
+	aes_decrypt_ctx dec_ctx;
+
+	memset ( &dec_ctx, 0, sizeof(aes_decrypt_ctx));
+
+	uint8_t secret[32], essiv[32];
+	cm_get_aes_key( secret );
+
+	// Use ESSIV generated from the MCUs serial number and the secret key used for encryption
+	storage_generate_essiv(secret, essiv);
+	aes_decrypt_key256(secret, &dec_ctx);
+	aes_cbc_decrypt((const unsigned char *)mnemonic_encrypted,
+			(unsigned char *)mnemonic_decrypted, sizeof(storageRom->mnemonic), essiv, &dec_ctx);
+
+	memzero( secret, 32);
+	memzero( essiv, 32);
+	memzero( &dec_ctx, sizeof(aes_decrypt_ctx));
+
+	mnemonic_decrypted[sizeof(storageRom->mnemonic) - 1] = 0; // force zero termination
+}
+
 const uint8_t *storage_getSeed(bool usePassphrase)
 {
 	// root node is properly cached
@@ -537,19 +585,28 @@ const uint8_t *storage_getSeed(bool usePassphrase)
 		if (usePassphrase && !protectPassphrase()) {
 			return NULL;
 		}
+#if CRYPTOMEM
+		char mnemonic[ sizeof(storageRom->mnemonic) ];
+		decode_mnemonic(storageRom->mnemonic, mnemonic );
+#else
+		const char *mnemonic = storageRom->mnemonic;
+#endif
 		// if storage was not imported (i.e. it was properly generated or recovered)
 		if (!storageRom->has_imported || !storageRom->imported) {
 			// test whether mnemonic is a valid BIP-0039 mnemonic
-			if (!mnemonic_check(storageRom->mnemonic)) {
+			if (!mnemonic_check(mnemonic)) {
 				// and if not then halt the device
 				storage_show_error();
 			}
 		}
 		char oldTiny = usbTiny(1);
-		mnemonic_to_seed(storageRom->mnemonic, usePassphrase ? sessionPassphrase : "", sessionSeed, get_root_node_callback); // BIP-0039
+		mnemonic_to_seed(mnemonic, usePassphrase ? sessionPassphrase : "", sessionSeed, get_root_node_callback); // BIP-0039
 		usbTiny(oldTiny);
 		sessionSeedCached = true;
 		sessionSeedUsesPassphrase = usePassphrase;
+#if CRYPTOMEM
+		memzero( mnemonic, sizeof(mnemonic));
+#endif
 		return sessionSeed;
 	}
 
@@ -617,10 +674,47 @@ const uint8_t *storage_getHomescreen(void)
 	return (storageRom->has_homescreen && storageRom->homescreen.size == 1024) ? storageRom->homescreen.bytes : 0;
 }
 
+#if CRYPTOMEM
+static bool encrypt_and_store_mnemonic(const char *mnemonic)
+{
+	if (!storageUpdate.zone_is_initialized) {
+		if (cm_initialize_new_zone() != CM_SUCCESS)
+			return false;
+	}
+	aes_encrypt_ctx ctx;
+	uint8_t secret[32], essiv[32];
+	if (cm_get_aes_key( secret ) != CM_SUCCESS)
+		return false;
+
+	aes_encrypt_key256(secret, &ctx);
+	// Use ESSIV generated from the MCUs serial number and the secret key used for encryption
+	storage_generate_essiv(secret, essiv);
+	// erase everything from the end of the string until the end of mnemonic memory
+	uint8_t mnemonic_plain[sizeof(storageUpdate.mnemonic)];
+	size_t len = strlen(mnemonic);
+	if (len >= sizeof(storageUpdate.mnemonic))
+		return false; // should never happen...
+	memcpy(mnemonic_plain, mnemonic, len);
+	memzero( mnemonic_plain + len, sizeof(storageUpdate.mnemonic) - len);
+	aes_cbc_encrypt((const unsigned char *)mnemonic_plain,
+			(unsigned char *)storageUpdate.mnemonic, sizeof(storageUpdate.mnemonic), essiv, &ctx);
+	memzero( secret, 32);
+	memzero( essiv, 32);
+	memzero( &ctx, sizeof(aes_encrypt_ctx));
+	memzero( mnemonic_plain, sizeof(mnemonic_plain));
+	return true;
+}
+#endif
+
 void storage_setMnemonic(const char *mnemonic)
 {
 	storageUpdate.has_mnemonic = true;
+#if CRYPTOMEM
+	if (!encrypt_and_store_mnemonic(mnemonic))
+		storageUpdate.has_mnemonic = false; // something went wrong
+#else
 	strlcpy(storageUpdate.mnemonic, mnemonic, sizeof(storageUpdate.mnemonic));
+#endif
 }
 
 bool storage_hasNode(void)
@@ -655,11 +749,36 @@ bool storage_containsMnemonic(const char *mnemonic) {
 	return diff == 0;
 }
 
+static uint32_t PinStringToHex(const char *pin)
+{
+	uint32_t pw;
+
+	if (pin[0] == 0) {
+		// empty PIN
+		pw = CM_DEFAULT_PW;
+	} else {
+		char * endptr = NULL;
+		// convert PIN string into binary number
+		pw = strtol( pin, &endptr, 10);
+		if (endptr != NULL && *endptr == '\0') {
+			/* conversion from string to hex successful */
+			pw &= 0xFFFFFF;
+		} else
+			pw = CM_DEFAULT_PW; //something is wrong, use empty PW
+	}
+	return pw;
+}
+
 /* Check whether pin matches storage.  The pin must be
  * a null-terminated string with at most 9 characters.
  */
 bool storage_containsPin(const char *pin)
 {
+#if CRYPTOMEM
+	uint32_t pw = PinStringToHex(pin);
+
+	return (cm_open_zone( pw ) == CM_SUCCESS);
+#else
 	/* The execution time of the following code only depends on the
 	 * (public) input.  This avoids timing attacks.
 	 */
@@ -671,17 +790,34 @@ bool storage_containsPin(const char *pin)
 	}
 	diff |= storageRom->pin[i];
 	return diff == 0;
+#endif
 }
 
 bool storage_hasPin(void)
 {
+#if CRYPTOMEM
+	return storageRom->has_pin && storageRom->pin;
+#else
 	return storageRom->has_pin && storageRom->pin[0] != 0;
+#endif
 }
 
 void storage_setPin(const char *pin)
 {
 	storageUpdate.has_pin = true;
+#if CRYPTOMEM
+	uint32_t pw = PinStringToHex(pin);
+
+	// empty PIN ?
+	storageUpdate.pin = !(pw == CM_DEFAULT_PW);
+
+
+	if (cm_set_PIN(pw) != CM_SUCCESS)
+		storageUpdate.has_pin = false; // did not work
+	cm_deactivate_security();
+#else
 	strlcpy(storageUpdate.pin, pin, sizeof(storageUpdate.pin));
+#endif
 	sessionPinCached = false;
 
 }
@@ -769,6 +905,9 @@ static void storage_area_recycle(uint32_t new_pinfails)
 
 void storage_resetPinFails(uint32_t flash_pinfails)
 {
+#if CRYPTOMEM
+	(void)flash_pinfails;
+#else
 	svc_flash_unlock();
 	if (flash_pinfails + sizeof(uint32_t)
 		>= FLASH_STORAGE_PINAREA + FLASH_STORAGE_PINAREA_LEN) {
@@ -779,6 +918,7 @@ void storage_resetPinFails(uint32_t flash_pinfails)
 		flash_write32(flash_pinfails, 0);
 	}
 	storage_check_flash_errors(svc_flash_lock());
+#endif
 }
 
 bool storage_increasePinFails(uint32_t flash_pinfails)
