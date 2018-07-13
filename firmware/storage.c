@@ -1002,13 +1002,9 @@ void storage_resetPinFails(uint32_t flash_pinfails)
 #endif
 }
 
+#if !CRYPTOMEM
 bool storage_increasePinFails(uint32_t flash_pinfails)
 {
-#if CRYPTOMEM
-	(void)flash_pinfails;
-	// PinFails is increased inside the cryptomem already
-	return (cm_get_remaining_PIN_attempts() > 0);
-#else
 	uint32_t newctr = *(const uint32_t*)FLASH_PTR(flash_pinfails) << 1;
 	// counter already at maximum, we do not increase it any more
 	// return success so that a good pin is accepted
@@ -1021,8 +1017,8 @@ bool storage_increasePinFails(uint32_t flash_pinfails)
 	storage_check_flash_errors(svc_flash_lock());
 
 	return *(const uint32_t*)FLASH_PTR(flash_pinfails) == newctr;
-#endif
 }
+#endif
 
 #if CRYPTOMEM
 uint32_t storage_getPinRemainingAttempts(void)
