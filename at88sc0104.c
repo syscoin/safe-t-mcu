@@ -7,6 +7,21 @@
  * Flavio D. Garcia, Peter van Rossum, Roel Verdult, Ronny Wichers Schreur:
  * "Dismantling SecureMemory, CryptoMemory and Crypto". https://eprint.iacr.org/2010/169.pdf and
  * https://www.esat.kuleuven.be/cosic/publications/article-2113.pdf)
+ *
+ *
+ * The chip is connected by 2 GPIOs. It does something similar to I2C, but we use bit banging nevertheless
+ *
+ * Communication with the chip is done after an authentication step (the common secret is call "seed" and is stored
+ * inside the chip during production - a copy needs to be kept). This works by synchronizing the state machine
+ * (stored in Gpa) to the one inside the chip. A random number is used to make the communication unpredictable.
+ * All communication can be encrypted after the authentication is done (and should of course).
+ * Access to one of the 4 user zones is protected by a 24bit password. Any attempt with a wrong password will decrease
+ * a counter. After 4 failed attempts, the chip locks the zone with no way to recover. Successful attempts restore
+ * the counter to 4.
+ *
+ * The user zone can store 32 bytes of data.
+ *
+ * See the data sheet for details.
  * */
 #if CRYPTOMEM
 #include <stdint.h>
@@ -623,7 +638,9 @@ uint8_t cm_ReadUserZone(uint8_t CryptoAddr, uint8_t * Buffer, uint8_t Count)
 
 // write user space
 // cm_WriteUserZone device for writing user space less than 256 Bytes (at88sc0104)
-
+//
+// without anti-tearing, 16 bytes max.
+// and with anti-tearing 8 bytes max!
 uint8_t cm_WriteUserZone(uint8_t CryptoAddr, const uint8_t * Buffer, uint8_t Count)
 {
 	uint8_t Return;

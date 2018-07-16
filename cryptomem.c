@@ -3,6 +3,18 @@
  *
  * High level functions
  *
+ * We use the cryptomem to implement a hardware way to check the PIN. After the user has entered the PIN
+ * correctly, the secret AES key will become accessible. It can be used to encrypt/decrypt secrets stored in flash memory
+ *
+ * Access to the cryptomem requires authentication through a common secret. This secret "seed" is available for each
+ * of the 4 zones of the chip and is stored in the OTP area of the MCU during production to tie the cryptomem to the
+ * board and MCU.
+ *
+ * Note that there is no way to access the memory without PIN. So "no PIN" means the default PIN (0xFFFFFF). It needs to
+ * be presented to the cryptome before being able to do any operations.
+ *
+ * If the cryptomem password access counter reaches 0, because the PIN was entered wrong 4 times, it will lock the user zone
+ * for good. As there are 4 zones only, be careful.
  */
 #if CRYPTOMEM
 #include <stdint.h>
