@@ -194,9 +194,12 @@ static const CoinInfo *fsm_getCoin(bool has_name, const char *name)
 	return coin;
 }
 
-static HDNode *fsm_getDerivedNode(const char *curve, const uint32_t *address_n, size_t address_n_count)
+static HDNode *fsm_getDerivedNode(const char *curve, const uint32_t *address_n, size_t address_n_count, uint32_t *fingerprint)
 {
 	static CONFIDENTIAL HDNode node;
+	if (fingerprint) {
+		*fingerprint = 0;
+	}
 	if (!storage_getRootNode(&node, curve, true)) {
 		fsm_sendFailure(FailureType_Failure_NotInitialized, _("Device not initialized or passphrase request cancelled or unsupported curve"));
 		layoutHome();
@@ -205,7 +208,7 @@ static HDNode *fsm_getDerivedNode(const char *curve, const uint32_t *address_n, 
 	if (!address_n || address_n_count == 0) {
 		return &node;
 	}
-	if (hdnode_private_ckd_cached(&node, address_n, address_n_count, NULL) == 0) {
+	if (hdnode_private_ckd_cached(&node, address_n, address_n_count, fingerprint) == 0) {
 		fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to derive private key"));
 		layoutHome();
 		return 0;
@@ -234,9 +237,14 @@ void fsm_msgInitialize(Initialize *msg)
 {
 	recovery_abort();
 	signing_abort();
-	if (msg->has_state && msg->state.size == 64) {
-		if (!session_compareState(msg->state.bytes)) {
+	if (msg && msg->has_state && msg->state.size == 64) {
+		uint8_t i_state[64];
+		if (!session_getState(msg->state.bytes, i_state, NULL)) {
 			session_clear(false); // do not clear PIN
+		} else {
+			if (0 != memcmp(msg->state.bytes, i_state, 64)) {
+				session_clear(false); // do not clear PIN
+			}
 		}
 	} else {
 		session_clear(false); // do not clear PIN
@@ -306,7 +314,6 @@ void fsm_msgGetFeatures(GetFeatures *msg)
 	resp->has_needs_backup = true; resp->needs_backup = storage_needsBackup();
 	resp->has_flags = true; resp->flags = storage_getFlags();
 	resp->has_model = true; strlcpy(resp->model, "1", sizeof(resp->model));
-	resp->has_state = true; resp->state.size = 64; session_getState(NULL, resp->state.bytes);
 
 	msg_write(MessageType_MessageType_Features, resp);
 }
@@ -435,19 +442,8 @@ void fsm_msgGetPublicKey(GetPublicKey *msg)
 		curve = msg->ecdsa_curve_name;
 	}
 	uint32_t fingerprint;
-	HDNode *node;
-	if (msg->address_n_count == 0) {
-		/* get master node */
-		fingerprint = 0;
-		node = fsm_getDerivedNode(curve, msg->address_n, 0);
-	} else {
-		/* get parent node */
-		node = fsm_getDerivedNode(curve, msg->address_n, msg->address_n_count - 1);
-		if (!node) return;
-		fingerprint = hdnode_fingerprint(node);
-		/* get child */
-		hdnode_private_ckd(node, msg->address_n[msg->address_n_count - 1]);
-	}
+	HDNode *node = node = fsm_getDerivedNode(curve, msg->address_n, msg->address_n_count, &fingerprint);
+	if (!node) return;
 	hdnode_fill_public_key(node);
 
 	if (msg->has_show_display && msg->show_display) {
@@ -541,7 +537,7 @@ void fsm_msgSignTx(SignTx *msg)
 
 	const CoinInfo *coin = fsm_getCoin(msg->has_coin_name, msg->coin_name);
 	if (!coin) return;
-	const HDNode *node = fsm_getDerivedNode(coin->curve_name, 0, 0);
+	const HDNode *node = fsm_getDerivedNode(coin->curve_name, NULL, 0, NULL);
 	if (!node) return;
 
 	signing_init(msg->inputs_count, msg->outputs_count, coin, node, msg->version, msg->lock_time);
@@ -569,7 +565,7 @@ void fsm_msgEthereumSignTx(EthereumSignTx *msg)
 
 	CHECK_PIN
 
-	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	ethereum_signing_init(msg, node);
@@ -590,7 +586,7 @@ void fsm_msgCipherKeyValue(CipherKeyValue *msg)
 
 	CHECK_PIN
 
-	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	bool encrypt = msg->has_encrypt && msg->encrypt;
@@ -785,7 +781,7 @@ void fsm_msgGetAddress(GetAddress *msg)
 
 	const CoinInfo *coin = fsm_getCoin(msg->has_coin_name, msg->coin_name);
 	if (!coin) return;
-	HDNode *node = fsm_getDerivedNode(coin->curve_name, msg->address_n, msg->address_n_count);
+	HDNode *node = fsm_getDerivedNode(coin->curve_name, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 	hdnode_fill_public_key(node);
 
@@ -840,7 +836,7 @@ void fsm_msgEthereumGetAddress(EthereumGetAddress *msg)
 
 	CHECK_PIN
 
-	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	resp->address.size = 20;
@@ -879,7 +875,7 @@ void fsm_msgEthereumSignMessage(EthereumSignMessage *msg)
 
 	CHECK_PIN
 
-	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	ethereum_message_sign(msg, node, resp);
@@ -941,7 +937,7 @@ void fsm_msgSignMessage(SignMessage *msg)
 
 	const CoinInfo *coin = fsm_getCoin(msg->has_coin_name, msg->coin_name);
 	if (!coin) return;
-	HDNode *node = fsm_getDerivedNode(coin->curve_name, msg->address_n, msg->address_n_count);
+	HDNode *node = fsm_getDerivedNode(coin->curve_name, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	layoutProgressSwipe(_("Signing"), 0);
@@ -1023,7 +1019,7 @@ void fsm_msgSignIdentity(SignIdentity *msg)
 	if (msg->has_ecdsa_curve_name) {
 		curve = msg->ecdsa_curve_name;
 	}
-	HDNode *node = fsm_getDerivedNode(curve, address_n, 5);
+	HDNode *node = fsm_getDerivedNode(curve, address_n, 5, NULL);
 	if (!node) return;
 
 	bool sign_ssh = msg->identity.has_proto && (strcmp(msg->identity.proto, "ssh") == 0);
@@ -1100,7 +1096,7 @@ void fsm_msgGetECDHSessionKey(GetECDHSessionKey *msg)
 		curve = msg->ecdsa_curve_name;
 	}
 
-	const HDNode *node = fsm_getDerivedNode(curve, address_n, 5);
+	const HDNode *node = fsm_getDerivedNode(curve, address_n, 5, NULL);
 	if (!node) return;
 
 	int result_size = 0;
@@ -1136,7 +1132,7 @@ void fsm_msgEncryptMessage(EncryptMessage *msg)
 
 		CHECK_PIN
 
-		node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+		node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 		if (!node) return;
 		hdnode_get_address_raw(node, coin->address_type, address_raw);
 	}
@@ -1173,7 +1169,7 @@ void fsm_msgDecryptMessage(DecryptMessage *msg)
 
 	CHECK_PIN
 
-	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(SECP256K1_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	layoutProgressSwipe(_("Decrypting"), 0);
@@ -1215,6 +1211,13 @@ void fsm_msgRecoveryDevice(RecoveryDevice *msg)
 	}
 
 	CHECK_PARAM(!msg->has_word_count || msg->word_count == 12 || msg->word_count == 18 || msg->word_count == 24, _("Invalid word count"));
+
+	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("recover the device?"), NULL, NULL, NULL, NULL);
+	if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
+		fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
+		layoutHome();
+		return;
+	}
 
 	recovery_init(
 		msg->has_word_count ? msg->word_count : 12,
@@ -1262,7 +1265,7 @@ void fsm_msgNEMGetAddress(NEMGetAddress *msg)
 
 	RESP_INIT(NEMAddress);
 
-	HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->address_n, msg->address_n_count);
+	HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	if (!hdnode_get_nem_address(node, msg->network, resp->address))
@@ -1335,7 +1338,7 @@ void fsm_msgNEMSignTx(NEMSignTx *msg) {
 
 	RESP_INIT(NEMSignedTx);
 
-	HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->transaction.address_n, msg->transaction.address_n_count);
+	HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->transaction.address_n, msg->transaction.address_n_count, NULL);
 	if (!node) return;
 
 	hdnode_fill_public_key(node);
@@ -1499,7 +1502,7 @@ void fsm_msgNEMDecryptMessage(NEMDecryptMessage *msg)
 
 	CHECK_PIN
 
-	HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(ED25519_KECCAK_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	const uint8_t *salt = msg->payload.bytes;
@@ -1553,7 +1556,7 @@ void fsm_msgCosiCommit(CosiCommit *msg)
 
 	CHECK_PIN
 
-	HDNode *node = fsm_getDerivedNode(ED25519_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(ED25519_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	uint8_t nonce[32];
@@ -1593,7 +1596,7 @@ void fsm_msgCosiSign(CosiSign *msg)
 
 	CHECK_PIN
 
-	HDNode *node = fsm_getDerivedNode(ED25519_NAME, msg->address_n, msg->address_n_count);
+	const HDNode *node = fsm_getDerivedNode(ED25519_NAME, msg->address_n, msg->address_n_count, NULL);
 	if (!node) return;
 
 	uint8_t nonce[32];
