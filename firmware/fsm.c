@@ -403,9 +403,15 @@ void fsm_msgChangePin(ChangePin *msg)
 
 void fsm_msgWipeDevice(WipeDevice *msg)
 {
-	(void)msg;
 #if CRYPTOMEM
-	CHECK_PIN_UNCACHED
+	bool force = msg->has_force && msg->force;
+	if (!force) {
+		CHECK_PIN
+	}
+	if (force && storage_hasPin() && !session_isPinCached())
+		layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("wipe the device?"),
+					_("All data and one zone"), _("of the secure store"), _("will be lost."), NULL);
+	else
 #endif
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("wipe the device?"), NULL, _("All data will be lost."), NULL, NULL);
 	if (!protectButton(ButtonRequestType_ButtonRequest_WipeDevice, false)) {
