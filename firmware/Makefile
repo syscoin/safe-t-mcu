@@ -1,19 +1,14 @@
 APPVER = 1.0.0
 
-ifeq ($(FASTFLASH),1)
-OBJS += fastflash.o
-OBJS += bootloader.o
-endif
-
 NAME  = trezor
 
 ifeq ($(EMULATOR),1)
 OBJS += udp.o
 else
 OBJS += usb.o
+OBJS += bl_check.o
 endif
 
-OBJS += bl_check.o
 OBJS += u2f.o
 OBJS += messages.o
 OBJS += storage.o
@@ -21,6 +16,7 @@ OBJS += trezor.o
 OBJS += pinmatrix.o
 OBJS += fsm.o
 OBJS += coins.o
+OBJS += coin_info.o
 OBJS += transaction.o
 OBJS += protect.o
 OBJS += layout2.o
@@ -87,12 +83,6 @@ OBJS += protob/types.pb.o
 
 include ../Makefile.include
 
-ifeq ($(FASTFLASH),1)
-CFLAGS += -DFASTFLASH=1
-else
-CFLAGS += -DFASTFLASH=0
-endif
-
 DEBUG_LINK ?= 0
 DEBUG_LOG  ?= 0
 DEBUG_GDB  ?= 0
@@ -107,26 +97,21 @@ CFLAGS += -DSCM_REVISION='"$(shell git rev-parse HEAD | sed 's:\(..\):\\x\1:g')"
 CFLAGS += -DUSE_ETHEREUM=1
 CFLAGS += -DUSE_NEM=1
 
-bootloader.o: ../fastflash/bootloader.bin
-	$(OBJCOPY) -I binary -O elf32-littlearm -B arm \
-		--redefine-sym _binary_$(shell echo -n "$<" | tr -c "[:alnum:]" "_")_start=__bootloader_start__ \
-		--redefine-sym _binary_$(shell echo -n "$<" | tr -c "[:alnum:]" "_")_size=__bootloader_size__ \
-		--rename-section .data=.rodata \
-		$< $@
+define GENERATE_CODE
+# $(1) - Basename for script and output header file
+# $(2) - Dependencies
+# $(3) - Additional output files
 
-coins_count.h: coins-gen.py coins.json
-	$(PYTHON) $< count > $@
+$(1).h $(3): $(1).py $(2)
+	$(PYTHON) $(1).py
 
-coins_array.h: coins-gen.py coins.json
-	$(PYTHON) $< array > $@
-
-nem_mosaics.c nem_mosaics.h: nem_mosaics.py nem_mosaics.json
-	$(PYTHON) $<
-
-bl_data.h: bl_data-gen.py ../bootloader/bootloader.bin
-	$(PYTHON) $<
+# Serialize build for parallel Make
+$(1).h: $(3)
 
 clean::
-	rm -f coins_count.h coins_array.h
-	rm -f nem_mosaics.c nem_mosaics.h
-	rm -f bl_data.h
+	rm -f $(1).h $(3)
+endef
+
+$(eval $(call GENERATE_CODE,coin_info,coins.json,coin_info.c))
+$(eval $(call GENERATE_CODE,nem_mosaics,nem_mosaics.json,nem_mosaics.c))
+$(eval $(call GENERATE_CODE,bl_data,../bootloader/bootloader.bin))
