@@ -17,6 +17,7 @@ class Img(object):
             return '1'
         if p == (255, 0, 255):
             return None
+        print("Bad Pixel: x = " + str(r) + " y = " + str(c))
         raise Exception('Unknown color', p)
 
 
@@ -24,7 +25,7 @@ def convert(imgfile, outfile):
     img = Img(imgfile)
     cur = ''
     with open(outfile, 'w') as f:
-        for i in range(128):
+        for i in range(256):
             x = (i % 16) * 10
             y = (i // 16) * 10
             cur = ''

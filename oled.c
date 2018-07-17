@@ -264,25 +264,29 @@ void oledDrawChar(int x, int y, char c, int font)
 	}
 }
 
-char oledConvertChar(const char c) {
-	uint8_t a = c;
-	if (a < 0x80) return c;
-	// UTF-8 handling: https://en.wikipedia.org/wiki/UTF-8#Description
-	// bytes 11xxxxxx are first byte of UTF-8 characters
-	// bytes 10xxxxxx are successive UTF-8 characters
-	if (a >= 0xC0) return '_';
-	return 0;
+static char oledGetConvertChar(const char **text) {
+	char c = 0;
+	/* convert UTF-8 2 char characters into Latin1 char */
+	if ((**text & 0xE0) == 0xC0 && *(*text + 1)) {
+		c = (**text & 0x1F) << 6;
+		(*text)++;
+		c |= **text & 0x3F;
+	} else if ((**text & 0x80) == 0)
+		c = **text;
+	(*text)++;
+	return c;
 }
 
 int oledStringWidth(const char *text, int font) {
 	if (!text) return 0;
 	int size = (font & FONT_DOUBLE ? 2 : 1);
 	int l = 0;
-	for (; *text; text++) {
-		char c = oledConvertChar(*text);
+	while(1) {
+		char c = oledGetConvertChar(&text);
 		if (c) {
 			l += size * (fontCharWidth(font & 0x7f, c) + 1);
-		}
+		} else
+			break;
 	}
 	return l;
 }
@@ -292,12 +296,14 @@ void oledDrawString(int x, int y, const char* text, int font)
 	if (!text) return;
 	int l = 0;
 	int size = (font & FONT_DOUBLE ? 2 : 1);
-	for (; *text; text++) {
-		char c = oledConvertChar(*text);
+	while(1) {
+		char c = oledGetConvertChar(&text);
 		if (c) {
 			oledDrawChar(x + l, y, c, font);
 			l += size * (fontCharWidth(font & 0x7f, c) + 1);
 		}
+		else
+			break;
 	}
 }
 
