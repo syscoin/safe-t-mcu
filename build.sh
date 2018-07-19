@@ -15,26 +15,22 @@ FIRMWARE_ELFFILE=build/trezor-$FIRMWARE_TAG.elf
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd /tmp && \
-	git clone https://github.com/trezor/trezor-mcu.git trezor-mcu-bl && \
-	cd trezor-mcu-bl && \
+	git clone https://github.com/archos-safe-t/safe-t-mcu.git safe-t-mcu-bl && \
+	cd safe-t-mcu-bl && \
 	git checkout $BOOTLOADER_TAG && \
 	git submodule update --init --recursive && \
-	make -C vendor/libopencm3 && \
-	make && \
+	make bootloader MEMORY_PROTECT=1 && \
 	make -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
-	git clone https://github.com/trezor/trezor-mcu.git trezor-mcu-fw && \
-	cd trezor-mcu-fw && \
+	git clone https://github.com/archos-safe-t/safe-t-mcu.git archos-safe-t-mcu-fw && \
+	cd archos-safe-t-mcu-fw && \
 	git checkout $FIRMWARE_TAG && \
 	git submodule update --init --recursive && \
-	make -C vendor/libopencm3 && \
-	make -C vendor/nanopb/generator/proto && \
-	make -C firmware/protob && \
-	make && \
-	cp /tmp/trezor-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin
-	make -C firmware sign && \
+	make firmware MEMORY_PROTECT=1 && \
+	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
+	make -C firmware sign MEMORY_PROTECT=1 && \
 	cp firmware/trezor.bin /$FIRMWARE_BINFILE && \
 	cp firmware/trezor.elf /$FIRMWARE_ELFFILE
 	"
