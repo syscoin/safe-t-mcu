@@ -399,7 +399,7 @@ void fsm_msgChangePin(ChangePin *msg)
 		storage_update();
 		fsm_sendSuccess(_("PIN removed"));
 	} else {
-		if (protectChangePin()) {
+		if (protectChangePin(NULL, 0)) {
 			fsm_sendSuccess(_("PIN changed"));
 		} else {
 			fsm_sendFailure(FailureType_Failure_PinMismatch, NULL);

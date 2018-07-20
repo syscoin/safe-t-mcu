@@ -35,6 +35,8 @@ static uint32_t strength;
 static uint8_t  int_entropy[32];
 static bool     awaiting_entropy = false;
 static bool     skip_backup = false;
+static CONFIDENTIAL char changed_pin[17];
+static bool		deferred_set_pin = false;
 
 void reset_init(bool display_random, uint32_t _strength, bool passphrase_protection, bool pin_protection, const char *language, const char *label, uint32_t u2f_counter, bool _skip_backup)
 {
@@ -60,10 +62,16 @@ void reset_init(bool display_random, uint32_t _strength, bool passphrase_protect
 		}
 	}
 
-	if (pin_protection && !protectChangePin()) {
-		fsm_sendFailure(FailureType_Failure_PinMismatch, NULL);
-		layoutHome();
-		return;
+	deferred_set_pin = false;
+
+	if (pin_protection) {
+		if (protectChangePin(changed_pin, sizeof(changed_pin))) {
+			deferred_set_pin = true;
+		} else {
+			fsm_sendFailure(FailureType_Failure_PinMismatch, NULL);
+			layoutHome();
+			return;
+		}
 	}
 
 	storage_setPassphraseProtection(passphrase_protection);
@@ -102,6 +110,11 @@ void reset_entropy(const uint8_t *ext_entropy, uint32_t len)
 		return;
 	}
 	if (skip_backup) {
+		if (deferred_set_pin) {
+			storage_setPin(changed_pin);
+			memzero(changed_pin, sizeof(changed_pin));
+			deferred_set_pin = false;
+		}
 		storage_update();
 		fsm_sendSuccess(_("Device successfully initialized"));
 		layoutHome();
@@ -170,6 +183,11 @@ void reset_backup(bool separated)
 	if (separated) {
 		fsm_sendSuccess(_("Seed successfully backed up"));
 	} else {
+		if (deferred_set_pin) {
+			storage_setPin(changed_pin);
+			memzero(changed_pin, sizeof(changed_pin));
+			deferred_set_pin = false;
+		}
 		storage_update();
 		fsm_sendSuccess(_("Device successfully initialized"));
 	}

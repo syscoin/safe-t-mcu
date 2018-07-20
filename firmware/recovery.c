@@ -50,6 +50,15 @@ static int awaiting_word = 0;
  */
 static bool dry_run;
 
+/* The pin is entered at the beginning, but it only
+ * makes sense to store it permanently at the end of the
+ * operation, so store it here temporarily and apply
+ * together with the seed when everything is done and confirmed
+ */
+
+static CONFIDENTIAL char changed_pin[17];
+static bool		deferred_set_pin = false;
+
 /* True if we should check that seed corresponds to bip39.
  */
 static bool enforce_wordlist;
@@ -178,6 +187,11 @@ static void recovery_done(void) {
 			if (!enforce_wordlist) {
 				// not enforcing => mark storage as imported
 				storage_setImported(true);
+			}
+			if (deferred_set_pin) {
+				storage_setPin(changed_pin);
+				memzero(changed_pin, sizeof(changed_pin));
+				deferred_set_pin = false;
 			}
 			storage_update();
 			fsm_sendSuccess(_("Device recovered"));
@@ -463,11 +477,18 @@ void recovery_init(uint32_t _word_count, bool passphrase_protection, bool pin_pr
 	enforce_wordlist = _enforce_wordlist;
 	dry_run = _dry_run;
 
+	deferred_set_pin = false;
+
 	if (!dry_run) {
-		if (pin_protection && !protectChangePin()) {
-			fsm_sendFailure(FailureType_Failure_PinMismatch, NULL);
-			layoutHome();
-			return;
+
+		if (pin_protection) {
+			if (protectChangePin(changed_pin, sizeof(changed_pin))) {
+				deferred_set_pin = true;
+			} else {
+				fsm_sendFailure(FailureType_Failure_PinMismatch, NULL);
+				layoutHome();
+				return;
+			}
 		}
 
 		storage_setPassphraseProtection(passphrase_protection);

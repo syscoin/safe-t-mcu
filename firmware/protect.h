@@ -25,7 +25,7 @@
 
 bool protectButton(ButtonRequestType type, bool confirm_only);
 bool protectPin(bool use_cached);
-bool protectChangePin(void);
+bool protectChangePin(char *changed_pin, size_t changed_pin_size);
 bool protectPassphrase(void);
 
 extern bool protectAbortedByInitialize;

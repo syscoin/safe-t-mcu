@@ -270,9 +270,17 @@ bool protectPin(bool use_cached)
 	}
 }
 
-bool protectChangePin(void)
+/*
+ * Ask user for pin. If confirmed, either set it directly
+ * or if a buffer is provided, store in buffer to allow the
+ * caller to handle setting the pin
+ */
+bool protectChangePin(char *changed_pin, size_t changed_pin_size)
 {
 	static CONFIDENTIAL char pin_compare[17];
+
+	if (changed_pin && changed_pin_size < sizeof(pin_compare))
+		return false;
 
 	const char *pin = requestPin(PinMatrixRequestType_PinMatrixRequestType_NewFirst, _("Please enter new PIN:"));
 
@@ -287,8 +295,12 @@ bool protectChangePin(void)
 	const bool result = pin && (strncmp(pin_compare, pin, sizeof(pin_compare)) == 0);
 
 	if (result) {
-		storage_setPin(pin_compare);
-		storage_update();
+		if (changed_pin) {
+			strlcpy( changed_pin, pin, changed_pin_size);
+		} else {
+			storage_setPin(pin_compare);
+			storage_update();
+		}
 	}
 
 	memzero(pin_compare, sizeof(pin_compare));
