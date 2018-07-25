@@ -118,7 +118,9 @@ int main(void)
 	storage_init();
 	layoutHome();
 
+#ifdef APPVER
 	setupUSB();
+#endif
 	usbInit();
 	for (;;) {
 		usbPoll();

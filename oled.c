@@ -468,6 +468,7 @@ void oledChangeBrightness(uint8_t brightness_level)
 
 static void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom)
 {
+#if !EMULATOR
 	uint8_t s[6] = {
 		OLED_SETCONTRAST,
 		contrast,
@@ -483,6 +484,10 @@ static void oledSetBrightness(uint8_t contrast, uint8_t precharge, uint8_t vcom)
 	gpio_clear(OLED_CS_PORT, OLED_CS_PIN);		// SPI select
 	SPISend(SPI_BASE, s, 6);
 	gpio_set(OLED_CS_PORT, OLED_CS_PIN);		// SPI deselect
-
+#else
+	(void)contrast;
+	(void)precharge;
+	(void)vcom;
+#endif
 	oledRefresh();
 }

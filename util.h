@@ -92,6 +92,9 @@ static inline int check_mode_priviledged(void)
 
 	return (!(result & 0x1));
 }
+#else
+static inline void set_mode_unprivileged(void){}
+static inline int check_mode_priviledged(void){ return 1; }
 #endif
 
 #endif

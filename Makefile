@@ -27,7 +27,9 @@ OBJS += gen/fonts.o
 
 ALL: firmware
 
+ifneq ($(EMULATOR),1)
 $(OBJS): libopencm3
+endif
 
 libtrezor.a: $(OBJS)
 	$(AR) rcs libtrezor.a $(OBJS)
@@ -48,6 +50,12 @@ firmware_protob: nanopb
 firmware: firmware_protob bootloader libtrezor.a
 	$(MAKE) -C firmware sign
 
+emulator/libemulator.a:
+	EMULATOR=1 $(MAKE) -C emulator
+
+emulator: firmware_protob libtrezor.a emulator/libemulator.a
+	EMULATOR=1 $(MAKE) -C firmware
+
 bootloader/bootloader.bin: libtrezor.a
 	$(MAKE) -C bootloader align
 
@@ -56,6 +64,7 @@ bootloader: bootloader/bootloader.bin
 mostlyclean: clean
 	$(MAKE) -C bootloader clean
 	$(MAKE) -C firmware clean
+	$(MAKE) -C emulator clean
 
 allclean: mostlyclean
 	$(MAKE) -C vendor/libopencm3 clean
