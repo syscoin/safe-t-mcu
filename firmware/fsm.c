@@ -419,6 +419,8 @@ void fsm_msgWipeDevice(WipeDevice *msg)
 		layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("wipe the device?"),
 					_("All data and one zone"), _("of the secure store"), _("will be lost."), NULL);
 	else
+#else
+        (void)msg;
 #endif
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to"), _("wipe the device?"), NULL, _("All data will be lost."), NULL, NULL);
 	if (!protectButton(ButtonRequestType_ButtonRequest_WipeDevice, false)) {

@@ -579,6 +579,7 @@ static void get_root_node_callback(uint32_t iter, uint32_t total)
 	layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 
+#if CRYPTOMEM
 // Generate an IV by hashing the key with sha256 and then encrypting the serial number of the MCU with it.
 static void storage_generate_essiv(const uint8_t secret[32], uint8_t essiv[32]) {
 	aes_encrypt_ctx enc_ctx;
@@ -625,6 +626,7 @@ static void decode_mnemonic(const char *mnemonic_encrypted, char *mnemonic_decry
 
 	mnemonic_decrypted[sizeof(storageRom->mnemonic) - 1] = 0; // force zero termination
 }
+#endif
 
 const uint8_t *storage_getSeed(bool usePassphrase)
 {
@@ -799,6 +801,7 @@ const char *storage_getMnemonic(char * decoded_mnemonic)
 	}
 	return NULL;
 #else
+	(void)decoded_mnemonic;
 	return mnemonic;
 #endif
 }
@@ -829,6 +832,7 @@ bool storage_containsMnemonic(const char *mnemonic) {
 	return diff == 0;
 }
 
+#if CRYPTOMEM
 static uint32_t PinStringToHex(const char *pin)
 {
 	uint32_t pw;
@@ -848,6 +852,7 @@ static uint32_t PinStringToHex(const char *pin)
 	}
 	return pw;
 }
+#endif
 
 /* Check whether pin matches storage.  The pin must be
  * a null-terminated string with at most 9 characters.
