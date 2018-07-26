@@ -9,8 +9,8 @@ FIRMWARE_TAG=${2:-master}
 BOOTLOADER_BINFILE=build/bootloader-$BOOTLOADER_TAG.bin
 BOOTLOADER_ELFFILE=build/bootloader-$BOOTLOADER_TAG.elf
 
-FIRMWARE_BINFILE=build/trezor-$FIRMWARE_TAG.bin
-FIRMWARE_ELFFILE=build/trezor-$FIRMWARE_TAG.elf
+FIRMWARE_BINFILE=build/safet-$FIRMWARE_TAG.bin
+FIRMWARE_ELFFILE=build/safet-$FIRMWARE_TAG.elf
 
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
