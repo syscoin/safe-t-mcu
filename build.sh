@@ -28,9 +28,9 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd archos-safe-t-mcu-fw && \
 	git checkout $FIRMWARE_TAG && \
 	git submodule update --init --recursive && \
-	make firmware MEMORY_PROTECT=1 && \
+	make firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
-	make -C firmware sign MEMORY_PROTECT=1 && \
+	make -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp firmware/trezor.bin /$FIRMWARE_BINFILE && \
 	cp firmware/trezor.elf /$FIRMWARE_ELFFILE
 	"
