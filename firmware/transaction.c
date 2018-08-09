@@ -422,6 +422,10 @@ uint32_t tx_serialize_header(TxStruct *tx, uint8_t *out)
 		memcpy(out + r, segwit_header, 2);
 		r += 2;
 	}
+	if (tx->version == 12) {
+		memcpy(out+r, tx->preblock_hash, 32);
+		r+=32;
+	}
 	return r + ser_length(tx->inputs_len, out + r);
 }
 
@@ -432,6 +436,12 @@ uint32_t tx_serialize_header_hash(TxStruct *tx)
 	if (tx->is_segwit) {
 		hasher_Update(&(tx->hasher), segwit_header, 2);
 		r += 2;
+	}
+	if (tx->version == 12) {
+		for (int i = 0; i < 32; i++) {
+			hasher_Update(&(tx->hasher), &(tx->preblock_hash[31 - i]), 1);
+		}
+		r += 32;
 	}
 	return r + ser_length_hash(&(tx->hasher), tx->inputs_len);
 }
@@ -492,8 +502,10 @@ uint32_t tx_serialize_middle_hash(TxStruct *tx)
 
 uint32_t tx_serialize_footer(TxStruct *tx, uint8_t *out)
 {
+	uint32_t hash_type = 0x01;
 	memcpy(out, &(tx->lock_time), 4);
-	return 4;
+	memcpy(out + 4, &hash_type, 4);
+	return 8;
 }
 
 uint32_t tx_serialize_footer_hash(TxStruct *tx)
@@ -571,8 +583,11 @@ uint32_t tx_serialize_extra_data_hash(TxStruct *tx, const uint8_t *data, uint32_
 	return datalen;
 }
 
-void tx_init(TxStruct *tx, uint32_t inputs_len, uint32_t outputs_len, uint32_t version, uint32_t lock_time, uint32_t extra_data_len, HasherType hasher_sign)
+void tx_init(TxStruct *tx, uint8_t preblock_hash[32], uint32_t inputs_len, uint32_t outputs_len, uint32_t version, uint32_t lock_time, uint32_t extra_data_len, HasherType hasher_sign)
 {
+	if (version ==  12) {
+		memcpy(tx->preblock_hash, preblock_hash, 32 * sizeof(uint8_t));
+	}
 	tx->inputs_len = inputs_len;
 	tx->outputs_len = outputs_len;
 	tx->version = version;

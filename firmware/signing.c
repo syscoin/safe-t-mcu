@@ -28,6 +28,7 @@
 #include "secp256k1.h"
 #include "gettext.h"
 
+static uint8_t preblock_hash[32];
 static uint32_t inputs_count;
 static uint32_t outputs_count;
 static const CoinInfo *coin;
@@ -432,6 +433,9 @@ bool compile_input_script_sig(TxInputType *tinput)
 
 void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 {
+	if(msg->version == 12) {
+		memcpy(preblock_hash, msg->preblock_hash.bytes, msg->preblock_hash.size);
+	}
 	inputs_count = msg->inputs_count;
 	outputs_count = msg->outputs_count;
 	coin = _coin;
@@ -463,7 +467,7 @@ void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 	multisig_fp_mismatch = false;
 	next_nonsegwit_input = 0xffffffff;
 
-	tx_init(&to, inputs_count, outputs_count, version, lock_time, 0, coin->curve->hasher_sign);
+	tx_init(&to, preblock_hash, inputs_count, outputs_count, version, lock_time, 0, coin->curve->hasher_sign);
 
 	// segwit hashes for hashPrevouts and hashSequence
 	hasher_Init(&hashers[0], coin->curve->hasher_sign);
@@ -897,7 +901,7 @@ void signing_txack(TransactionType *tx)
 				signing_abort();
 				return;
 			}
-			tx_init(&tp, tx->inputs_cnt, tx->outputs_cnt, tx->version, tx->lock_time, tx->extra_data_len, coin->curve->hasher_sign);
+			tx_init(&tp, tx->preblock_hash.bytes, tx->inputs_cnt, tx->outputs_cnt, tx->version, tx->lock_time, tx->extra_data_len, coin->curve->hasher_sign);
 			progress_meta_step = progress_step / (tp.inputs_len + tp.outputs_len);
 			idx2 = 0;
 			if (tp.inputs_len > 0) {
@@ -971,7 +975,7 @@ void signing_txack(TransactionType *tx)
 		case STAGE_REQUEST_4_INPUT:
 			progress = 500 + ((signatures * progress_step + idx2 * progress_meta_step) >> PROGRESS_PRECISION);
 			if (idx2 == 0) {
-				tx_init(&ti, inputs_count, outputs_count, version, lock_time, 0, coin->curve->hasher_sign);
+				tx_init(&ti, preblock_hash, inputs_count, outputs_count, version, lock_time, 0, coin->curve->hasher_sign);
 				hasher_Reset(&hashers[0]);
 			}
 			// check prevouts and script type

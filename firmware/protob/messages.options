@@ -123,6 +123,7 @@ EstimateTxSize				skip_message:true
 TxSize					skip_message:true
 
 SignTx.coin_name			max_size:21
+SignTx.preblock_hash        max_size:32
 
 EthereumSignTx.address_n		max_count:8
 EthereumSignTx.nonce			max_size:32

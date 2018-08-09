@@ -37,7 +37,7 @@
 #include "gettext.h"
 #include "fonts.h"
 
-#define BITCOIN_DIVISIBILITY (8)
+#define BITCOIN_DIVISIBILITY (7)
 
 #define LINES_ON_SCREEN 6
 

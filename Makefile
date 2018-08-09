@@ -72,5 +72,8 @@ allclean: mostlyclean
 libopencm3:
 	FP_FLAGS="-mfloat-abi=soft" V=1 $(MAKE) -C vendor/libopencm3
 
+debug:
+	arm-none-eabi-gdb firmware/trezor.elf
+
 update_translations:
 	$(MAKE) -C firmware/po update
