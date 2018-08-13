@@ -1,0 +1,1589 @@
+# French translations for PACKAGE package
+# Traductions françaises du paquet PACKAGE.
+# Copyright (C) 2018 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-08-10 10:48+0200\n"
+"PO-Revision-Date: 2018-07-16 13:18+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. DISPLAY: 6 lines
+#: ../bl_check.c:52
+msgid ""
+"Unknown bootloader detected.\n"
+"\n"
+"Unplug your Safe-T\n"
+"contact our support."
+msgstr ""
+"Bootloader inconnu détecté.\n"
+"\n"
+"Débranchez votre Safe-T\n"
+"Contactez le support."
+
+#. show info and halt
+#. DISPLAY: 6 lines
+#: ../bl_check.c:81
+#, fuzzy
+msgid ""
+"Update finished successfully.\n"
+"\n"
+"Please reconnect the device."
+msgstr ""
+"Mise à jour terminée avec succès\n"
+"\n"
+"Veuillez reconnecter l'appareil"
+
+#. #-#-#-#-#  fsm.pot (PACKAGE VERSION)  #-#-#-#-#
+#. DISPLAY: 5 lines
+#: ../ethereum.c:165 ../ethereum.c:181 ../ethereum.c:529 ../ethereum.c:546 ../fsm.c:1035
+#: ../fsm.c:1122
+msgid "Signing"
+msgstr "Signature"
+
+#: ../ethereum.c:193 ../ethereum.c:631 ../signing.c:676
+msgid "Signing failed"
+msgstr "La signature a échoué"
+
+#: ../ethereum.c:272 ../ethereum.c:377
+msgid "message"
+msgstr "message"
+
+#. DISPLAY : 1 line
+#: ../ethereum.c:292
+msgid "to new contract?"
+msgstr "au nouveau contrat?"
+
+#. #-#-#-#-#  layout2.pot (PACKAGE VERSION)  #-#-#-#-#
+#. DISPLAY : 1 line
+#: ../ethereum.c:298 ../ethereum.c:338 ../ethereum.c:384 ../fsm.c:342 ../fsm.c:377 ../fsm.c:388
+#: ../fsm.c:395 ../fsm.c:432 ../fsm.c:440 ../fsm.c:462 ../fsm.c:541 ../fsm.c:713 ../fsm.c:725
+#: ../fsm.c:742 ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1341 ../fsm.c:1594 ../layout2.c:292
+#: ../layout2.c:317 ../layout2.c:336 ../layout2.c:353 ../layout2.c:366 ../layout2.c:375
+#: ../layout2.c:386 ../layout2.c:395 ../layout2.c:407 ../layout2.c:620 ../layout2.c:666
+#: ../layout2.c:712 ../layout2.c:729 ../layout2.c:749 ../layout2.c:759 ../layout2.c:781
+#: ../layout2.c:797 ../layout2.c:806 ../layout2.c:818 ../layout2.c:844 ../layout2.c:861
+#: ../layout2.c:873 ../layout2.c:921 ../nem2.c:190 ../nem2.c:237 ../nem2.c:323 ../nem2.c:333
+#: ../nem2.c:377 ../nem2.c:406 ../nem2.c:436 ../nem2.c:444 ../nem2.c:499 ../nem2.c:514 ../nem2.c:552
+#: ../nem2.c:570 ../nem2.c:597 ../nem2.c:653 ../nem2.c:687 ../reset.c:59 ../trezor.c:52
+msgid "Cancel"
+msgstr "Annuler"
+
+#. #-#-#-#-#  layout2.pot (PACKAGE VERSION)  #-#-#-#-#
+#. DISPLAY : 1 line
+#: ../ethereum.c:299 ../ethereum.c:339 ../ethereum.c:385 ../fsm.c:342 ../fsm.c:377 ../fsm.c:388
+#: ../fsm.c:395 ../fsm.c:432 ../fsm.c:440 ../fsm.c:462 ../fsm.c:713 ../fsm.c:725 ../fsm.c:742
+#: ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1341 ../fsm.c:1595 ../layout2.c:294 ../layout2.c:318
+#: ../layout2.c:337 ../layout2.c:354 ../layout2.c:366 ../layout2.c:375 ../layout2.c:386
+#: ../layout2.c:395 ../layout2.c:407 ../layout2.c:620 ../layout2.c:666 ../layout2.c:730
+#: ../layout2.c:921 ../nem2.c:238 ../recovery.c:157 ../recovery.c:182 ../recovery.c:189
+#: ../recovery.c:204
+msgid "Confirm"
+msgstr "Confirmer"
+
+#. DISPLAY : 1 line
+#: ../ethereum.c:302
+msgid "Send"
+msgstr "Envoyer"
+
+#. DISPLAY: 1 line
+#: ../ethereum.c:342
+msgid "Transaction data:"
+msgstr "Transaction:"
+
+#: ../ethereum.c:377
+msgid "token"
+msgstr "token"
+
+#. DISPLAY: 5 lines USE CASE : Really send 0.0001524 paying up to 0.0000014 for gas?
+#: ../ethereum.c:388
+#, c-format
+msgid "Really send %s paying up to %s for gas?"
+msgstr "Voulez-vous vraiment envoyer %s en payant jusqu'à %s pour du gaz?"
+
+#: ../ethereum.c:448
+msgid "Chain Id out of bounds"
+msgstr "Identifiants de la chaîne hors limites"
+
+#: ../ethereum.c:459
+msgid "Data length provided, but no initial chunk"
+msgstr "Longueur de données fournie, mais pas de bloc initial"
+
+#: ../ethereum.c:467
+msgid "Data length exceeds limit"
+msgstr "La longueur des données dépasse la limite"
+
+#: ../ethereum.c:476
+msgid "Invalid size of initial chunk"
+msgstr "Taille non valide du bloc initial"
+
+#: ../ethereum.c:483
+msgid "Safety check failed"
+msgstr "contrôle de sécurité échoué"
+
+#: ../ethereum.c:569
+msgid "Not in Ethereum signing mode"
+msgstr "Pas en mode de signature Ethereum"
+
+#: ../ethereum.c:575
+msgid "Too much data"
+msgstr "Trop de données"
+
+#: ../ethereum.c:581
+msgid "Empty data chunk received"
+msgstr "Bloc de données vide reçu"
+
+#: ../ethereum.c:644
+msgid "Malformed data"
+msgstr "Données malformées"
+
+#: ../fsm.c:77
+msgid "Device has PIN set. Remove first."
+msgstr "L'appareil à déjà un code PIN. Enlevez-le d'abord"
+
+#: ../fsm.c:83
+msgid "Device is already initialized. Use Wipe first."
+msgstr "L'appareil est déjà initialisé. Effacez-le d'abord"
+
+#: ../fsm.c:133
+msgid "Unexpected message"
+msgstr "Message inattendu"
+
+#: ../fsm.c:136
+msgid "Button expected"
+msgstr "Bouton requis"
+
+#: ../fsm.c:139
+msgid "Data error"
+msgstr "Erreur de données"
+
+#: ../fsm.c:142
+msgid "Action cancelled by user"
+msgstr "Action annulée par l'utilisateur"
+
+#: ../fsm.c:145
+msgid "PIN expected"
+msgstr "PIN requis"
+
+#: ../fsm.c:148
+msgid "PIN cancelled"
+msgstr "PIN annulé"
+
+#: ../fsm.c:151
+msgid "PIN invalid"
+msgstr "PIN incorrect"
+
+#: ../fsm.c:154 ../fsm.c:983 ../fsm.c:1076
+msgid "Invalid signature"
+msgstr "Signature incorrecte"
+
+#: ../fsm.c:157
+msgid "Process error"
+msgstr "Erreur de process"
+
+#: ../fsm.c:160 ../signing.c:603
+msgid "Not enough funds"
+msgstr "Pas assez de fonds"
+
+#: ../fsm.c:163
+msgid "Device not initialized"
+msgstr "Appareil non initialisé"
+
+#: ../fsm.c:166
+msgid "PIN mismatch"
+msgstr "Code PIN erroné"
+
+#: ../fsm.c:169
+msgid "Firmware error"
+msgstr "Erreur du logiciel"
+
+#: ../fsm.c:197
+msgid "Invalid coin name"
+msgstr "Nom de monnaie incorrect"
+
+#: ../fsm.c:211
+msgid "Device not initialized or passphrase request cancelled or unsupported curve"
+msgstr ""
+"Périphérique non initialisé ou demande de phrase secrète annulée ou courbe non prise en charge"
+
+#: ../fsm.c:219
+msgid "Failed to derive private key"
+msgstr "Impossible de dériver la clé privée"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:344
+#, fuzzy
+msgid "Do you really want to answer to ping?"
+msgstr "Voulez-vous vraiment répondre au ping?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:379
+#, fuzzy
+msgid "Do you really want to remove current PIN?"
+msgstr "Voulez-vous vraiment désactiver le code PIN?"
+
+#: ../fsm.c:383 ../fsm.c:413
+msgid "PIN removed"
+msgstr "Code PIN supprimé"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:390
+#, fuzzy
+msgid "Do you really want to change current PIN?"
+msgstr "Voulez-vous vraiment changer le code PIN?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:397
+#, fuzzy
+msgid "Do you really want to set new PIN?"
+msgstr "Voulez-vous vraiment définir un nouveau code PIN?"
+
+#: ../fsm.c:416
+msgid "PIN changed"
+msgstr "Code PIN modifié"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:434
+msgid ""
+"Do you really want to wipe the device?\n"
+"\n"
+"All data and one zone of the secure store will be lost."
+msgstr ""
+"Voulez-vous vraiment effacer l'appareil?\n"
+"Toutes les données et une zone sécurisée seront perdues."
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:442
+#, fuzzy
+msgid ""
+"Do you really want to wipe the device?\n"
+"\n"
+"All data will be lost."
+msgstr ""
+"Voulez-vous vraiment effacer l'appareil?\n"
+"\n"
+"Toutes les données seront perdues."
+
+#. the following does not work on Mac anyway :-/ Linux/Windows are fine, so it is not needed
+#. usbReconnect(); // force re-enumeration because of the serial number change
+#: ../fsm.c:455
+msgid "Device wiped"
+msgstr "Appareil effacé"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:464
+#, fuzzy
+msgid "Do you really want to send entropy?"
+msgstr "Voulez-vous vraiment envoyer l'entropie?"
+
+#: ../fsm.c:542 ../layout2.c:782 ../nem2.c:191
+msgid "I take the risk"
+msgstr "Je prend le risque"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:545
+msgid "Loading private seed is not recommended. Continue only if you know what you are doing!"
+msgstr "Chargement d'une graine privée non recommandé. Continuez si vous savez ce que vous faites!"
+
+#: ../fsm.c:556
+msgid "Mnemonic with wrong checksum provided"
+msgstr "Mnémonique fourni avec une mauvaise somme de contrôle"
+
+#: ../fsm.c:563
+msgid "Device loaded"
+msgstr "Appareil chargé"
+
+#: ../fsm.c:575
+msgid "Invalid seed strength"
+msgstr "Force de la graine incorrecte"
+
+#: ../fsm.c:603
+msgid "Transaction must have at least one input"
+msgstr "La transaction doit avoir au moins une entrée"
+
+#: ../fsm.c:604
+msgid "Transaction must have at least one output"
+msgstr "La transaction doit avoir au moins une sortie"
+
+#: ../fsm.c:605 ../signing.c:576 ../signing.c:834 ../signing.c:861 ../signing.c:896 ../signing.c:934
+msgid "Value overflow"
+msgstr "Dépassement de valeur"
+
+#: ../fsm.c:619 ../fsm.c:1405
+msgid "No transaction provided"
+msgstr "Aucune transaction fournie"
+
+#: ../fsm.c:654
+msgid "No key provided"
+msgstr "Aucune clé fournie"
+
+#: ../fsm.c:655
+msgid "No value provided"
+msgstr "Aucune valeur fournie"
+
+#: ../fsm.c:656
+msgid "Value length must be a multiple of 16"
+msgstr "La longueur de la valeur doit être un multiple de 16"
+
+#: ../fsm.c:703
+msgid "Session cleared"
+msgstr "Session terminée"
+
+#: ../fsm.c:708
+msgid "No setting provided"
+msgstr "Aucun paramètre fourni"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:715
+#, fuzzy, c-format
+msgid "Do you really want to change name to %s?"
+msgstr "Voulez-vous vraiment changer le nom en %s?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:727
+#, fuzzy, c-format
+msgid "Do you really want to change language to %s?"
+msgstr "Voulez-vous vraiment changer la langue en %s?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:739
+msgid "Do you really want to enable passphrase encryption?"
+msgstr "Voulez-vous vraiment activer le chiffrement par phrase secrète?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:741
+msgid "Do you really want to disable passphrase encryption?"
+msgstr "Voulez-vous vraiment désactiver le chiffrement par phrase secrète?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:752
+#, fuzzy
+msgid "Do you really want to change the home screen?"
+msgstr "Voulez-vous vraiment changer l'écran d'accueil?"
+
+#: ../fsm.c:774
+msgid "Settings applied"
+msgstr "Paramètres appliqués"
+
+#: ../fsm.c:784
+msgid "Flags applied"
+msgstr "Drapeaux appliqués"
+
+#. DISPLAY: 1 line
+#: ../fsm.c:878
+msgid "Computing address"
+msgstr "Calcul de l'adresse"
+
+#: ../fsm.c:880
+msgid "Can't encode address"
+msgstr "Impossible d'encoder l'adresse"
+
+#: ../fsm.c:896
+msgid "Address:"
+msgstr "Adresse:"
+
+#: ../fsm.c:902
+msgid "Abort"
+msgstr "Abandonner"
+
+#: ../fsm.c:902 ../layout2.c:538 ../layout2.c:558 ../reset.c:60
+msgid "Continue"
+msgstr "Continuer"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:904
+#, fuzzy
+msgid ""
+"Wrong address path for selected coin.\n"
+"\n"
+"Continue at your own risk!"
+msgstr ""
+"Mauvais chemin d'adresse pour la monnaie sélectionnée.\n"
+"Continuez à vos risques et périls!"
+
+#: ../fsm.c:979 ../fsm.c:1055
+msgid "No address provided"
+msgstr "Aucune adresse fournie"
+
+#: ../fsm.c:980 ../fsm.c:1056
+msgid "No message provided"
+msgstr "Aucun message fourni"
+
+#: ../fsm.c:1001 ../fsm.c:1074
+msgid "Message verified"
+msgstr "Message vérifié"
+
+#: ../fsm.c:1040
+msgid "Error computing address"
+msgstr "Erreur dans le calcul de l'adresse"
+
+#: ../fsm.c:1048
+msgid "Error signing message"
+msgstr "Erreur dans la signature du message"
+
+#: ../fsm.c:1060
+msgid "Verifying"
+msgstr "Vérification"
+
+#: ../fsm.c:1098 ../fsm.c:1175
+msgid "Invalid identity"
+msgstr "Identité incorrecte"
+
+#: ../fsm.c:1153
+msgid "Error signing identity"
+msgstr "Erreur dans la signature de l'identité"
+
+#: ../fsm.c:1201
+msgid "Error getting ECDH session key"
+msgstr "Erreur lors de l'obtention de la clé de session ECDH"
+
+#: ../fsm.c:1309
+msgid "Invalid word count"
+msgstr "Nombre de mots incorrect"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:1313
+#, fuzzy
+msgid "Do you really want to recover the device?"
+msgstr "Voulez-vous vraiment récupérer l'appareil?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:1343
+#, fuzzy
+msgid "Do you want to set the U2F counter?"
+msgstr "Voulez-vous vraiment configurer le compteur U2F?"
+
+#: ../fsm.c:1352
+msgid "U2F counter set"
+msgstr "Compteur U2F armé"
+
+#: ../fsm.c:1363 ../fsm.c:1584 ../nem2.c:37
+msgid "Invalid NEM network"
+msgstr "Réseau NEM incorrect"
+
+#: ../fsm.c:1396
+msgid "No common provided"
+msgstr "Pas de commun fourni"
+
+#: ../fsm.c:1406
+msgid "More than one transaction provided"
+msgstr "Plus d'une transaction fournie"
+
+#: ../fsm.c:1420
+msgid "Inner transaction network is different"
+msgstr "réseau de transaction interne différent"
+
+#: ../fsm.c:1422
+msgid "No multisig transaction to cosign"
+msgstr "Pas de transaction multisig à cosigner"
+
+#: ../fsm.c:1435 ../fsm.c:1458 ../fsm.c:1464 ../fsm.c:1470 ../fsm.c:1476 ../fsm.c:1482 ../fsm.c:1488
+msgid "Signing cancelled by user"
+msgstr "Signature annulée par l'utilisateur"
+
+#: ../fsm.c:1585
+msgid "No payload provided"
+msgstr "Aucune charge utile fournie"
+
+#: ../fsm.c:1586
+msgid "Invalid encrypted payload"
+msgstr "Charge utile cryptée invalide"
+
+#: ../fsm.c:1587
+msgid "No public key provided"
+msgstr "Aucune clé publique fournie"
+
+#: ../fsm.c:1588
+msgid "Invalid public key"
+msgstr "Clé publique incorrecte"
+
+#. DISPLAY: 1 line
+#: ../fsm.c:1597
+msgid "Decrypt message"
+msgstr "Décrypter le message"
+
+#. #-#-#-#-#  fsm.pot (PACKAGE VERSION)  #-#-#-#-#
+#. DISPLAY: 1 line
+#. #-#-#-#-#  layout2.pot (PACKAGE VERSION)  #-#-#-#-#
+#. DISPLAY : 1 line
+#: ../fsm.c:1599 ../layout2.c:377
+msgid "Confirm address?"
+msgstr "Confirmer l'adresse?"
+
+#: ../fsm.c:1627
+msgid "Failed to decrypt payload"
+msgstr "Déchiffrement de la charge utile échoué"
+
+#: ../fsm.c:1652 ../fsm.c:1690
+msgid "No data provided"
+msgstr "Aucune donnée fournie"
+
+#: ../fsm.c:1691
+msgid "Invalid global commitment"
+msgstr "Engagement global invalide"
+
+#: ../fsm.c:1692
+msgid "Invalid global pubkey"
+msgstr "Clé publique globale invalide"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:67
+msgid "Unknown long path"
+msgstr "Long chemin inconnu"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:71
+msgid "Path: m"
+msgstr "Chemin: m"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:225 ../layout2.c:251
+msgid "Go to safe-t.io/start"
+msgstr "Allez sur safe-t.io/start"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:247
+msgid "NEEDS BACKUP!"
+msgstr "SAUVEGARDE REQUISE!"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:277
+msgid "Confirm sending"
+msgstr "Confirmer l'envoi"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:321
+msgid "Confirm OP_RETURN:"
+msgstr "Confirmer OP_RETURN:"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:340
+#, fuzzy, c-format
+msgid ""
+"Really send %s from your wallet?\n"
+"Fee included: %s"
+msgstr ""
+"Voulez vous vraiment envoyer %s depuis votre portefeuille?\n"
+"Frais inclus: %s"
+
+#. DISPLAY : 5 lines USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
+#: ../layout2.c:357
+#, fuzzy, c-format
+msgid ""
+"Fee %s is unexpectedly high.\n"
+"\n"
+"Send anyway?"
+msgstr ""
+"les frais de %s sont étonnament élévés.\n"
+"\n"
+"Envoyer quand même?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:368
+msgid "Sign message?"
+msgstr "Signer le message?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:379
+msgid "Message signed by:"
+msgstr "Message signé par:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:388
+msgid "Verified message"
+msgstr "Message vérifié"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:398
+msgid "Encrypt value of this key?"
+msgstr "Chiffrer la clé?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:400
+msgid "Decrypt value of this key?"
+msgstr "Déchiffrer la clé?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:410
+msgid "Encrypt+Sign message?"
+msgstr "Chiffrer+Signer le message?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:412
+msgid "Encrypt message?"
+msgstr "Chiffrer le message?"
+
+#: ../layout2.c:419 ../u2f.c:564
+msgid "OK"
+msgstr "OK"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:422
+msgid "Decrypted signed message"
+msgstr "Message signé déchiffré"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:424
+msgid "Decrypted message"
+msgstr "Message déchiffré"
+
+#: ../layout2.c:436
+msgid "Finish"
+msgstr "Terminer"
+
+#: ../layout2.c:438
+msgid "Again"
+msgstr "Encore"
+
+#: ../layout2.c:441 ../layout2.c:712 ../layout2.c:730 ../layout2.c:750 ../layout2.c:760
+#: ../layout2.c:797 ../layout2.c:806 ../layout2.c:818 ../layout2.c:845 ../layout2.c:862
+#: ../layout2.c:874 ../nem2.c:324 ../nem2.c:334 ../nem2.c:378 ../nem2.c:407 ../nem2.c:437
+#: ../nem2.c:445 ../nem2.c:500 ../nem2.c:515 ../nem2.c:553 ../nem2.c:571 ../nem2.c:598 ../nem2.c:654
+#: ../nem2.c:688
+msgid "Next"
+msgstr "Suivant"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:447
+msgid "Please check the seed"
+msgstr "Vérifiez la graine"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:450
+msgid "Write down the seed"
+msgstr "Ecrivez la graine"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:453
+#, fuzzy
+msgid "Word number ## is:"
+msgstr "Le mot numéro ##"
+
+#: ../layout2.c:537
+msgid "QR Code"
+msgstr "QR Code"
+
+#: ../layout2.c:540
+msgid "Brightness"
+msgstr "Luminosité"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:573
+msgid "Web sign in to:"
+msgstr "Connexion Web à:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:576
+msgid "GPG sign for:"
+msgstr "Signature GPG pour:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:582
+msgid " login to:"
+msgstr " se connecter à:"
+
+#: ../layout2.c:585
+msgid "Login to:"
+msgstr "Se connecter à:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:599 ../layout2.c:660
+msgid "user: "
+msgstr "utilisateur: "
+
+#. DISPLAY : 1 line
+#: ../layout2.c:622
+msgid "Do you want to sign in?"
+msgstr "Voulez-vous vous connecter?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:642
+msgid " decrypt for:"
+msgstr " décrypter pour:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:645
+msgid "Decrypt for:"
+msgstr "Décrypter pour:"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:668
+msgid "Do you want to decrypt?"
+msgstr "Voulez-vous déchiffrer?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:682
+msgid "U2F security key?"
+msgstr "Clé de sécurité U2F?"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:714
+#, c-format
+msgid "Confirm transfer of %s and network fee of %s"
+msgstr "Confirmer l'envoi de %s et des frais réseau de %s"
+
+#: ../layout2.c:751 ../layout2.c:761
+msgid "Mosaic"
+msgstr "Mosaïque"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:753
+#, c-format
+msgid "Confirm transfer of %s and levy of %s"
+msgstr "Confirmer le transfert de %s et le prélèvement de %s"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:763
+#, c-format
+msgid "Confirm transfer of %s"
+msgstr "Confirmer le transfert de %s"
+
+#: ../layout2.c:783
+msgid "Unknown Mosaic"
+msgstr "Mosaïque inconnue"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:785
+#, c-format
+msgid "Confirm transfer of %s raw units of %s"
+msgstr "Confirmer le transfert de %s d'unités brutes de %s"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:800
+msgid "Encrypted hex data"
+msgstr "Données hexa cryptées"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:802
+msgid "Unencrypted hex data"
+msgstr "Données hexa en clair"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:809
+msgid "Encrypted message"
+msgstr "Message crypté"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:811
+msgid "Unencrypted message"
+msgstr "Message non crypté"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:820
+msgid "Mosaic Description"
+msgstr "Description de la mosaïque"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:847
+msgid "Percentile Levy"
+msgstr "Impôt de centile"
+
+#. DISPLAY : 5 line
+#: ../layout2.c:849
+#, fuzzy, c-format
+msgid "Raw levy value is %s in %s"
+msgstr "La valeur du prélèvement brut est %s dans %s"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:852
+msgid "the same mosaic"
+msgstr "la même mosaïque"
+
+#: ../layout2.c:863 ../layout2.c:875
+msgid "Absolute Levy"
+msgstr "Prélèvement absolu"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:866
+#, c-format
+msgid "Levy is %s in the same mosaic"
+msgstr "Le prélèvement est de %s dans la même mosaïque"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:868
+#, c-format
+msgid "Levy is %s"
+msgstr "Le prélèvement est de %s"
+
+#. DISPLAY : 5 lines
+#: ../layout2.c:877
+#, c-format
+msgid "Levy is %s in raw units of %s"
+msgstr "Le prélèvement est de %s en unités brutes de %s"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:895
+msgid "CoSi sign message?"
+msgstr "Signer le message CoSi?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:897
+msgid "CoSi commit message?"
+msgstr "Valider le message CoSi?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:902
+#, fuzzy, c-format
+msgid "CoSi sign index %c?"
+msgstr "Signer le message CoSi?"
+
+#. DISPLAY : 1 line
+#: ../layout2.c:905
+#, fuzzy, c-format
+msgid "CoSi commit index %c?"
+msgstr "Valider le message CoSi?"
+
+#. unknown message
+#: ../messages.c:256 ../messages.c:369
+msgid "Unknown message"
+msgstr "Message inconnu"
+
+#. message is too big :(
+#: ../messages.c:260
+msgid "Message too big"
+msgstr "Message trop grand"
+
+#: ../nem2.c:37
+msgid "Invalid NEM network in inner transaction"
+msgstr ""
+
+#: ../nem2.c:41
+msgid "No timestamp provided"
+msgstr ""
+
+#: ../nem2.c:41
+msgid "No timestamp provided in inner transaction"
+msgstr ""
+
+#: ../nem2.c:45
+msgid "No fee provided"
+msgstr ""
+
+#: ../nem2.c:45
+msgid "No fee provided in inner transaction"
+msgstr ""
+
+#: ../nem2.c:49
+msgid "No deadline provided"
+msgstr ""
+
+#: ../nem2.c:49
+msgid "No deadline provided in inner transaction"
+msgstr ""
+
+#: ../nem2.c:53
+msgid "No signer provided in inner transaction"
+msgstr ""
+
+#: ../nem2.c:53
+msgid "Signer not allowed in outer transaction"
+msgstr ""
+
+#: ../nem2.c:57
+msgid "Invalid signer public key in inner transaction"
+msgstr ""
+
+#: ../nem2.c:64
+msgid "No recipient provided"
+msgstr ""
+
+#: ../nem2.c:65
+msgid "No amount provided"
+msgstr ""
+
+#: ../nem2.c:68
+msgid "Invalid recipient public key"
+msgstr ""
+
+#: ../nem2.c:71
+msgid "Invalid recipient address"
+msgstr ""
+
+#: ../nem2.c:76 ../nem2.c:105
+msgid "No mosaic namespace provided"
+msgstr ""
+
+#: ../nem2.c:77 ../nem2.c:106
+msgid "No mosaic name provided"
+msgstr ""
+
+#: ../nem2.c:78
+msgid "No mosaic quantity provided"
+msgstr ""
+
+#: ../nem2.c:85 ../nem2.c:130
+msgid "No namespace provided"
+msgstr ""
+
+#: ../nem2.c:86
+msgid "No rental sink provided"
+msgstr ""
+
+#: ../nem2.c:87
+msgid "No rental sink fee provided"
+msgstr ""
+
+#: ../nem2.c:89
+msgid "Invalid rental sink address"
+msgstr ""
+
+#: ../nem2.c:95
+msgid "No mosaic definition provided"
+msgstr ""
+
+#: ../nem2.c:96
+msgid "No creation sink provided"
+msgstr ""
+
+#: ../nem2.c:97
+msgid "No creation sink fee provided"
+msgstr ""
+
+#: ../nem2.c:99
+msgid "Invalid creation sink address"
+msgstr ""
+
+#: ../nem2.c:101
+msgid "Name not allowed in mosaic creation transactions"
+msgstr ""
+
+#: ../nem2.c:102
+msgid "Ticker not allowed in mosaic creation transactions"
+msgstr ""
+
+#: ../nem2.c:103
+msgid "Networks not allowed in mosaic creation transactions"
+msgstr ""
+
+#: ../nem2.c:109 ../nem2.c:110
+msgid "No levy address provided"
+msgstr ""
+
+#: ../nem2.c:111
+msgid "No levy namespace provided"
+msgstr ""
+
+#: ../nem2.c:112
+msgid "No levy mosaic name provided"
+msgstr ""
+
+#: ../nem2.c:114
+msgid "No divisibility provided"
+msgstr ""
+
+#: ../nem2.c:115
+msgid "No supply provided"
+msgstr ""
+
+#: ../nem2.c:116
+msgid "No supply mutability provided"
+msgstr ""
+
+#: ../nem2.c:117
+msgid "No mosaic transferability provided"
+msgstr ""
+
+#: ../nem2.c:118
+msgid "No description provided"
+msgstr ""
+
+#: ../nem2.c:120
+msgid "Invalid divisibility provided"
+msgstr ""
+
+#: ../nem2.c:121
+msgid "Invalid supply provided"
+msgstr ""
+
+#: ../nem2.c:123
+msgid "Invalid levy address"
+msgstr ""
+
+#: ../nem2.c:131
+msgid "No mosaic provided"
+msgstr ""
+
+#: ../nem2.c:132
+msgid "No type provided"
+msgstr ""
+
+#: ../nem2.c:133
+msgid "No delta provided"
+msgstr ""
+
+#: ../nem2.c:140
+msgid "No modifications provided"
+msgstr ""
+
+#: ../nem2.c:146
+msgid "No modification type provided"
+msgstr ""
+
+#: ../nem2.c:147
+msgid "No cosignatory public key provided"
+msgstr ""
+
+#: ../nem2.c:148
+msgid "Invalid cosignatory public key provided"
+msgstr ""
+
+#: ../nem2.c:151
+msgid "Cannot remove cosignatory when converting account"
+msgstr ""
+
+#: ../nem2.c:159
+msgid "No mode provided"
+msgstr ""
+
+#: ../nem2.c:160
+msgid "No remote account provided"
+msgstr ""
+
+#: ../nem2.c:161
+msgid "Invalid remote account provided"
+msgstr ""
+
+#: ../nem2.c:192
+msgid "Unknown Mosaics"
+msgstr "Mosaïques inconnues"
+
+#: ../nem2.c:193
+msgid "Divisibility and levy cannot be shown for unknown mosaics!"
+msgstr "Divisibilité et prélèvement ne peuvent pas être montrés pour les mosaïques inconnues!"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:241
+msgid "Confirm transfer to"
+msgstr "Valider le transfert à"
+
+#: ../nem2.c:258
+msgid "Private key unavailable for encrypted message"
+msgstr ""
+
+#: ../nem2.c:277
+msgid "Failed to encrypt payload"
+msgstr ""
+
+#: ../nem2.c:299
+msgid "Failed to create transfer transaction"
+msgstr ""
+
+#: ../nem2.c:312
+msgid "Failed to attach mosaics"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:327
+#, c-format
+msgid "Create namespace %s under namespace %s"
+msgstr "Créer un espace de noms %s sous l'espace %s"
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:337
+msgid "Create namespace"
+msgstr "Créer l'espace"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:349
+msgid "Confirm rental fee of"
+msgstr "Valider les frais loc. de"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:352 ../nem2.c:464
+msgid "and network fee of"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:381
+#, c-format
+msgid "Create mosaic %s under namespace %s"
+msgstr "Créer la mosaïque %s sous l'espace de nom %s"
+
+#: ../nem2.c:408
+msgid "Properties"
+msgstr "Propriétés"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:411
+msgid "Mutable supply:"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:413
+msgid "Immutable supply:"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:416
+msgid "Mosaic will be"
+msgstr "La mosaïque sera"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:419
+msgid "transferable"
+msgstr "transférable"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:421
+msgid "non-transferable"
+msgstr "non-transférable"
+
+#: ../nem2.c:438 ../nem2.c:446
+msgid "Levy Recipient"
+msgstr "Reçu du prélèvement"
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:440
+msgid "Levy will be paid to yourself"
+msgstr "le prélèvement vous sera payé"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:448
+msgid "Levy will be paid to"
+msgstr "Prélèvement payé à"
+
+#. DISPLAY : 1 line
+#: ../nem2.c:461
+msgid "Confirm creation fee"
+msgstr "Valider les frais de création"
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:503
+#, c-format
+msgid "Modify supply for %s under namespace %s"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:519
+#, c-format
+msgid "Increase supply by %s whole units"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:521
+#, c-format
+msgid "Decrease supply by %s whole units"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:528 ../nem2.c:615 ../nem2.c:666
+msgid "Confirm network fee"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:556
+msgid "Convert account to multisig account?"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:575
+msgid "Add cosignatory"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:577
+msgid "Remove cosignatory"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:602
+#, c-format
+msgid "Set minimum cosignatories to %s"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:605
+#, c-format
+msgid "Decrease minimum cosignatories by %s"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:607
+#, c-format
+msgid "Increase minimum cosignatories by %s"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:658
+msgid "Activate remote harvesting?"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:660
+msgid "Deactivate remote harvesting?"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:692
+msgid "Cosign transaction for"
+msgstr ""
+
+#. DISPLAY : 5 lines
+#: ../nem2.c:694
+msgid "Initiate transaction for"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../nem2.c:700
+msgid "Confirm multisig fee"
+msgstr ""
+
+#: ../nem2.c:729
+msgid "Failed to create multisig transaction"
+msgstr ""
+
+#. Display : 1 line
+#: ../protect.c:164
+msgid "x crypto zones left"
+msgstr "x crypto-zones restantes"
+
+#. Display : 1 line
+#: ../protect.c:168
+msgid "1 crypto zone left"
+msgstr "1 crypto-zone restante"
+
+#. Display : 1 line
+#: ../protect.c:171
+msgid "no crypto zone left"
+msgstr "Aucune crypto-zone restante"
+
+#. DISPLAY : 6 lines
+#: ../protect.c:173
+#, c-format
+msgid ""
+"Too many wrong PIN attempts. Storage has been wiped.\n"
+"%s\n"
+"Please unplug the device."
+msgstr ""
+"Trop de code PIN incorrects. Stockage effacé.\n"
+"%s\n"
+"Veuillez débrancher l'appareil."
+
+#. DISPLAY : 6 lines
+#: ../protect.c:176
+msgid ""
+"Too many wrong PIN attempts. Storage has been wiped.\n"
+"\n"
+"Please unplug the device."
+msgstr ""
+"Trop de code PIN incorrects. Stockage effacé.\n"
+"\n"
+"Veuillez débrancher l'appareil."
+
+#. Display : 1 line
+#: ../protect.c:202
+msgid "only 1 attempt left"
+msgstr "1 seul essai restant"
+
+#. Display : 1 line
+#: ../protect.c:205
+msgid "   0 attempts left"
+msgstr "   0 essai restant"
+
+#. DISPLAY : 6 lines
+#: ../protect.c:209
+#, c-format
+msgid ""
+"Wrong PIN entered\n"
+"\n"
+"Please wait to continue ...\n"
+"\n"
+"%s"
+msgstr ""
+"Mauvais PIN saisi\n"
+"\n"
+"Attendez pour continuer ...\n"
+"\n"
+"%s"
+
+#: ../protect.c:227
+msgid "________0 seconds"
+msgstr "________0 secondes"
+
+#. DISPLAY: 6 lines
+#: ../protect.c:239
+#, fuzzy, c-format
+msgid ""
+"Wrong PIN entered\n"
+"\n"
+"Please wait %s to continue ..."
+msgstr ""
+"Mauvais PIN saisi\n"
+"\n"
+"Attendez  %s pour continuer ..."
+
+#. DISPLAY: 1 line
+#: ../protect.c:255
+msgid "Please enter current PIN:"
+msgstr "Entrez votre code PIN:"
+
+#. DISPLAY: 1 line
+#: ../protect.c:293
+msgid "Please enter new PIN:"
+msgstr "Entrez le nouveau PIN:"
+
+#. DISPLAY: 1 line
+#: ../protect.c:301
+msgid "Please re-enter new PIN:"
+msgstr "Réinsérez le code PIN:"
+
+#. DISPLAY: 6 lines
+#: ../protect.c:330
+msgid "Please enter your passphrase using the computer's keyboard."
+msgstr "Veuillez entrer votre phrase secrète sur votre clavier."
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:159
+#, fuzzy
+msgid "Seed could not be stored on the device."
+msgstr "Voulez-vous vraiment récupérer l'appareil?"
+
+#: ../recovery.c:163
+msgid "The seed is valid but could not be stored on the device."
+msgstr "La graine est incorrecte et n'a pu être sauvegardé sur l'appareil."
+
+#: ../recovery.c:176
+msgid "Device recovered"
+msgstr "Appareil restauré"
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:184
+msgid "The seed is valid and MATCHES the one in the device."
+msgstr "La graine est valide et CORRESPOND à celle de l'appareil."
+
+#: ../recovery.c:187
+msgid "The seed is valid and matches the one in the device"
+msgstr "La graine est valide et correspond à celle de l'appareil."
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:191
+msgid "The seed is valid but does NOT MATCH the one in the device."
+msgstr "La graine est valide mais ne CORRESPOND PAS à celle de l'appareil."
+
+#: ../recovery.c:195
+#, fuzzy
+msgid "The seed is valid but does not match the one in the device."
+msgstr "La graine est valide mais ne correspond pas à celle de l'appareil."
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:206
+#, fuzzy
+msgid "The seed is INVALID!"
+msgstr "La graine est INCORRECTE!"
+
+#: ../recovery.c:210
+msgid "Invalid seed, are words in correct order?"
+msgstr ""
+
+#. DISPLAY: 3 lines
+#: ../recovery.c:277
+#, fuzzy, c-format
+msgid "Please enter word number %d of your mnemonic"
+msgstr "Veuillez entrer le mot numéro %d de votre mnémonique"
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:443
+#, c-format
+msgid ""
+"Please enter the word\n"
+"\n"
+"%s\n"
+"\n"
+"on your computer"
+msgstr ""
+"Veuillez entrer le mot\n"
+"\n"
+"%s\n"
+"\n"
+"sur l'ordinateur"
+
+#. DISPLAY: 5 lines
+#: ../recovery.c:447
+#, c-format
+msgid ""
+"Please enter\n"
+"\n"
+"word number %d\n"
+"\n"
+"of your mnemonic"
+msgstr ""
+"Veuillez entrer\n"
+"\n"
+"le mot numéro %d\n"
+"\n"
+"de votre mnémonique"
+
+#: ../recovery.c:507
+msgid "Wrong word retyped"
+msgstr ""
+
+#: ../recovery.c:526
+msgid "Word not found in a wordlist"
+msgstr ""
+
+#: ../recovery.c:555
+msgid "Not in Recovery mode"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../reset.c:63
+msgid "Internal entropy:"
+msgstr "Entropie interne:"
+
+#: ../reset.c:104
+msgid "Not in Reset mode"
+msgstr ""
+
+#: ../reset.c:121
+msgid "Seed cannot be stored on device"
+msgstr ""
+
+#: ../reset.c:131 ../reset.c:204
+msgid "Device successfully initialized"
+msgstr ""
+
+#: ../reset.c:145
+msgid "Seed already backed up"
+msgstr ""
+
+#: ../reset.c:196
+msgid "Seed successfully backed up"
+msgstr ""
+
+#. DISPLAY : 1 line
+#: ../signing.c:474 ../signing.c:584 ../signing.c:648 ../signing.c:805 ../signing.c:1043
+#: ../signing.c:1087 ../signing.c:1157
+msgid "Signing transaction"
+msgstr "Signature"
+
+#: ../signing.c:487
+msgid "Error computing multisig fingerprint"
+msgstr ""
+
+#: ../signing.c:519
+msgid "Encountered invalid prevhash"
+msgstr ""
+
+#: ../signing.c:536
+msgid "Address in change output"
+msgstr ""
+
+#: ../signing.c:591 ../signing.c:1021 ../signing.c:1131
+msgid "Failed to compile output"
+msgstr ""
+
+#: ../signing.c:687
+msgid "Pubkey not found in multisig script"
+msgstr ""
+
+#: ../signing.c:695
+msgid "Failed to serialize multisig script"
+msgstr ""
+
+#: ../signing.c:709 ../signing.c:736 ../signing.c:1009 ../signing.c:1063 ../signing.c:1073
+msgid "Transaction has changed during signing"
+msgstr ""
+
+#: ../signing.c:731 ../signing.c:982 ../signing.c:1068 ../signing.c:1092 ../signing.c:1111
+msgid "Failed to compile input"
+msgstr ""
+
+#: ../signing.c:797
+msgid "Not in Signing mode"
+msgstr ""
+
+#: ../signing.c:821 ../signing.c:873
+msgid "Mixing segwit and non-segwit inputs is not allowed"
+msgstr ""
+
+#: ../signing.c:829
+msgid "BIP 143 input without amount"
+msgstr ""
+
+#: ../signing.c:851
+msgid "Segwit not enabled on this coin"
+msgstr ""
+
+#: ../signing.c:856
+msgid "Segwit input without amount"
+msgstr ""
+
+#: ../signing.c:884
+msgid "Wrong input script type"
+msgstr ""
+
+#: ../signing.c:891
+msgid "Not enough outputs in previous transaction."
+msgstr ""
+
+#: ../signing.c:913 ../signing.c:998
+msgid "Failed to serialize input"
+msgstr ""
+
+#: ../signing.c:928 ../signing.c:1028
+msgid "Failed to serialize output"
+msgstr ""
+
+#: ../signing.c:954
+msgid "Failed to serialize extra data"
+msgstr ""
+
+#: ../signing.c:1169
+msgid "Signing error"
+msgstr ""
+
+#. DISPLAY : 6 lines
+#: ../storage.c:125
+msgid ""
+"Storage failure detected.\n"
+"\n"
+"Please unplug the device."
+msgstr ""
+"Echec de stockage détecté.\n"
+"\n"
+"Veuillez débrancher l'appareil."
+
+#. DISPLAY : 1 line
+#: ../storage.c:289
+msgid "Updating"
+msgstr "Mise à jour"
+
+#. DISPLAY : 1 line
+#: ../storage.c:588
+msgid "Waking up"
+msgstr "Démarrage"
+
+#: ../trezor.c:53
+msgid "Lock Device"
+msgstr "Vérouiller"
+
+#. DISPLAY : 5 lines
+#: ../trezor.c:56
+#, fuzzy
+msgid "Do you really want to lock your Safe-T?"
+msgstr "Voulez-vous vraiment vérouiller votre Safe-T?"
+
+#. DISPLAY : 5 lines
+#: ../u2f.c:567
+msgid "Another U2F device was used to register in this application."
+msgstr "Un autre appareil U2F a été utilisé pour s'enregister sur l'application."
+
+#. DISPLAY : 1 line
+#: ../u2f.c:574
+msgid "Register"
+msgstr "S'enregistrer"
+
+#. DISPLAY : 1 line
+#: ../u2f.c:709
+msgid "Authenticate"
+msgstr "Authentifier"
