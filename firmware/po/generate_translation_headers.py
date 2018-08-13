@@ -7,6 +7,15 @@ import sys
 
 intlDirectory = "../intl/"
 
+warningMessage = [
+    "/**\n",
+    " * CAUTION !!\n",
+    " * This file is generated directly by generate_translation_headers.h,\n",
+    " * DO NOT MODIFY IT DIRECTLY !\n",
+    " * To add/edit a translation, modify the .po related file"
+    " **/\n\n"
+];
+
 def extractTranslation(language, original, translation):
     translationFile = open(language + ".po", "r")
     for line in translationFile:
@@ -34,6 +43,7 @@ def getFileVar(fileName):
 def writeBeginning(filePointer):
     fileName = getFileName(filePointer)
     fileVar =  getFileVar(fileName)
+    filePointer.writelines(warningMessage)
     filePointer.writelines([
         "#ifndef " + fileVar +"\n",
         "#define " + fileVar +"\n",
@@ -55,6 +65,7 @@ def writeEnd(filePointer):
 def writeIntlFile(languages, originalLength):
     intlFile = open(intlDirectory + "intl.h", "w+")
     fileVar = getFileVar(getFileName(intlFile))
+    intlFile.writelines(warningMessage)
     intlFile.writelines([
         "#ifndef " + fileVar +"\n",
         "#define " + fileVar +"\n",
@@ -91,7 +102,7 @@ def writeTranslationFiles(language):
     writeBeginning(translationHeader)
 
     # first element is empty (comment in the po file), starting loop to 1
-    for x in range(1, originalLength-1):
+    for x in range(1, originalLength):
         originalHeader.write("\t" + original[x] + ",\n")
         if translation[x] == "\"\"":
             translationHeader.write("\t" + original[x] + ",\n")
@@ -102,12 +113,12 @@ def writeTranslationFiles(language):
     writeEnd(translationHeader)
     originalHeader.close
     translationHeader.close
-    return originalLength
+    return originalLength-1
 
 traductionNum = 0
 languages = sys.argv[1:len(sys.argv)]
-print("languages: " + str(languages))
-for language in languages:
-    traductionsNum = writeTranslationFiles(language)
 
-writeIntlFile(languages, traductionsNum)
+for language in languages:
+    traductionNum = writeTranslationFiles(language)
+
+writeIntlFile(languages, traductionNum)

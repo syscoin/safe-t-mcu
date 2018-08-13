@@ -1,3 +1,5 @@
+PYTHON = python3
+
 POT_SOURCES += bl_check.pot
 POT_SOURCES += trezor.pot
 POT_SOURCES += protect.pot
@@ -12,19 +14,20 @@ POT_SOURCES += layout2.pot
 POT_SOURCES += ethereum.pot
 POT_SOURCES += recovery.pot
 
+LANGUAGES = fr de
+
+LINE_WIDTH = 100
+MSGCAT = msgcat -w $(LINE_WIDTH) --sort-by-file
 rm = rm -rf
 
-%.pot: ../%.c
-	xgettext --keyword=_ --language=C --add-comments --sort-output -o $@ $<
+%.pot: ../%.c .FORCE
+	xgettext -w $(LINE_WIDTH) --keyword=_ -c// --language=C --add-comments -o $@ $<
 
 %po: %pot
-	msginit --no-translator --input=$< --locale=$(LOCALE) -o $@
+	msginit -w $(LINE_WIDTH) --no-translator --input=$< --locale=$(LOCALE) -o $@
 
-fr.pot: $(POT_SOURCES)
-	msgcat $^ -o $@
-
-de.pot: $(POT_SOURCES)
-	msgcat $^ -o $@
+fr.pot de.pot: $(POT_SOURCES)
+	$(MSGCAT) $^ -o $@
 
 # Be shure to have the locale installed on your computer (locale -a to check)
 init:
@@ -33,9 +36,14 @@ init:
 	$(MAKE) clean
 
 update:
-	$(MAKE) fr.pot de.pot
-	msgmerge fr.po fr.pot --update
-	msgmerge de.po de.pot --update
+	$(foreach language, $(LANGUAGES), $(MAKE) $(language).pot; msgmerge $(language).po $(language).pot --update --sort-by-file -w $(LINE_WIDTH);)
+
+headers:
+	$(PYTHON) generate_translation_headers.py $(LANGUAGES)
 
 clean:
 	@$(rm) $(POT_SOURCES) fr.pot de.pot
+
+.PHONY: clean
+
+.FORCE:
