@@ -898,13 +898,14 @@ void layoutCosiCommitSign(const uint32_t *address_n, size_t address_n_count, con
 	char desc_buf[32];
 	if (is_slip18(address_n, address_n_count)) {
 		if (final_sign) {
+
+			#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 			// DISPLAY : 1 line
-			strlcpy(desc_buf, _("CoSi sign index #?"), sizeof(desc_buf));
-			desc_buf[16] = '0' + (address_n[1] & 0x7FFFFFFF);
+			snprintf(desc_buf, sizeof(desc_buf),_("CoSi sign index %c?"), '0' + (address_n[1] & 0x7FFFFFFF));
 		} else {
+			#pragma GCC diagnostic ignored "-Wformat-nonliteral"
 			// DISPLAY : 1 line
-			strlcpy(desc_buf, _("CoSi commit index #?"), sizeof(desc_buf));
-			desc_buf[18] = '0' + (address_n[1] & 0x7FFFFFFF);
+			snprintf(desc_buf, sizeof(desc_buf), _("CoSi commit index %c?"), '0' + (address_n[1] & 0x7FFFFFFF));
 		}
 		desc = desc_buf;
 	}
