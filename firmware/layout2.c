@@ -420,31 +420,26 @@ void layoutResetWord(const char *word, int pass, int word_pos, bool last)
 	} else {
 		action = _("Write down the seed");
 	}
+	const char *index_text = _("Word number ## is:");
+	char index_str[strlen(index_text) + 1];
+	strcpy(index_str, index_text);
 
-	char index_str[] = "##th word is:";
+	char *first_digit = strchr(index_str, '#');
+	char *second_digit = strrchr(index_str, '#');
 	if (word_pos < 10) {
-		index_str[0] = ' ';
+		*first_digit =  ' ';
 	} else {
-		index_str[0] = '0' + word_pos / 10;
+		*first_digit = '0' + word_pos / 10;
 	}
-	index_str[1] = '0' + word_pos % 10;
-	if (word_pos == 1 || word_pos == 21) {
-		index_str[2] = 's'; index_str[3] = 't';
-	} else
-	if (word_pos == 2 || word_pos == 22) {
-		index_str[2] = 'n'; index_str[3] = 'd';
-	} else
-	if (word_pos == 3 || word_pos == 23) {
-		index_str[2] = 'r'; index_str[3] = 'd';
-	}
-
+	*second_digit = '0' + word_pos % 10;
+	
 	int left = 0;
 	oledClear();
 	oledDrawBitmap(0, 0, &bmp_icon_info);
 	left = bmp_icon_info.width + 4;
 
 	oledDrawString(left, 0 * 9, action, FONT_STANDARD);
-	oledDrawString(left, 2 * 9, word_pos < 10 ? index_str + 1 : index_str, FONT_STANDARD);
+	oledDrawString(left, 2 * 9, index_str, FONT_STANDARD);
 	oledDrawString(left, 3 * 9, word, FONT_STANDARD | FONT_DOUBLE);
 	oledHLine(OLED_HEIGHT - 13);
 	layoutButtonYes(btnYes);
