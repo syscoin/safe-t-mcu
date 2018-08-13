@@ -20,6 +20,8 @@
 #ifndef __GETTEXT_H__
 #define __GETTEXT_H__
 
-#define _(X) (X)
+#define _(X) strGetTrad(X)
+
+char const * strGetTrad(char const * str);
 
 #endif

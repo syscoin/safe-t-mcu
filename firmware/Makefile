@@ -28,6 +28,7 @@ OBJS += ethereum.o
 OBJS += ethereum_tokens.o
 OBJS += nem2.o
 OBJS += nem_mosaics.o
+OBJS += gettext.o
 
 OBJS += debug.o
 
@@ -99,6 +100,13 @@ CFLAGS += -DUPDATE_BOOTLOADER=$(UPDATE_BOOTLOADER)
 CFLAGS += -DSCM_REVISION='"$(shell git rev-parse HEAD | sed 's:\(..\):\\x\1:g')"'
 CFLAGS += -DUSE_ETHEREUM=1
 CFLAGS += -DUSE_NEM=1
+
+# Dependencies for the translations
+intl/intl.h: intl/de.h intl/fr.h
+
+intl/%.h: po/%.po
+	echo make headers
+	$(MAKE) -C po headers
 
 define GENERATE_CODE
 # $(1) - Basename for script and output header file

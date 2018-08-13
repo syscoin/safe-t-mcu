@@ -235,7 +235,7 @@ void layoutHome(void)
 	}
 	if (storage_needsBackup()) {
 		oledBox(0, 0, 127, 8, false);
-		oledDrawStringCenter(0, "NEEDS BACKUP!", FONT_STANDARD);
+		oledDrawStringCenter(0, _("NEEDS BACKUP!"), FONT_STANDARD);
 	}
 #if CRYPTOMEM
 	} else {
@@ -832,7 +832,7 @@ static inline bool is_slip18(const uint32_t *address_n, size_t address_n_count)
 
 void layoutCosiCommitSign(const uint32_t *address_n, size_t address_n_count, const uint8_t *data, uint32_t len, bool final_sign)
 {
-	char *desc = final_sign ? _("CoSi sign message?") : _("CoSi commit message?");
+	char *desc = final_sign ? (char *) _("CoSi sign message?") : (char *) _("CoSi commit message?");
 	char desc_buf[32];
 	if (is_slip18(address_n, address_n_count)) {
 		if (final_sign) {

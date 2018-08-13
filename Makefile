@@ -36,7 +36,7 @@ libtrezor.a: $(OBJS)
 
 include Makefile.include
 
-.PHONY: ALL vendor bootloader firmware nanopb
+.PHONY: ALL vendor bootloader firmware nanopb translations update_translations
 
 vendor:
 	git submodule update --init
@@ -72,3 +72,5 @@ allclean: mostlyclean
 libopencm3:
 	FP_FLAGS="-mfloat-abi=soft" V=1 $(MAKE) -C vendor/libopencm3
 
+update_translations:
+	$(MAKE) -C firmware/po update
