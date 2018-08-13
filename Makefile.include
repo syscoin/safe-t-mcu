@@ -117,7 +117,8 @@ LDFLAGS  += --static \
             -L$(TOOLCHAIN_DIR)/lib \
             -T$(LDSCRIPT) \
             -nostartfiles \
-            -Wl,--gc-sections
+            -Wl,--gc-sections \
+            --specs=nano.specs
 
 LDLIBS   += -ltrezor
 LIBDEPS  += $(TOP_DIR)/libtrezor.a
