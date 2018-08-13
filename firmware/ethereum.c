@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include <stdio.h>
 
 #include "ethereum.h"
 #include "fsm.h"
@@ -375,17 +376,17 @@ static void layoutEthereumFee(const uint8_t *value, uint32_t value_len,
 		ethereumFormatAmount(&val, NULL, tx_value, sizeof(tx_value));
 	}
 
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(
+		&bmp_icon_question,
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
-		_("Really send"),
+		// USE CASE : Really send 0.0001524 paying up to 0.0000014 for gas?
+		_("Really send %s paying up to %s for gas?"),
 		tx_value,
-		_("paying up to"),
-		gas_value,
-		_("for gas?"),
-		NULL
+		gas_value
 	);
+
 }
 
 /*

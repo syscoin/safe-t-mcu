@@ -121,7 +121,7 @@ static bool cm_init_successful;
 
 void storage_show_error(void)
 {
-	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Storage failure"), _("detected."), NULL, _("Please unplug"), _("the device."), NULL);
+	layoutDialogSplit(&bmp_icon_error, NULL, NULL, NULL, _("Storage failure detected.\n\nPlease unplug the device."));
 	shutdown();
 }
 

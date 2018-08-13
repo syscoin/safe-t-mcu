@@ -29,6 +29,9 @@
 
 extern void *layoutLast;
 
+#define MAX_LENGTH_LINE 50
+#define PIXEL_LINE_WIDTH 110
+
 #if DEBUG_LINK
 #define layoutSwipe oledClear
 #else
@@ -36,6 +39,9 @@ extern void *layoutLast;
 #endif
 
 void layoutDialogSwipe(const BITMAP *icon, const char *btnNo, const char *btnYes, const char *desc, const char *line1, const char *line2, const char *line3, const char *line4, const char *line5, const char *line6);
+void layoutDialogSplit(const BITMAP *icon, const char *btnNo, const char *btnYes, const char *desc, const char *text);
+void layoutDialogSplitFormat(const BITMAP *icon, const char *btnNo, const char *btnYes, const char *desc, const char *format, ...);
+
 void layoutProgressSwipe(const char *desc, int permil);
 
 void layoutScreensaver(void);

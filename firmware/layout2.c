@@ -19,6 +19,8 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <ctype.h>
 
 #include "layout2.h"
@@ -33,8 +35,11 @@
 #include "secp256k1.h"
 #include "nem2.h"
 #include "gettext.h"
+#include "fonts.h"
 
 #define BITCOIN_DIVISIBILITY (8)
+
+#define LINES_ON_SCREEN 6
 
 static const char *slip44_extras(uint32_t coin_type)
 {
@@ -319,34 +324,24 @@ void layoutConfirmTx(const CoinInfo *coin, uint64_t amount_out, uint64_t amount_
 	char str_out[32], str_fee[32];
 	bn_format_uint64(amount_out, NULL, coin->coin_shortcut, BITCOIN_DIVISIBILITY, 0, false, str_out, sizeof(str_out));
 	bn_format_uint64(amount_fee, NULL, coin->coin_shortcut, BITCOIN_DIVISIBILITY, 0, false, str_fee, sizeof(str_fee));
-	layoutDialogSwipe(&bmp_icon_question,
-		_("Cancel"),
-		_("Confirm"),
-		NULL,
-		_("Really send"),
-		str_out,
-		_("from your wallet?"),
-		_("Fee included:"),
-		str_fee,
-		NULL
-	);
+	layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Really send %s from your wallest?\nFee included: %s"), str_out, str_fee);
 }
 
 void layoutFeeOverThreshold(const CoinInfo *coin, uint64_t fee)
 {
 	char str_fee[32];
 	bn_format_uint64(fee, NULL, coin->coin_shortcut, BITCOIN_DIVISIBILITY, 0, false, str_fee, sizeof(str_fee));
-	layoutDialogSwipe(&bmp_icon_question,
+	
+	layoutDialogSplitFormat(
+		&bmp_icon_question,
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
-		_("Fee"),
-		str_fee,
-		_("is unexpectedly high."),
-		NULL,
-		_("Send anyway?"),
-		NULL
+		// USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
+		_("Fee %s is unexpectedly high.\n\nSend anyway?"),
+		str_fee
 	);
+
 }
 
 void layoutSignMessage(const uint8_t *msg, uint32_t len)
@@ -670,16 +665,7 @@ void layoutNEMTransferXEM(const char *desc, uint64_t quantity, const bignum256 *
 	nem_mosaicFormatAmount(NEM_MOSAIC_DEFINITION_XEM, quantity, multiplier, str_out, sizeof(str_out));
 	nem_mosaicFormatAmount(NEM_MOSAIC_DEFINITION_XEM, fee, NULL, str_fee, sizeof(str_fee));
 
-	layoutDialogSwipe(&bmp_icon_question,
-		_("Cancel"),
-		_("Next"),
-		desc,
-		_("Confirm transfer of"),
-		str_out,
-		_("and network fee of"),
-		str_fee,
-		NULL,
-		NULL);
+	layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Next"), desc, _("Confirm transfer of %s and network fee of %s"), str_out, str_fee);
 }
 
 void layoutNEMNetworkFee(const char *desc, bool confirm, const char *fee1_desc, uint64_t fee1, const char *fee2_desc, uint64_t fee2) {
@@ -710,18 +696,22 @@ void layoutNEMTransferMosaic(const NEMMosaicDefinition *definition, uint64_t qua
 
 	if (definition->has_levy) {
 		nem_mosaicFormatLevy(definition, quantity, multiplier, network, str_levy, sizeof(str_levy));
+		layoutDialogSplitFormat(&bmp_icon_question,
+			_("Cancel"),
+			_("Next"),
+			definition->has_name ? definition->name : _("Mosaic"),
+			_("Confirm transfer of %s and levy of %s"),
+			str_out,
+			str_levy
+		);
 	}
-
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(&bmp_icon_question,
 		_("Cancel"),
 		_("Next"),
 		definition->has_name ? definition->name : _("Mosaic"),
-		_("Confirm transfer of"),
-		str_out,
-		definition->has_levy ? _("and levy of") : NULL,
-		definition->has_levy ? str_levy : NULL,
-		NULL,
-		NULL);
+		_("Confirm transfer of %s"),
+		str_out
+	);
 }
 
 void layoutNEMTransferUnknownMosaic(const char *namespace, const char *mosaic, uint64_t quantity, const bignum256 *multiplier) {
@@ -736,16 +726,14 @@ void layoutNEMTransferUnknownMosaic(const char *namespace, const char *mosaic, u
 		*decimal = '\0';
 	}
 
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(&bmp_icon_question,
 		_("Cancel"),
 		_("I take the risk"),
 		_("Unknown Mosaic"),
-		_("Confirm transfer of"),
+		_("Confirm transfer of %s raw units of %s"),
 		str_out,
-		_("raw units of"),
-		mosaic_name,
-		NULL,
-		NULL);
+		mosaic_name
+	);
 }
 
 void layoutNEMTransferPayload(const uint8_t *payload, size_t length, bool encrypted) {
@@ -791,31 +779,37 @@ void layoutNEMLevy(const NEMMosaicDefinition *definition, uint8_t network) {
 	case NEMMosaicLevy_MosaicLevy_Percentile:
 		bn_format_uint64(definition->fee, NULL, NULL, 0, 0, false, str_out, sizeof(str_out));
 
-		layoutDialogSwipe(&bmp_icon_question,
+		layoutDialogSplitFormat(&bmp_icon_question,
 			_("Cancel"),
 			_("Next"),
 			_("Percentile Levy"),
-			_("Raw levy value is"),
+			_("Raw levy value is %s in "),
 			str_out,
-			_("in"),
-			mosaic ? (mosaic == definition ? _("the same mosaic") : mosaic->name) : mosaic_name,
-			NULL,
-			NULL);
+			mosaic ? (mosaic == definition ? _("the same mosaic") : mosaic->name) : mosaic_name
+		);
 		break;
 
 	case NEMMosaicLevy_MosaicLevy_Absolute:
 	default:
 		nem_mosaicFormatAmount(mosaic, definition->fee, NULL, str_out, sizeof(str_out));
-		layoutDialogSwipe(&bmp_icon_question,
-			_("Cancel"),
-			_("Next"),
-			_("Absolute Levy"),
-			_("Levy is"),
-			str_out,
-			mosaic ? (mosaic == definition ? _("in the same mosaic") : NULL) : _("in raw units of"),
-			mosaic ? NULL : mosaic_name,
-			NULL,
-			NULL);
+		if (mosaic) {
+			layoutDialogSplitFormat(&bmp_icon_question,
+				_("Cancel"),
+				_("Next"),
+				_("Absolute Levy"),
+				mosaic == definition ? _("Levy is %s in the same mosaic") : _("Levy is %s"),
+				str_out
+			);
+		} else {
+			layoutDialogSplitFormat(&bmp_icon_question,
+				_("Cancel"),
+				_("Next"),
+				_("Absolute Levy"),
+				_("Levy is %s in raw units of %s"),
+				str_out,
+				mosaic_name
+			);
+		}
 		break;
 	}
 }
@@ -853,4 +847,47 @@ void layoutCosiCommitSign(const uint32_t *address_n, size_t address_n_count, con
 	}
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"), desc,
 		str[0], str[1], str[2], str[3], NULL, NULL);
+}
+
+void layoutDialogSplit(const BITMAP *icon, const char *btnNo, const char *btnYes, const char *desc, const char *string) {
+    int lineIndex = 0;
+	int wordPixelLen = 0;
+	int linePixelLen = 0;
+	int start = 0;
+	char lines[LINES_ON_SCREEN][MAX_LENGTH_LINE] = {{0}};
+
+	for(int i = 0; i < (int) strlen(string); i++)
+	{
+		wordPixelLen += fontCharWidth(FONT_STANDARD & 0x7f, string[i]) + 1;
+		if (string[i+1] == ' ' || string[i+1] == '\0' || string[i+1] == '\n') {
+			if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH) {
+				linePixelLen += wordPixelLen;
+				strncat(lines[lineIndex], &string[start], (int) (strlen(&string[start]) - strlen(&string[i+1])));
+				start = i + 1;
+			} else if (lineIndex < LINES_ON_SCREEN - 1) {
+				lineIndex++;
+				linePixelLen = wordPixelLen;
+				strncat(lines[lineIndex], &string[start + 1], (int) (strlen(&string[start + 1]) - strlen(&string[i+1])));
+				start = i + 1;
+			}
+			wordPixelLen = 0;
+			if(string[i+1] == '\n' && lineIndex < LINES_ON_SCREEN - 1) {
+				lineIndex++;
+				linePixelLen = 0;
+			}
+		}
+	}
+	layoutDialogSwipe(icon, btnNo, btnYes, desc, lines[0], lines[1], lines[2], lines[3], lines[4], lines[5]);
+}
+
+void layoutDialogSplitFormat(const BITMAP *icon, const char *btnNo, const char *btnYes, const char *desc, const char *format, ...) {
+	char string[LINES_ON_SCREEN * MAX_LENGTH_LINE];
+
+	va_list vargs;
+
+	va_start(vargs, format);
+	vsnprintf(string, sizeof(string), format, vargs);
+	va_end(vargs);
+
+	layoutDialogSplit(icon, btnNo, btnYes, desc, string);
 }

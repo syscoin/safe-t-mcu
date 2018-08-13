@@ -7,24 +7,37 @@ import sys
 
 intlDirectory = "../intl/"
 
+poFilesDirectory = "./"
 warningMessage = [
     "/**\n",
     " * CAUTION !!\n",
     " * This file is generated directly by generate_translation_headers.h,\n",
     " * DO NOT MODIFY IT DIRECTLY !\n",
-    " * To add/edit a translation, modify the .po related file"
+    " * To add/edit a translation, modify the .po related file\n"
     " **/\n\n"
 ];
 
 def extractTranslation(language, original, translation):
-    translationFile = open(language + ".po", "r")
-    for line in translationFile:
-        matchedLine = re.search(r'^(msgid|msgstr) (.*)', line)
-        if matchedLine:
-            if matchedLine.group(1) == "msgid":
-                original.append(matchedLine.group(2))
-            if matchedLine.group(1) == "msgstr":
-                translation.append(matchedLine.group(2))
+    translationFile = open(poFilesDirectory + language + ".po", "r", encoding='utf-8')
+    line = translationFile.readline()
+    while line:
+        matchMsgid = re.search(r'^msgid "(.*)"', line)
+        if matchMsgid:
+            string = matchMsgid.group(1)
+            line = translationFile.readline()
+            matchMsgstr = re.search(r'^msgstr "(.*)"', line)
+            while not matchMsgstr:
+                string += re.search(r'"(.*)"', line).group(1)
+                line = translationFile.readline()
+                matchMsgstr = re.search(r'^msgstr "(.*)"', line)
+            original.append('"' + string + '"')
+            string = matchMsgstr.group(1)
+            line = translationFile.readline()
+            while(line != '\n' and line != ''):
+                string += re.search(r'"(.*)"', line).group(1)
+                line = translationFile.readline()
+            translation.append('"' + string + '"')
+        line = translationFile.readline()
     translationFile.close
 
 def checkLength(originalLength, translationLength):
@@ -96,7 +109,7 @@ def writeTranslationFiles(language):
     checkLength(originalLength, translationLength)
 
     originalHeader = open(intlDirectory + "en.h", "w+")
-    translationHeader = open(intlDirectory + language + ".h", "w+")
+    translationHeader = open(intlDirectory + language + ".h", "w+", encoding='utf-8')
 
     writeBeginning(originalHeader)
     writeBeginning(translationHeader)

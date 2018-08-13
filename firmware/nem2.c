@@ -186,16 +186,12 @@ bool nem_askTransfer(const NEMTransactionCommon *common, const NEMTransfer *tran
 		bn_read_uint64(transfer->amount, &multiplier);
 
 		if (unknownMosaic) {
-			layoutDialogSwipe(&bmp_icon_question,
+			layoutDialogSplit(&bmp_icon_question,
 				_("Cancel"),
 				_("I take the risk"),
 				_("Unknown Mosaics"),
-				_("Divisibility and levy"),
-				_("cannot be shown for"),
-				_("unknown mosaics!"),
-				NULL,
-				NULL,
-				NULL);
+				_("Divisibility and levy cannot be shown for unknown mosaics!")
+			);
 			if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 				return false;
 			}
@@ -321,16 +317,24 @@ bool nem_fsmTransfer(nem_transaction_ctx *context, const HDNode *node, const NEM
 }
 
 bool nem_askProvisionNamespace(const NEMTransactionCommon *common, const NEMProvisionNamespace *provision_namespace, const char *desc) {
-	layoutDialogSwipe(&bmp_icon_question,
-		_("Cancel"),
-		_("Next"),
-		desc,
-		_("Create namespace"),
-		provision_namespace->namespace,
-		provision_namespace->has_parent ? _("under namespace") : NULL,
-		provision_namespace->has_parent ? provision_namespace->parent : NULL,
-		NULL,
-		NULL);
+	if(provision_namespace->has_parent) {
+		layoutDialogSplitFormat(&bmp_icon_question,
+			_("Cancel"),
+			_("Next"),
+			desc,
+			_("Create namespace %s under namespace %s"),
+			provision_namespace->namespace,
+			provision_namespace->parent
+		);	
+	} else {
+		layoutDialogSplitFormat(&bmp_icon_question,
+			_("Cancel"),
+			_("Next"),
+			desc,
+			_("Create namespace"),
+			provision_namespace->namespace
+		);
+	}
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
@@ -357,16 +361,14 @@ bool nem_fsmProvisionNamespace(nem_transaction_ctx *context, const NEMTransactio
 }
 
 bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCreation *mosaic_creation, const char *desc, const char *address) {
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(&bmp_icon_question,
 		_("Cancel"),
 		_("Next"),
 		desc,
-		_("Create mosaic"),
+		_("Create mosaic %s under namespace %s"),
 		mosaic_creation->definition.mosaic,
-		_("under namespace"),
-		mosaic_creation->definition.namespace,
-		NULL,
-		NULL);
+		mosaic_creation->definition.namespace
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
@@ -408,16 +410,12 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 		}
 
 		if (strcmp(address, mosaic_creation->definition.levy_address) == 0) {
-			layoutDialogSwipe(&bmp_icon_question,
+			layoutDialogSplit(&bmp_icon_question,
 				_("Cancel"),
 				_("Next"),
 				_("Levy Recipient"),
-				_("Levy will be paid to"),
-				_("yourself"),
-				NULL,
-				NULL,
-				NULL,
-				NULL);
+				_("Levy will be paid to yourself")
+			);
 		} else {
 			layoutNEMDialog(&bmp_icon_question,
 				_("Cancel"),
@@ -464,33 +462,29 @@ bool nem_fsmMosaicCreation(nem_transaction_ctx *context, const NEMTransactionCom
 }
 
 bool nem_askSupplyChange(const NEMTransactionCommon *common, const NEMMosaicSupplyChange *supply_change, const char *desc) {
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(&bmp_icon_question,
 		_("Cancel"),
 		_("Next"),
 		desc,
-		_("Modify supply for"),
+		_("Modify supply for %s under namespace %s"),
 		supply_change->mosaic,
-		_("under namespace"),
-		supply_change->namespace,
-		NULL,
-		NULL);
+		supply_change->namespace
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
 
 	char str_out[32];
 	bn_format_uint64(supply_change->delta, NULL, NULL, 0, 0, false, str_out, sizeof(str_out));
-
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplitFormat(&bmp_icon_question,
 		_("Cancel"),
 		_("Next"),
 		desc,
-		supply_change->type == NEMSupplyChangeType_SupplyChange_Increase ? _("Increase supply by") : _("Decrease supply by"),
-		str_out,
-		_("whole units"),
-		NULL,
-		NULL,
-		NULL);
+		supply_change->type == NEMSupplyChangeType_SupplyChange_Increase ?
+			_("Increase supply by %s whole units") :
+			_("Decrease supply by %s whole units"),
+		str_out
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
@@ -518,16 +512,12 @@ bool nem_fsmSupplyChange(nem_transaction_ctx *context, const NEMTransactionCommo
 
 bool nem_askAggregateModification(const NEMTransactionCommon *common, const NEMAggregateModification *aggregate_modification, const char *desc, bool creation) {
 	if (creation) {
-		layoutDialogSwipe(&bmp_icon_question,
+		layoutDialogSplit(&bmp_icon_question,
 			_("Cancel"),
 			_("Next"),
 			desc,
-			_("Convert account to"),
-			_("multisig account?"),
-			NULL,
-			NULL,
-			NULL,
-			NULL);
+			_("Convert account to multisig account?")
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 			return false;
 		}
@@ -562,16 +552,15 @@ bool nem_askAggregateModification(const NEMTransactionCommon *common, const NEMA
 			str_out,
 			sizeof(str_out));
 
-		layoutDialogSwipe(&bmp_icon_question,
+		layoutDialogSplitFormat(&bmp_icon_question,
 			_("Cancel"),
 			_("Next"),
 			desc,
-			creation ? _("Set minimum") : (relative_change < 0 ? _("Decrease minimum") : _("Increase minimum")),
-			creation ? _("cosignatories to") : _("cosignatories by"),
-			str_out,
-			NULL,
-			NULL,
-			NULL);
+			creation ?
+				_("Set minimum cosignatories to %s") :
+				(relative_change < 0 ? _("Decrease minimum cosignatories by %s") : _("Increase minimum cosignatories by %s")),
+			str_out
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 			return false;
 		}
@@ -614,16 +603,14 @@ bool nem_fsmAggregateModification(nem_transaction_ctx *context, const NEMTransac
 }
 
 bool nem_askImportanceTransfer(const NEMTransactionCommon *common, const NEMImportanceTransfer *importance_transfer, const char *desc) {
-	layoutDialogSwipe(&bmp_icon_question,
+	layoutDialogSplit(&bmp_icon_question,
 		_("Cancel"),
 		_("Next"),
 		desc,
-		importance_transfer->mode == NEMImportanceTransferMode_ImportanceTransfer_Activate ? _("Activate remote") : _("Deactivate remote"),
-		_("harvesting?"),
-		NULL,
-		NULL,
-		NULL,
-		NULL);
+		importance_transfer->mode == NEMImportanceTransferMode_ImportanceTransfer_Activate ?
+			_("Activate remote harvesting?") :
+			_("Deactivate remote harvesting?")
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}

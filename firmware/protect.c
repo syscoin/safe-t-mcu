@@ -166,11 +166,9 @@ static void protectCheckMaxTry(uint32_t wait) {
 		strlcpy(remaining_zones_str, _("1 crypto zone left"), sizeof(remaining_zones_str));
 	else
 		strlcpy(remaining_zones_str, _("no crypto zone left"), sizeof(remaining_zones_str));
-
-	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Too many wrong PIN"), _("attempts. Storage has"), _("been wiped."),
-			remaining_zones_str, _("Please unplug"), _("the device."));
+	layoutDialogSplitFormat(&bmp_icon_error, NULL, NULL, NULL,_("Too many wrong PIN attempts. Storage has been wiped.\n%s\nPlease unplug the device."), remaining_zones_str);
 #else
-	layoutDialog(&bmp_icon_error, NULL, NULL, NULL, _("Too many wrong PIN"), _("attempts. Storage has"), _("been wiped."), NULL, _("Please unplug"), _("the device."));
+	layoutDialogSplit(&bmp_icon_error, NULL, NULL, NULL,_("Too many wrong PIN attempts. Storage has been wiped.\n\nPlease unplug the device."));
 #endif
 	for (;;) {} // loop forever
 }
@@ -200,7 +198,7 @@ bool protectPin(bool use_cached)
 			strlcpy(attemptstrbuf, _("   0 attempts left"), sizeof(attemptstrbuf));
 			attemptstrbuf[3] = attempts + '0';
 		}
-		layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Wrong PIN entered"), NULL, _("Please wait"), _("to continue ..."), NULL, attemptstrbuf);
+		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL,_("Wrong PIN entered\n\nPlease wait to continue ...\n\n%s"), attemptstrbuf);
 		// wait 5 seconds
 		usbSleep(5000);
 		if (msg_tiny_id == MessageType_MessageType_Initialize) {
@@ -318,8 +316,7 @@ bool protectPassphrase(void)
 	memset(&resp, 0, sizeof(PassphraseRequest));
 	usbTiny(1);
 	msg_write(MessageType_MessageType_PassphraseRequest, &resp);
-
-	layoutDialogSwipe(&bmp_icon_info, NULL, NULL, NULL, _("Please enter your"), _("passphrase using"), _("the computer's"), _("keyboard."), NULL, NULL);
+	layoutDialogSplit(&bmp_icon_info, NULL, NULL, NULL,_("Please enter your passphrase using the computer's keyboard."));
 
 	bool result;
 	for (;;) {

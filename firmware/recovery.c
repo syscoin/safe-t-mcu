@@ -126,27 +126,6 @@ static uint8_t word_matrix[9];
 #define TABLE1(x) MASK_IDX(word_table1[x])
 #define TABLE2(x) MASK_IDX(word_table2[x])
 
-/* Helper function to format a two digit number.
- * Parameter dest is buffer containing the string. It should already
- * start with "##th".  The number is written in place.
- * Parameter number gives the number that we should format.
- */
-static void format_number(char *dest, int number) {
-	if (number < 10) {
-		dest[0] = ' ';
-	} else {
-		dest[0] = '0' + number / 10;
-	}
-	dest[1] = '0' + number % 10;
-	if (number == 1 || number == 21) {
-		dest[2] = 's'; dest[3] = 't';
-	} else if (number == 2 || number == 22) {
-		dest[2] = 'n'; dest[3] = 'd';
-	} else if (number == 3 || number == 23) {
-		dest[2] = 'r'; dest[3] = 'd';
-	}
-}
-
 /* Send a request for a new word/matrix code to the PC.
  */
 static void recovery_request(void) {
@@ -175,10 +154,7 @@ static void recovery_done(void) {
 		if (!dry_run) {
 			// Update mnemonic on storage.
 			if (storage_setMnemonic(new_mnemonic) == false) {
-				layoutDialog(&bmp_icon_error, NULL, _("Confirm"), NULL,
-					_("Seed could not be"),
-					_("stored on the device."),
-					NULL, NULL, NULL, NULL);
+				layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL, _("Seed could not be stored on the device."));
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendFailure(FailureType_Failure_DataError,
 					_("The seed is valid but could not be stored on the device."));
@@ -200,17 +176,11 @@ static void recovery_done(void) {
 			bool match = (storage_isInitialized() && storage_containsMnemonic(new_mnemonic));
 			memzero(new_mnemonic, sizeof(new_mnemonic));
 			if (match) {
-				layoutDialog(&bmp_icon_ok, NULL, _("Confirm"), NULL,
-					_("The seed is valid"),
-					_("and MATCHES"),
-					_("the one in the device."), NULL, NULL, NULL);
+				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL, _("The seed is valid and MATCHES the one in the device."));
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendSuccess(_("The seed is valid and matches the one in the device"));
 			} else {
-				layoutDialog(&bmp_icon_error, NULL, _("Confirm"), NULL,
-					_("The seed is valid"),
-					_("but does NOT MATCH"),
-					_("the one in the device."), NULL, NULL, NULL);
+				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL, _("The seed is valid but does NOT MATCH the one in the device."));
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendFailure(FailureType_Failure_DataError,
 					_("The seed is valid but does not match the one in the device"));
@@ -222,8 +192,7 @@ static void recovery_done(void) {
 		if (!dry_run) {
 			session_clear(true);
 		} else {
-			layoutDialog(&bmp_icon_error, NULL, _("Confirm"), NULL,
-				_("The seed is"), _("INVALID!"), NULL, NULL, NULL, NULL);
+			layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL, _("The seed is INVALID!"));
 			protectButton(ButtonRequestType_ButtonRequest_Other, true);
 		}
 		fsm_sendFailure(FailureType_Failure_DataError, _("Invalid seed, are words in correct order?"));
@@ -291,10 +260,9 @@ static void display_choices(bool twoColumn, char choices[9][12], int num)
 	random_permute((char*)word_matrix, displayedChoices);
 
 	if (word_index % 4 == 0) {
-		char desc[] = "##th word";
 		int nr = (word_index / 4) + 1;
-		format_number(desc, nr);
-		layoutDialogSwipe(&bmp_icon_info, NULL, NULL, NULL, _("Please enter the"), (nr < 10 ? desc + 1 : desc), _("of your mnemonic"), NULL, NULL, NULL);
+		// DISPLAY: 5 lines
+		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter word number %d of your mnemonic"), nr);
 	} else {
 		oledBox(0, 27, 127, 63, false);
 	}
@@ -459,12 +427,10 @@ void next_word(void) {
 	if (word_pos == 0) {
 		const char * const *wl = mnemonic_wordlist();
 		strlcpy(fake_word, wl[random_uniform(2048)], sizeof(fake_word));
-		layoutDialogSwipe(&bmp_icon_info, NULL, NULL, NULL, _("Please enter the word"), NULL, fake_word, NULL, _("on your computer"), NULL);
+		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter the word\n\n%s\n\non your computer"), fake_word);
 	} else {
 		fake_word[0] = 0;
-		char desc[] = "##th word";
-		format_number(desc, word_pos);
-		layoutDialogSwipe(&bmp_icon_info, NULL, NULL, NULL, _("Please enter the"), NULL, (word_pos < 10 ? desc + 1 : desc), NULL, _("of your mnemonic"), NULL);
+		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter\n\nword number %d\n\nof your mnemonic"), word_pos);
 	}
 	recovery_request();
 }

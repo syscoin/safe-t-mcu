@@ -23,6 +23,7 @@
 #include "bl_data.h"
 #include "memory.h"
 #include "layout.h"
+#include "layout2.h"
 #include "gettext.h"
 #include "util.h"
 
@@ -48,7 +49,7 @@ void check_bootloader(void)
 	int r = memory_bootloader_hash(hash);
 
 	if (!known_bootloader(r, hash)) {
-		layoutDialog(&bmp_icon_error, NULL, NULL, NULL, "Unknown bootloader", "detected.", NULL, "Unplug your Safe-T", "contact our support.", NULL);
+		layoutDialogSplit(&bmp_icon_error, NULL, NULL, NULL, _("Unknown bootloader detected.\n\nUnplug your Safe-T\ncontact our support."));
 		shutdown();
 	}
 
@@ -76,7 +77,7 @@ void check_bootloader(void)
 	flash_lock();
 
 	// show info and halt
-	layoutDialog(&bmp_icon_info, NULL, NULL, NULL, _("Update finished"), _("successfully."), NULL, _("Please reconnect"), _("the device."), NULL);
+	layoutDialogSplit(&bmp_icon_info, NULL, NULL, NULL, _("Update finished successfully.\n\nPlease reconnect the device."));
 	shutdown();
 #endif
 #endif
