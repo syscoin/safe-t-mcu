@@ -25,7 +25,7 @@ AR       := $(PREFIX)-ar
 AS       := $(PREFIX)-as
 OPENOCD  := openocd -f interface/stlink-v2.cfg -c "transport select hla_swd" -f target/stm32f2x.cfg
 
-OPTFLAGS ?= -O3
+OPTFLAGS ?= -Os
 DBGFLAGS ?= -g -DNDEBUG
 CPUFLAGS ?= -mcpu=cortex-m3 -mthumb
 FPUFLAGS ?= -msoft-float
