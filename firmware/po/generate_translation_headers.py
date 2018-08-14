@@ -8,6 +8,16 @@ import sys
 intlDirectory = "../intl/"
 
 poFilesDirectory = "./"
+
+fontDirectory = "../../gen/"
+
+fontCharWidth = [0]*256
+
+translations_fit = True;
+
+# 128 wide OLED, icon needs 16 pixels + 4 pixels space
+PIXEL_LINE_WIDTH=128-20
+
 warningMessage = [
     "/**\n",
     " * CAUTION !!\n",
@@ -18,9 +28,19 @@ warningMessage = [
 ];
 
 def extractTranslation(language, original, translation):
+    global translations_fit
     translationFile = open(poFilesDirectory + language + ".po", "r", encoding='utf-8')
     line = translationFile.readline()
+    commentLineBefore = False
+    commentLineNow = False
+    DisplayLines=0
     while line:
+        commentLineBefore = commentLineNow
+        commentLineNow = bool(re.search(r'^#.*', line))
+        if commentLineNow:
+            matchDisplayStr = re.search(r'^#\. DISPLAY.*: (.*) line.*', line)
+            if matchDisplayStr:
+                DisplayLines = int(matchDisplayStr.group(1))
         matchMsgid = re.search(r'^msgid "(.*)"', line)
         if matchMsgid:
             string = matchMsgid.group(1)
@@ -37,6 +57,13 @@ def extractTranslation(language, original, translation):
                 string += re.search(r'"(.*)"', line).group(1)
                 line = translationFile.readline()
             translation.append('"' + string + '"')
+            if commentLineBefore and DisplayLines > 0:
+                if (checkWidth(DisplayLines, string)):
+                    print("Max. " + str(DisplayLines) + " lines")
+                    print("\"" + string + "\" too long!!")
+                    translations_fit = False
+
+            DisplayLines = 0
         line = translationFile.readline()
     translationFile.close
 
@@ -128,10 +155,45 @@ def writeTranslationFiles(language):
     translationHeader.close
     return originalLength-1
 
+def readFontMetric(fontFilename):
+    fontIncFile = open(fontFilename, "r")
+    line = fontIncFile.readline()
+    while line:
+        matchFontline = re.search(r'^.*/* 0x(..) . \*/ \(uint8_t \*\)"\\x(..)\\x.*', line)
+        if matchFontline:
+            fontCharWidth[int(matchFontline.group(1), 16)] = int(matchFontline.group(2), 16)
+        line = fontIncFile.readline()
+    fontIncFile.close
+def checkWidth(maxLines, string):
+    wordPixelLen = 0
+    linePixelLen = 0
+    lineIndex = 0
+    for i in range (0, len(string)):
+        charWidth = fontCharWidth[ord(string[i])] + 1
+        if ((string[i] == 'n' and i>0 and string[i-1] == '\\') or string[i] == '\0'):
+            lineIndex += 1
+            linePixelLen = 0
+            wordPixelLen = 0
+        elif (string[i] == ' '):
+            if(linePixelLen + wordPixelLen <= PIXEL_LINE_WIDTH):
+                linePixelLen += wordPixelLen + charWidth
+            else:
+               lineIndex += 1
+               linePixelLen = wordPixelLen + charWidth
+            wordPixelLen = 0
+        wordPixelLen += charWidth
+
+    return (lineIndex + 1 > maxLines)
+
+readFontMetric(fontDirectory + "font.inc")
+
 traductionNum = 0
 languages = sys.argv[1:len(sys.argv)]
 
 for language in languages:
     traductionNum = writeTranslationFiles(language)
+if (translations_fit == False):
+    print("does not fit\n")
+    sys.exit(1)
 
 writeIntlFile(languages, traductionNum)
