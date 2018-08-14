@@ -237,6 +237,7 @@ bool nem_askTransfer(const NEMTransactionCommon *common, const NEMTransfer *tran
 		_("Cancel"),
 		_("Confirm"),
 		desc,
+		// DISPLAY : 1 line
 		_("Confirm transfer to"),
 		transfer->recipient);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
@@ -322,6 +323,7 @@ bool nem_askProvisionNamespace(const NEMTransactionCommon *common, const NEMProv
 			_("Cancel"),
 			_("Next"),
 			desc,
+			// DISPLAY : 5 lines
 			_("Create namespace %s under namespace %s"),
 			provision_namespace->namespace,
 			provision_namespace->parent
@@ -331,6 +333,7 @@ bool nem_askProvisionNamespace(const NEMTransactionCommon *common, const NEMProv
 			_("Cancel"),
 			_("Next"),
 			desc,
+			// DISPLAY : 5 lines
 			_("Create namespace"),
 			provision_namespace->namespace
 		);
@@ -339,7 +342,16 @@ bool nem_askProvisionNamespace(const NEMTransactionCommon *common, const NEMProv
 		return false;
 	}
 
-	layoutNEMNetworkFee(desc, true, _("Confirm rental fee of"), provision_namespace->fee, _("and network fee of"), common->fee);
+	layoutNEMNetworkFee(
+		desc,
+		true,
+		// DISPLAY : 1 line
+		_("Confirm rental fee of"),
+		provision_namespace->fee,
+		// DISPLAY : 1 line
+		_("and network fee of"),
+		common->fee
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
 		return false;
 	}
@@ -365,6 +377,7 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 		_("Cancel"),
 		_("Next"),
 		desc,
+		// DISPLAY : 5 lines
 		_("Create mosaic %s under namespace %s"),
 		mosaic_creation->definition.mosaic,
 		mosaic_creation->definition.namespace
@@ -393,10 +406,19 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 		_("Cancel"),
 		_("Next"),
 		_("Properties"),
-		mosaic_creation->definition.mutable_supply ? _("Mutable supply:") : _("Immutable supply:"),
+		mosaic_creation->definition.mutable_supply ?
+			// DISPLAY : 1 line
+			_("Mutable supply:") :
+			// DISPLAY : 1 line
+			_("Immutable supply:"),
 		str_out,
+		// DISPLAY : 1 line
 		_("Mosaic will be"),
-		mosaic_creation->definition.transferable ? _("transferable") : _("non-transferable"),
+		mosaic_creation->definition.transferable ?
+			// DISPLAY : 1 line
+			_("transferable") :
+			// DISPLAY : 1 line
+			_("non-transferable"),
 		NULL,
 		NULL);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
@@ -414,6 +436,7 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 				_("Cancel"),
 				_("Next"),
 				_("Levy Recipient"),
+				// DISPLAY : 5 lines
 				_("Levy will be paid to yourself")
 			);
 		} else {
@@ -421,6 +444,7 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 				_("Cancel"),
 				_("Next"),
 				_("Levy Recipient"),
+				// DISPLAY : 1 line
 				_("Levy will be paid to"),
 				mosaic_creation->definition.levy_address);
 		}
@@ -430,7 +454,16 @@ bool nem_askMosaicCreation(const NEMTransactionCommon *common, const NEMMosaicCr
 		}
 	}
 
-	layoutNEMNetworkFee(desc, true, _("Confirm creation fee"), mosaic_creation->fee, _("and network fee of"), common->fee);
+	layoutNEMNetworkFee(
+		desc,
+		true,
+		// DISPLAY : 1 line
+		_("Confirm creation fee"),
+		mosaic_creation->fee,
+		// DISPLAY : 1 line
+		_("and network fee of"),
+		common->fee
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
 		return false;
 	}
@@ -466,6 +499,7 @@ bool nem_askSupplyChange(const NEMTransactionCommon *common, const NEMMosaicSupp
 		_("Cancel"),
 		_("Next"),
 		desc,
+		// DISPLAY : 5 lines
 		_("Modify supply for %s under namespace %s"),
 		supply_change->mosaic,
 		supply_change->namespace
@@ -481,14 +515,16 @@ bool nem_askSupplyChange(const NEMTransactionCommon *common, const NEMMosaicSupp
 		_("Next"),
 		desc,
 		supply_change->type == NEMSupplyChangeType_SupplyChange_Increase ?
+			// DISPLAY : 5 lines
 			_("Increase supply by %s whole units") :
+			// DISPLAY : 5 lines
 			_("Decrease supply by %s whole units"),
 		str_out
 	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
-
+	// DISPLAY : 1 line
 	layoutNEMNetworkFee(desc, true, _("Confirm network fee"), common->fee, NULL, 0);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
 		return false;
@@ -516,6 +552,7 @@ bool nem_askAggregateModification(const NEMTransactionCommon *common, const NEMA
 			_("Cancel"),
 			_("Next"),
 			desc,
+			// DISPLAY : 5 lines
 			_("Convert account to multisig account?")
 		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
@@ -533,7 +570,11 @@ bool nem_askAggregateModification(const NEMTransactionCommon *common, const NEMA
 			_("Cancel"),
 			_("Next"),
 			desc,
-			modification->type == NEMModificationType_CosignatoryModification_Add ? _("Add cosignatory") : _("Remove cosignatory"),
+			modification->type == NEMModificationType_CosignatoryModification_Add ?
+				// DISPLAY : 1 line
+				_("Add cosignatory") :
+				// DISPLAY : 1 line
+				_("Remove cosignatory"),
 			address);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 			return false;
@@ -557,15 +598,20 @@ bool nem_askAggregateModification(const NEMTransactionCommon *common, const NEMA
 			_("Next"),
 			desc,
 			creation ?
+				// DISPLAY : 5 lines
 				_("Set minimum cosignatories to %s") :
-				(relative_change < 0 ? _("Decrease minimum cosignatories by %s") : _("Increase minimum cosignatories by %s")),
+				(relative_change < 0 ?
+					// DISPLAY : 5 lines
+					_("Decrease minimum cosignatories by %s") :
+					// DISPLAY : 5 lines
+					_("Increase minimum cosignatories by %s")),
 			str_out
 		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 			return false;
 		}
 	}
-
+	// DISPLAY : 1 line
 	layoutNEMNetworkFee(desc, true, _("Confirm network fee"), common->fee, NULL, 0);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
 		return false;
@@ -608,13 +654,15 @@ bool nem_askImportanceTransfer(const NEMTransactionCommon *common, const NEMImpo
 		_("Next"),
 		desc,
 		importance_transfer->mode == NEMImportanceTransferMode_ImportanceTransfer_Activate ?
+			// DISPLAY : 5 lines
 			_("Activate remote harvesting?") :
+			// DISPLAY : 5 lines
 			_("Deactivate remote harvesting?")
 	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
-
+	// DISPLAY : 1 line
 	layoutNEMNetworkFee(desc, true, _("Confirm network fee"), common->fee, NULL, 0);
 	if (!protectButton(ButtonRequestType_ButtonRequest_SignTx, false)) {
 		return false;
@@ -639,12 +687,16 @@ bool nem_askMultisig(const char *address, const char *desc, bool cosigning, uint
 		_("Cancel"),
 		_("Next"),
 		desc,
-		cosigning ? _("Cosign transaction for") : _("Initiate transaction for"),
+		cosigning ?
+			// DISPLAY : 5 lines
+			_("Cosign transaction for") :
+			// DISPLAY : 5 lines
+			_("Initiate transaction for"),
 		address);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;
 	}
-
+	// DISPLAY : 1 line
 	layoutNEMNetworkFee(desc, false, _("Confirm multisig fee"), fee, NULL, 0);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
 		return false;

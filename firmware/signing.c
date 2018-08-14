@@ -470,6 +470,7 @@ void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 	hasher_Init(&hashers[1], coin->curve->hasher_sign);
 	hasher_Init(&hashers[2], coin->curve->hasher_sign);
 
+	// DISPLAY : 1 line
 	layoutProgressSwipe(_("Signing transaction"), 0);
 
 	send_req_1_input();
@@ -579,6 +580,7 @@ static bool signing_check_output(TxOutputType *txoutput) {
 	spending += txoutput->amount;
 	int co = compile_output(coin, root, txoutput, &bin_output, !is_change);
 	if (!is_change) {
+		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
 	}
 	if (co < 0) {
@@ -642,6 +644,7 @@ static void phase1_request_next_output(void) {
 		}
 		// Everything was checked, now phase 2 begins and the transaction is signed.
 		progress_meta_step = progress_step / (inputs_count + outputs_count);
+		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
 		idx1 = 0;
 		phase2_request_next_input();
@@ -798,6 +801,7 @@ void signing_txack(TransactionType *tx)
 
 	static int update_ctr = 0;
 	if (update_ctr++ == 20) {
+		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
 		update_ctr = 0;
 	}
@@ -1035,6 +1039,7 @@ void signing_txack(TransactionType *tx)
 				// since this took a longer time, update progress
 				signatures++;
 				progress = 500 + ((signatures * progress_step) >> PROGRESS_PRECISION);
+				// DISPLAY : 1 line
 				layoutProgress(_("Signing transaction"), progress);
 				update_ctr = 0;
 				if (idx1 < inputs_count - 1) {
@@ -1078,6 +1083,7 @@ void signing_txack(TransactionType *tx)
 				// since this took a longer time, update progress
 				signatures++;
 				progress = 500 + ((signatures * progress_step) >> PROGRESS_PRECISION);
+				// DISPLAY : 1 line
 				layoutProgress(_("Signing transaction"), progress);
 				update_ctr = 0;
 			} else if (tx->inputs[0].script_type == InputScriptType_SPENDP2SHWITNESS
@@ -1147,6 +1153,7 @@ void signing_txack(TransactionType *tx)
 			}
 			signatures++;
 			progress = 500 + ((signatures * progress_step) >> PROGRESS_PRECISION);
+			// DISPLAY : 1 line
 			layoutProgress(_("Signing transaction"), progress);
 			update_ctr = 0;
 			if (idx1 < inputs_count - 1) {

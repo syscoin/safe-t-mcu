@@ -154,7 +154,10 @@ static void recovery_done(void) {
 		if (!dry_run) {
 			// Update mnemonic on storage.
 			if (storage_setMnemonic(new_mnemonic) == false) {
-				layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL, _("Seed could not be stored on the device."));
+				layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL,
+					// DISPLAY: 5 lines
+					_("Seed could not be stored on the device.")
+				);
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendFailure(FailureType_Failure_DataError,
 					_("The seed is valid but could not be stored on the device."));
@@ -176,14 +179,20 @@ static void recovery_done(void) {
 			bool match = (storage_isInitialized() && storage_containsMnemonic(new_mnemonic));
 			memzero(new_mnemonic, sizeof(new_mnemonic));
 			if (match) {
-				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL, _("The seed is valid and MATCHES the one in the device."));
+				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL,
+					// DISPLAY: 5 lines
+					_("The seed is valid and MATCHES the one in the device.")
+				);
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendSuccess(_("The seed is valid and matches the one in the device"));
 			} else {
-				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL, _("The seed is valid but does NOT MATCH the one in the device."));
+				layoutDialogSplit(&bmp_icon_ok, NULL, _("Confirm"), NULL,
+					// DISPLAY: 5 lines
+					_("The seed is valid but does NOT MATCH the one in the device.")
+				);
 				protectButton(ButtonRequestType_ButtonRequest_Other, true);
 				fsm_sendFailure(FailureType_Failure_DataError,
-					_("The seed is valid but does not match the one in the device"));
+					_("The seed is valid but does not match the one in the device."));
 			}
 		}
 	} else {
@@ -192,7 +201,10 @@ static void recovery_done(void) {
 		if (!dry_run) {
 			session_clear(true);
 		} else {
-			layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL, _("The seed is INVALID!"));
+			layoutDialogSplit(&bmp_icon_error, NULL, _("Confirm"), NULL,
+				// DISPLAY: 5 lines
+				_("The seed is INVALID!")
+			);
 			protectButton(ButtonRequestType_ButtonRequest_Other, true);
 		}
 		fsm_sendFailure(FailureType_Failure_DataError, _("Invalid seed, are words in correct order?"));
@@ -261,7 +273,7 @@ static void display_choices(bool twoColumn, char choices[9][12], int num)
 
 	if (word_index % 4 == 0) {
 		int nr = (word_index / 4) + 1;
-		// DISPLAY: 5 lines
+		// DISPLAY: 3 lines
 		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter word number %d of your mnemonic"), nr);
 	} else {
 		oledBox(0, 27, 127, 63, false);
@@ -427,9 +439,11 @@ void next_word(void) {
 	if (word_pos == 0) {
 		const char * const *wl = mnemonic_wordlist();
 		strlcpy(fake_word, wl[random_uniform(2048)], sizeof(fake_word));
+		// DISPLAY: 5 lines
 		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter the word\n\n%s\n\non your computer"), fake_word);
 	} else {
 		fake_word[0] = 0;
+		// DISPLAY: 5 lines
 		layoutDialogSplitFormat(&bmp_icon_info, NULL, NULL, NULL, _("Please enter\n\nword number %d\n\nof your mnemonic"), word_pos);
 	}
 	recovery_request();

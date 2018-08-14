@@ -339,7 +339,10 @@ void fsm_msgPing(Ping *msg)
 	RESP_INIT(Success);
 
 	if (msg->has_button_protection && msg->button_protection) {
-		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to answer to ping?"));
+		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+			// DISPLAY: 5 lines
+			_("Do you really want to answer to ping?")
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();
@@ -371,7 +374,10 @@ void fsm_msgChangePin(ChangePin *msg)
 	bool removal = msg->has_remove && msg->remove;
 	if (removal) {
 		if (storage_hasPin()) {
-			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to remove current PIN?"));
+			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+				// DISPLAY: 5 lines
+				_("Do you really want to remove current PIN?")
+			);
 
 		} else {
 			fsm_sendSuccess(_("PIN removed"));
@@ -379,11 +385,17 @@ void fsm_msgChangePin(ChangePin *msg)
 		}
 	} else {
 		if (storage_hasPin()) {
-			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to change current PIN?"));
+			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, 
+				// DISPLAY: 5 lines
+				_("Do you really want to change current PIN?")
+			);
 		} else {
 			/* only allow to set a PIN on an initialized device */
 			CHECK_INITIALIZED
-			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to set new PIN?"));
+			layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+				// DISPLAY: 5 lines				
+				_("Do you really want to set new PIN?")
+			);
 
 		}
 	}
@@ -417,12 +429,18 @@ void fsm_msgWipeDevice(WipeDevice *msg)
 		CHECK_PIN
 	}
 	if (force && storage_hasPin() && !session_isPinCached()) {
-		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to wipe the device?\n\nAll data and one zone of the secure store will be lost."));
+		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+			// DISPLAY: 5 lines
+			_("Do you really want to wipe the device?\n\nAll data and one zone of the secure store will be lost.")
+		);
 	} else {
 #else
 	(void)msg;
 #endif
-	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to wipe the device?\n\nAll data will be lost."));
+	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+		// DISPLAY: 5 lines
+		_("Do you really want to wipe the device?\n\nAll data will be lost.")
+	);
 #if CRYPTOMEM
 	}
 #endif
@@ -441,7 +459,10 @@ void fsm_msgWipeDevice(WipeDevice *msg)
 void fsm_msgGetEntropy(GetEntropy *msg)
 {
 #if !DEBUG_RNG
-	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to send entropy?"));
+	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+		// DISPLAY: 5 lines
+		_("Do you really want to send entropy?")
+	);
 
 	if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 		fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
@@ -520,6 +541,7 @@ void fsm_msgLoadDevice(LoadDevice *msg)
 		_("Cancel"),
 		_("I take the risk"),
 		NULL,
+		// DISPLAY: 5 lines
 		_("Loading private seed is not recommended. Continue only if you know what you are doing!")
 	);
 	
@@ -688,7 +710,11 @@ void fsm_msgApplySettings(ApplySettings *msg)
 	CHECK_PIN
 
 	if (msg->has_label) {
-		layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to change name to %s?"), msg->label);
+		layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+			// DISPLAY: 5 lines
+			_("Do you really want to change name to %s?"),
+			msg->label
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();
@@ -696,7 +722,11 @@ void fsm_msgApplySettings(ApplySettings *msg)
 		}
 	}
 	if (msg->has_language) {
-		layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to change language to %s?"), msg->language);
+		layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+			// DISPLAY: 5 lines
+			_("Do you really want to change language to %s?"),
+			msg->language
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();
@@ -705,7 +735,9 @@ void fsm_msgApplySettings(ApplySettings *msg)
 	}
 	if (msg->has_use_passphrase) {
 		const char * message = msg->use_passphrase ?
+			// DISPLAY: 5 lines
 			_("Do you really want to enable passphrase encryption?") :
+			// DISPLAY: 5 lines
 			_("Do you really want to disable passphrase encryption?");
 		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, message);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
@@ -715,7 +747,10 @@ void fsm_msgApplySettings(ApplySettings *msg)
 		}
 	}
 	if (msg->has_homescreen) {
-		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to change the home screen?"));
+		layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+			// DISPLAY: 5 lines
+			_("Do you really want to change the home screen?")
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();
@@ -839,6 +874,7 @@ void fsm_msgGetAddress(GetAddress *msg)
 	hdnode_fill_public_key(node);
 
 	char address[MAX_ADDR_SIZE];
+	// DISPLAY: 1 line
 	layoutProgress(_("Computing address"), 0);
 	if (!compute_address(coin, msg->script_type, node, msg->has_multisig, &msg->multisig, address)) {
 		fsm_sendFailure(FailureType_Failure_DataError, _("Can't encode address"));
@@ -863,7 +899,10 @@ void fsm_msgGetAddress(GetAddress *msg)
 		bool mismatch = path_mismatched(coin, msg);
 
 		if (mismatch) {
-			layoutDialogSplit(&bmp_icon_warning, _("Abort"), _("Continue"), NULL, _("Wrong address path for selected coin.\n\nContinue at your own risk!"));
+			layoutDialogSplit(&bmp_icon_warning, _("Abort"), _("Continue"), NULL,
+				// DISPLAY: 5 lines
+				_("Wrong address path for selected coin.\n\nContinue at your own risk!")
+			);
 			if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {
 				fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 				layoutHome();
@@ -1079,6 +1118,7 @@ void fsm_msgSignIdentity(SignIdentity *msg)
 	bool sign_gpg = msg->identity.has_proto && (strcmp(msg->identity.proto, "gpg") == 0);
 
 	int result = 0;
+	// DISPLAY: 5 lines
 	layoutProgressSwipe(_("Signing"), 0);
 	if (sign_ssh) { // SSH does not sign visual challenge
 		result = sshMessageSign(node, msg->challenge_hidden.bytes, msg->challenge_hidden.size, resp->signature.bytes);
@@ -1268,7 +1308,10 @@ void fsm_msgRecoveryDevice(RecoveryDevice *msg)
 
 	CHECK_PARAM(!msg->has_word_count || msg->word_count == 12 || msg->word_count == 18 || msg->word_count == 24, _("Invalid word count"));
 
-	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you really want to recover the device?"));
+	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, 
+		// DISPLAY: 5 lines
+		_("Do you really want to recover the device?")
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 		fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 		layoutHome();
@@ -1295,7 +1338,10 @@ void fsm_msgWordAck(WordAck *msg)
 
 void fsm_msgSetU2FCounter(SetU2FCounter *msg)
 {
-	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Do you want to set the U2F counter?"));
+	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL,
+		// DISPLAY: 5 lines
+		_("Do you want to set the U2F counter?")
+	);
 	if (!protectButton(ButtonRequestType_ButtonRequest_ProtectCall, false)) {
 		fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 		layoutHome();
@@ -1547,7 +1593,9 @@ void fsm_msgNEMDecryptMessage(NEMDecryptMessage *msg)
 	layoutNEMDialog(&bmp_icon_question,
 		_("Cancel"),
 		_("Confirm"),
+		// DISPLAY: 1 line
 		_("Decrypt message"),
+		// DISPLAY: 1 line
 		_("Confirm address?"),
 		address);
 	if (!protectButton(ButtonRequestType_ButtonRequest_Other, false)) {

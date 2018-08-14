@@ -49,6 +49,7 @@ void check_bootloader(void)
 	int r = memory_bootloader_hash(hash);
 
 	if (!known_bootloader(r, hash)) {
+		// DISPLAY: 6 lines
 		layoutDialogSplit(&bmp_icon_error, NULL, NULL, NULL, _("Unknown bootloader detected.\n\nUnplug your Safe-T\ncontact our support."));
 		shutdown();
 	}
@@ -77,6 +78,7 @@ void check_bootloader(void)
 	flash_lock();
 
 	// show info and halt
+	// DISPLAY: 6 lines
 	layoutDialogSplit(&bmp_icon_info, NULL, NULL, NULL, _("Update finished successfully.\n\nPlease reconnect the device."));
 	shutdown();
 #endif

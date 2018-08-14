@@ -558,11 +558,19 @@ void u2f_register(const APDU *a)
 		// error: testof-user-presence is required
 		buttonUpdate(); // Clear button state
 		if (0 == memcmp(req->appId, BOGUS_APPID, U2F_APPID_SIZE)) {
-			layoutDialogSplit(&bmp_icon_warning, NULL, _("OK"), NULL, _("Another U2F device was used to register in this application."));
+			layoutDialogSplit(
+				&bmp_icon_warning,
+				NULL,
+				_("OK"),
+				NULL,
+				// DISPLAY : 5 lines
+				_("Another U2F device was used to register in this application.")
+			);
 		} else {
 			const char *appname;
 			const BITMAP *appicon;
 			getReadableAppId(req->appId, &appname, &appicon);
+			// DISPLAY : 1 line
 			layoutU2FDialog(_("Register"), appname, appicon);
 		}
 		last_req_state = REG;
@@ -697,6 +705,7 @@ void u2f_authenticate(const APDU *a)
 		const char *appname;
 		const BITMAP *appicon;
 		getReadableAppId(req->appId, &appname, &appicon);
+		// DISPLAY : 1 line
 		layoutU2FDialog(_("Authenticate"), appname, appicon);
 		last_req_state = AUTH;
 	}

@@ -54,7 +54,19 @@ void reset_init(bool display_random, uint32_t _strength, bool passphrase_protect
 	data2hex(int_entropy + 24, 8, ent_str[3]);
 
 	if (display_random) {
-		layoutDialogSwipe(&bmp_icon_info, _("Cancel"), _("Continue"), NULL, _("Internal entropy:"), ent_str[0], ent_str[1], ent_str[2], ent_str[3], NULL);
+		layoutDialogSwipe(
+			&bmp_icon_info,
+			_("Cancel"),
+			_("Continue"),
+			NULL,
+			// DISPLAY : 1 line			
+			_("Internal entropy:"),
+			ent_str[0],
+			ent_str[1],
+			ent_str[2],
+			ent_str[3],
+			NULL
+		);
 		if (!protectButton(ButtonRequestType_ButtonRequest_ResetDevice, false)) {
 			fsm_sendFailure(FailureType_Failure_ActionCancelled, NULL);
 			layoutHome();

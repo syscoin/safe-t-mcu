@@ -121,6 +121,7 @@ static bool cm_init_successful;
 
 void storage_show_error(void)
 {
+	// DISPLAY : 6 lines
 	layoutDialogSplit(&bmp_icon_error, NULL, NULL, NULL, _("Storage failure detected.\n\nPlease unplug the device."));
 	shutdown();
 }
@@ -284,6 +285,7 @@ static uint32_t storage_flash_words(uint32_t addr, const uint32_t *src, int nwor
 
 static void get_u2froot_callback(uint32_t iter, uint32_t total)
 {
+	// DISPLAY : 1 line
 	layoutProgress(_("Updating"), 1000 * iter / total);
 }
 
@@ -582,6 +584,7 @@ void storage_setHomescreen(const uint8_t *data, uint32_t size)
 static void get_root_node_callback(uint32_t iter, uint32_t total)
 {
 	usbSleep(1);
+	// DISPLAY : 1 line
 	layoutProgress(_("Waking up"), 1000 * iter / total);
 }
 

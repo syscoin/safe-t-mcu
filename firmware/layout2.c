@@ -63,9 +63,11 @@ static const char *slip44_extras(uint32_t coin_type)
 static const char *address_n_str(const uint32_t *address_n, size_t address_n_count)
 {
 	if (address_n_count > 8) {
+		// DISPLAY : 1 line
 		return _("Unknown long path");
 	}
 	if (address_n_count == 0) {
+		// DISPLAY : 1 line
 		return _("Path: m");
 	}
 
@@ -219,6 +221,7 @@ void layoutHome(void)
 		layoutSwipe();
 	}
 	layoutLast = layoutHome;
+	// DISPLAY : 1 line
 	const char *label = storage_isInitialized() ? storage_getLabel() : _("Go to safe-t.io/start");
 #if CRYPTOMEM
 	if (storage_cm_init_successful()) {
@@ -240,6 +243,7 @@ void layoutHome(void)
 	}
 	if (storage_needsBackup()) {
 		oledBox(0, 0, 127, 8, false);
+		// DISPLAY : 1 line
 		oledDrawStringCenter(0, _("NEEDS BACKUP!"), FONT_STANDARD);
 	}
 #if CRYPTOMEM
@@ -269,6 +273,7 @@ void layoutConfirmOutput(const CoinInfo *coin, const TxOutputType *out)
 	layoutSwipe();
 	oledClear();
 	oledDrawBitmap(0, 0, &bmp_icon_question);
+	// DISPLAY : 1 line
 	oledDrawString(20, 0 * 9, _("Confirm sending"), FONT_STANDARD);
 	oledDrawString(20, 1 * 9, str_out, FONT_STANDARD);
 	int left = linelen > 18 ? 0 : 20;
@@ -283,7 +288,9 @@ void layoutConfirmOutput(const CoinInfo *coin, const TxOutputType *out)
 			oledHLine(OLED_HEIGHT - 13);
 		}
 	}
+	// DISPLAY : 1 line
 	layoutButtonNo(_("Cancel"));
+	// DISPLAY : 1 line
 	layoutButtonYes(_("Confirm"));
 	oledRefresh();
 }
@@ -310,6 +317,7 @@ void layoutConfirmOpReturn(const uint8_t *data, uint32_t size)
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
+		// DISPLAY : 1 line
 		_("Confirm OP_RETURN:"),
 		str[0],
 		str[1],
@@ -324,7 +332,15 @@ void layoutConfirmTx(const CoinInfo *coin, uint64_t amount_out, uint64_t amount_
 	char str_out[32], str_fee[32];
 	bn_format_uint64(amount_out, NULL, coin->coin_shortcut, BITCOIN_DIVISIBILITY, 0, false, str_out, sizeof(str_out));
 	bn_format_uint64(amount_fee, NULL, coin->coin_shortcut, BITCOIN_DIVISIBILITY, 0, false, str_fee, sizeof(str_fee));
-	layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, _("Really send %s from your wallest?\nFee included: %s"), str_out, str_fee);
+	layoutDialogSplitFormat(&bmp_icon_question,
+		_("Cancel"),
+		_("Confirm"),
+		NULL,
+		// DISPLAY : 5 lines
+		_("Really send %s from your wallet?\nFee included: %s"),
+		str_out,
+		str_fee
+	);
 }
 
 void layoutFeeOverThreshold(const CoinInfo *coin, uint64_t fee)
@@ -337,7 +353,7 @@ void layoutFeeOverThreshold(const CoinInfo *coin, uint64_t fee)
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
-		// USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
+		// DISPLAY : 5 lines USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
 		_("Fee %s is unexpectedly high.\n\nSend anyway?"),
 		str_fee
 	);
@@ -348,6 +364,7 @@ void layoutSignMessage(const uint8_t *msg, uint32_t len)
 {
 	const char **str = split_message(msg, len, 16);
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"),
+		// DISPLAY : 1 line
 		_("Sign message?"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
@@ -356,7 +373,9 @@ void layoutVerifyAddress(const char *address)
 {
 	const char **str = split_message((const uint8_t *)address, strlen(address), 17);
 	layoutDialogSwipe(&bmp_icon_info, _("Cancel"), _("Confirm"),
+		// DISPLAY : 1 line
 		_("Confirm address?"),
+		// DISPLAY : 1 line
 		_("Message signed by:"),
 		str[0], str[1], str[2], NULL, NULL);
 }
@@ -365,6 +384,7 @@ void layoutVerifyMessage(const uint8_t *msg, uint32_t len)
 {
 	const char **str = split_message(msg, len, 16);
 	layoutDialogSwipe(&bmp_icon_info, _("Cancel"), _("Confirm"),
+		// DISPLAY : 1 line
 		_("Verified message"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
@@ -373,7 +393,11 @@ void layoutCipherKeyValue(bool encrypt, const char *key)
 {
 	const char **str = split_message((const uint8_t *)key, strlen(key), 16);
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"),
-		encrypt ? _("Encrypt value of this key?") : _("Decrypt value of this key?"),
+		encrypt ?
+			// DISPLAY : 1 line
+			_("Encrypt value of this key?") :
+			// DISPLAY : 1 line
+			_("Decrypt value of this key?"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
 
@@ -381,7 +405,11 @@ void layoutEncryptMessage(const uint8_t *msg, uint32_t len, bool signing)
 {
 	const char **str = split_message(msg, len, 16);
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"),
-		signing ? _("Encrypt+Sign message?") : _("Encrypt message?"),
+		signing ?
+			// DISPLAY : 1 line
+			_("Encrypt+Sign message?") :
+			// DISPLAY : 1 line
+			_("Encrypt message?"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
 
@@ -389,7 +417,11 @@ void layoutDecryptMessage(const uint8_t *msg, uint32_t len, const char *address)
 {
 	const char **str = split_message(msg, len, 16);
 	layoutDialogSwipe(&bmp_icon_info, NULL, _("OK"),
-		address ? _("Decrypted signed message") : _("Decrypted message"),
+		address ?
+			// DISPLAY : 1 line
+			_("Decrypted signed message") :
+			// DISPLAY : 1 line
+			_("Decrypted message"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
 
@@ -411,10 +443,13 @@ void layoutResetWord(const char *word, int pass, int word_pos, bool last)
 
 	const char *action;
 	if (pass == 1) {
+		// DISPLAY : 1 line
 		action = _("Please check the seed");
 	} else {
+		// DISPLAY : 1 line
 		action = _("Write down the seed");
 	}
+	// DISPLAY : 1 line
 	const char *index_text = _("Word number ## is:");
 	char index_str[strlen(index_text) + 1];
 	strcpy(index_str, index_text);
@@ -534,13 +569,16 @@ void layoutSignIdentity(const IdentityType *identity, const char *challenge)
 
 	if (identity->has_proto && identity->proto[0]) {
 		if (strcmp(identity->proto, "https") == 0) {
+			// DISPLAY : 1 line
 			strlcpy(row_proto, _("Web sign in to:"), sizeof(row_proto));
 		} else if (is_gpg) {
+			// DISPLAY : 1 line
 			strlcpy(row_proto, _("GPG sign for:"), sizeof(row_proto));
 		} else {
 			strlcpy(row_proto, identity->proto, sizeof(row_proto));
 			char *p = row_proto;
 			while (*p) { *p = toupper((int)*p); p++; }
+			// DISPLAY : 1 line
 			strlcat(row_proto, _(" login to:"), sizeof(row_proto));
 		}
 	} else {
@@ -580,6 +618,7 @@ void layoutSignIdentity(const IdentityType *identity, const char *challenge)
 	}
 
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"),
+		// DISPLAY : 1 line
 		_("Do you want to sign in?"),
 		row_proto[0] ? row_proto : NULL,
 		row_hostport[0] ? row_hostport : NULL,
@@ -599,8 +638,10 @@ void layoutDecryptIdentity(const IdentityType *identity)
 		strlcpy(row_proto, identity->proto, sizeof(row_proto));
 		char *p = row_proto;
 		while (*p) { *p = toupper((int)*p); p++; }
+		// DISPLAY : 1 line
 		strlcat(row_proto, _(" decrypt for:"), sizeof(row_proto));
 	} else {
+		// DISPLAY : 1 line
 		strlcpy(row_proto, _("Decrypt for:"), sizeof(row_proto));
 	}
 
@@ -615,6 +656,7 @@ void layoutDecryptIdentity(const IdentityType *identity)
 	}
 
 	if (identity->has_user && identity->user[0]) {
+		// DISPLAY : 1 line
 		strlcpy(row_user, _("user: "), sizeof(row_user));
 		strlcat(row_user, identity->user, sizeof(row_user));
 	} else {
@@ -622,6 +664,7 @@ void layoutDecryptIdentity(const IdentityType *identity)
 	}
 
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Confirm"),
+		// DISPLAY : 1 line
 		_("Do you want to decrypt?"),
 		row_proto[0] ? row_proto : NULL,
 		row_hostport[0] ? row_hostport : NULL,
@@ -635,6 +678,7 @@ void layoutU2FDialog(const char *verb, const char *appname, const BITMAP *appico
 	if (!appicon) {
 		appicon = &bmp_icon_question;
 	}
+	// DISPLAY : 1 line
 	layoutDialog(appicon, NULL, verb, NULL, verb, _("U2F security key?"), NULL, appname, NULL, NULL);
 }
 
@@ -665,7 +709,11 @@ void layoutNEMTransferXEM(const char *desc, uint64_t quantity, const bignum256 *
 	nem_mosaicFormatAmount(NEM_MOSAIC_DEFINITION_XEM, quantity, multiplier, str_out, sizeof(str_out));
 	nem_mosaicFormatAmount(NEM_MOSAIC_DEFINITION_XEM, fee, NULL, str_fee, sizeof(str_fee));
 
-	layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Next"), desc, _("Confirm transfer of %s and network fee of %s"), str_out, str_fee);
+	layoutDialogSplitFormat(&bmp_icon_question, _("Cancel"), _("Next"), desc,
+		// DISPLAY : 5 lines
+		_("Confirm transfer of %s and network fee of %s"),
+		str_out, str_fee
+	);
 }
 
 void layoutNEMNetworkFee(const char *desc, bool confirm, const char *fee1_desc, uint64_t fee1, const char *fee2_desc, uint64_t fee2) {
@@ -686,7 +734,8 @@ void layoutNEMNetworkFee(const char *desc, bool confirm, const char *fee1_desc, 
 		fee2_desc,
 		fee2_desc ? str_fee2 : NULL,
 		NULL,
-		NULL);
+		NULL
+	);
 }
 
 void layoutNEMTransferMosaic(const NEMMosaicDefinition *definition, uint64_t quantity, const bignum256 *multiplier, uint8_t network) {
@@ -700,6 +749,7 @@ void layoutNEMTransferMosaic(const NEMMosaicDefinition *definition, uint64_t qua
 			_("Cancel"),
 			_("Next"),
 			definition->has_name ? definition->name : _("Mosaic"),
+			// DISPLAY : 5 lines
 			_("Confirm transfer of %s and levy of %s"),
 			str_out,
 			str_levy
@@ -709,6 +759,7 @@ void layoutNEMTransferMosaic(const NEMMosaicDefinition *definition, uint64_t qua
 		_("Cancel"),
 		_("Next"),
 		definition->has_name ? definition->name : _("Mosaic"),
+		// DISPLAY : 5 lines
 		_("Confirm transfer of %s"),
 		str_out
 	);
@@ -730,6 +781,7 @@ void layoutNEMTransferUnknownMosaic(const char *namespace, const char *mosaic, u
 		_("Cancel"),
 		_("I take the risk"),
 		_("Unknown Mosaic"),
+		// DISPLAY : 5 lines
 		_("Confirm transfer of %s raw units of %s"),
 		str_out,
 		mosaic_name
@@ -743,12 +795,20 @@ void layoutNEMTransferPayload(const uint8_t *payload, size_t length, bool encryp
 
 		const char **str = split_message((uint8_t *) encoded, sizeof(encoded) - 1, 16);
 		layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Next"),
-			encrypted ? _("Encrypted hex data") : _("Unencrypted hex data"),
+			encrypted ?
+				// DISPLAY : 1 line
+				_("Encrypted hex data") :
+				// DISPLAY : 1 line
+				_("Unencrypted hex data"),
 			str[0], str[1], str[2], str[3], NULL, NULL);
 	} else {
 		const char **str = split_message(payload, length, 16);
 		layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Next"),
-			encrypted ? _("Encrypted message") : _("Unencrypted message"),
+			encrypted ?
+				// DISPLAY : 1 line
+				_("Encrypted message") :
+				// DISPLAY : 1 line
+				_("Unencrypted message"),
 			str[0], str[1], str[2], str[3], NULL, NULL);
 	}
 }
@@ -756,6 +816,7 @@ void layoutNEMTransferPayload(const uint8_t *payload, size_t length, bool encryp
 void layoutNEMMosaicDescription(const char *description) {
 	const char **str = split_message((uint8_t *) description, strlen(description), 16);
 	layoutDialogSwipe(&bmp_icon_question, _("Cancel"), _("Next"),
+		// DISPLAY : 1 line		
 		_("Mosaic Description"),
 		str[0], str[1], str[2], str[3], NULL, NULL);
 }
@@ -782,9 +843,12 @@ void layoutNEMLevy(const NEMMosaicDefinition *definition, uint8_t network) {
 		layoutDialogSplitFormat(&bmp_icon_question,
 			_("Cancel"),
 			_("Next"),
+			// DISPLAY : 1 line		
 			_("Percentile Levy"),
-			_("Raw levy value is %s in "),
+			// DISPLAY : 5 line
+			_("Raw levy value is %s in %s"),
 			str_out,
+			// DISPLAY : 1 line
 			mosaic ? (mosaic == definition ? _("the same mosaic") : mosaic->name) : mosaic_name
 		);
 		break;
@@ -797,7 +861,11 @@ void layoutNEMLevy(const NEMMosaicDefinition *definition, uint8_t network) {
 				_("Cancel"),
 				_("Next"),
 				_("Absolute Levy"),
-				mosaic == definition ? _("Levy is %s in the same mosaic") : _("Levy is %s"),
+				mosaic == definition ?
+					// DISPLAY : 5 lines
+					_("Levy is %s in the same mosaic") :
+					// DISPLAY : 5 lines
+					_("Levy is %s"),
 				str_out
 			);
 		} else {
@@ -805,6 +873,7 @@ void layoutNEMLevy(const NEMMosaicDefinition *definition, uint8_t network) {
 				_("Cancel"),
 				_("Next"),
 				_("Absolute Levy"),
+				// DISPLAY : 5 lines
 				_("Levy is %s in raw units of %s"),
 				str_out,
 				mosaic_name
@@ -821,13 +890,19 @@ static inline bool is_slip18(const uint32_t *address_n, size_t address_n_count)
 
 void layoutCosiCommitSign(const uint32_t *address_n, size_t address_n_count, const uint8_t *data, uint32_t len, bool final_sign)
 {
-	char *desc = final_sign ? (char *) _("CoSi sign message?") : (char *) _("CoSi commit message?");
+	char *desc = final_sign ?
+		// DISPLAY : 1 line
+		(char *) _("CoSi sign message?") :
+		// DISPLAY : 1 line
+		(char *) _("CoSi commit message?");
 	char desc_buf[32];
 	if (is_slip18(address_n, address_n_count)) {
 		if (final_sign) {
+			// DISPLAY : 1 line
 			strlcpy(desc_buf, _("CoSi sign index #?"), sizeof(desc_buf));
 			desc_buf[16] = '0' + (address_n[1] & 0x7FFFFFFF);
 		} else {
+			// DISPLAY : 1 line
 			strlcpy(desc_buf, _("CoSi commit index #?"), sizeof(desc_buf));
 			desc_buf[18] = '0' + (address_n[1] & 0x7FFFFFFF);
 		}

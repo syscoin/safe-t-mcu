@@ -288,6 +288,7 @@ static void layoutEthereumConfirmTx(const uint8_t *to, uint32_t to_len, const ui
 		memcpy(_to2, to_str + 10, 15);
 		memcpy(_to3, to_str + 25, 15);
 	} else {
+		// DISPLAY : 1 line
 		strlcpy(_to1, _("to new contract?"), sizeof(_to1));
 		strlcpy(_to2, "", sizeof(_to2));
 		strlcpy(_to3, "", sizeof(_to3));
@@ -297,6 +298,7 @@ static void layoutEthereumConfirmTx(const uint8_t *to, uint32_t to_len, const ui
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
+		// DISPLAY : 1 line
 		_("Send"),
 		amount,
 		_to1,
@@ -336,6 +338,7 @@ static void layoutEthereumData(const uint8_t *data, uint32_t len, uint32_t total
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
+		// DISPLAY: 1 line
 		_("Transaction data:"),
 		hexdata[0],
 		hexdata[1],
@@ -381,7 +384,7 @@ static void layoutEthereumFee(const uint8_t *value, uint32_t value_len,
 		_("Cancel"),
 		_("Confirm"),
 		NULL,
-		// USE CASE : Really send 0.0001524 paying up to 0.0000014 for gas?
+		// DISPLAY: 5 lines USE CASE : Really send 0.0001524 paying up to 0.0000014 for gas?
 		_("Really send %s paying up to %s for gas?"),
 		tx_value,
 		gas_value
