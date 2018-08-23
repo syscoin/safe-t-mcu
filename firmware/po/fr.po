@@ -574,7 +574,7 @@ msgid ""
 "Fee included: %s"
 msgstr ""
 "Voulez vous vraiment envoyer %s depuis votre portefeuille?\n"
-"Frais inclus: %s"
+"Frais: %s"
 
 #. DISPLAY : 5 lines USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
 #: ../layout2.c:357

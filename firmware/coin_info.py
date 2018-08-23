@@ -78,6 +78,7 @@ def coin_to_struct(coin):
         ("coin_name",             format_string(coin["coin_name"])),
         ("coin_shortcut",         format_string(" " + coin["coin_shortcut"])),
         ("maxfee_kb",             format_number(coin["maxfee_kb"])),
+        ("divisibility",          format_number(coin["divisibility"])),
         ("signed_message_header", prepend_varint(coin["signed_message_header"])),             # noqa: E501
         ("has_address_type",      format_bool(coin["address_type"] is not None)),             # noqa: E501
         ("has_address_type_p2sh", format_bool(coin["address_type_p2sh"] is not None)),        # noqa: E501

@@ -30,6 +30,7 @@ typedef struct _CoinInfo {
 	const char *coin_name;
 	const char *coin_shortcut;
 	uint64_t maxfee_kb;
+	uint8_t divisibility;
 	const char *signed_message_header;
 	bool has_address_type;
 	bool has_address_type_p2sh;

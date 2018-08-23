@@ -3,6 +3,7 @@ Version 1.1.0
 * Multi-language support
 * Translations for French and German supported
 * Implement deferred PIN set in recovery and reset
+* Update signing process to support BCD
 
 Version 1.0.7
 * Update boot loader to version 1.5.1 to fix USB enumeration problems
