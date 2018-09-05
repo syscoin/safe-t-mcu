@@ -1,19 +1,15 @@
 #!/bin/bash
 set -e
 
-IMAGE=trezor-mcu-build-emulator64
+IMAGE=safet-mcu-build-emulator64
 TAG=${1:-master}
-ELFFILE=build/trezor-emulator64-$TAG
+ELFFILE=build/safet-emulator64-$TAG
 
 docker build -f Dockerfile.emulator -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
-	git clone https://github.com/trezor/trezor-mcu && \
-	cd trezor-mcu && \
+	git clone https://github.com/archos-safe-t/safe-t-mcu.git && \
+	cd safe-t-mcu && \
 	git checkout $TAG && \
 	git submodule update --init && \
-	make -C vendor/nanopb/generator/proto && \
-	make -C firmware/protob && \
-	EMULATOR=1 make && \
-	EMULATOR=1 make -C emulator && \
-	EMULATOR=1 make -C firmware && \
+	EMULATOR=1 make emulator && \
 	cp firmware/trezor.elf /$ELFFILE"
