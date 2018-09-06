@@ -1309,6 +1309,9 @@ void fsm_msgRecoveryDevice(RecoveryDevice *msg)
 	CHECK_PARAM(!msg->has_word_count || msg->word_count == 12 || msg->word_count == 18 || msg->word_count == 24, _("Invalid word count"));
 
 	layoutDialogSplit(&bmp_icon_question, _("Cancel"), _("Confirm"), NULL, 
+		dry_run ?
+		// DISPLAY: 5 lines
+		_("Do you really want to check your recovery seed?"):
 		// DISPLAY: 5 lines
 		_("Do you really want to recover the device?")
 	);

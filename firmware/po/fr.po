@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-10 10:48+0200\n"
+"POT-Creation-Date: 2018-09-06 15:12+0200\n"
 "PO-Revision-Date: 2018-07-16 13:18+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. DISPLAY: 6 lines
-#: ../bl_check.c:52
+#: ../bl_check.c:53
 msgid ""
 "Unknown bootloader detected.\n"
 "\n"
@@ -33,7 +33,7 @@ msgstr ""
 
 #. show info and halt
 #. DISPLAY: 6 lines
-#: ../bl_check.c:81
+#: ../bl_check.c:82
 #, fuzzy
 msgid ""
 "Update finished successfully.\n"
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Signing"
 msgstr "Signature"
 
-#: ../ethereum.c:193 ../ethereum.c:631 ../signing.c:676
+#: ../ethereum.c:193 ../ethereum.c:631 ../signing.c:680
 msgid "Signing failed"
 msgstr "La signature a échoué"
 
@@ -68,12 +68,12 @@ msgstr "au nouveau contrat?"
 #. DISPLAY : 1 line
 #: ../ethereum.c:298 ../ethereum.c:338 ../ethereum.c:384 ../fsm.c:342 ../fsm.c:377 ../fsm.c:388
 #: ../fsm.c:395 ../fsm.c:432 ../fsm.c:440 ../fsm.c:462 ../fsm.c:541 ../fsm.c:713 ../fsm.c:725
-#: ../fsm.c:742 ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1341 ../fsm.c:1594 ../layout2.c:292
-#: ../layout2.c:317 ../layout2.c:336 ../layout2.c:353 ../layout2.c:366 ../layout2.c:375
-#: ../layout2.c:386 ../layout2.c:395 ../layout2.c:407 ../layout2.c:620 ../layout2.c:666
-#: ../layout2.c:712 ../layout2.c:729 ../layout2.c:749 ../layout2.c:759 ../layout2.c:781
-#: ../layout2.c:797 ../layout2.c:806 ../layout2.c:818 ../layout2.c:844 ../layout2.c:861
-#: ../layout2.c:873 ../layout2.c:921 ../nem2.c:190 ../nem2.c:237 ../nem2.c:323 ../nem2.c:333
+#: ../fsm.c:742 ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1344 ../fsm.c:1597 ../layout2.c:290
+#: ../layout2.c:315 ../layout2.c:334 ../layout2.c:351 ../layout2.c:364 ../layout2.c:373
+#: ../layout2.c:384 ../layout2.c:393 ../layout2.c:405 ../layout2.c:618 ../layout2.c:664
+#: ../layout2.c:710 ../layout2.c:727 ../layout2.c:747 ../layout2.c:757 ../layout2.c:779
+#: ../layout2.c:795 ../layout2.c:804 ../layout2.c:816 ../layout2.c:842 ../layout2.c:859
+#: ../layout2.c:871 ../layout2.c:922 ../nem2.c:190 ../nem2.c:237 ../nem2.c:323 ../nem2.c:333
 #: ../nem2.c:377 ../nem2.c:406 ../nem2.c:436 ../nem2.c:444 ../nem2.c:499 ../nem2.c:514 ../nem2.c:552
 #: ../nem2.c:570 ../nem2.c:597 ../nem2.c:653 ../nem2.c:687 ../reset.c:59 ../trezor.c:52
 msgid "Cancel"
@@ -83,10 +83,10 @@ msgstr "Annuler"
 #. DISPLAY : 1 line
 #: ../ethereum.c:299 ../ethereum.c:339 ../ethereum.c:385 ../fsm.c:342 ../fsm.c:377 ../fsm.c:388
 #: ../fsm.c:395 ../fsm.c:432 ../fsm.c:440 ../fsm.c:462 ../fsm.c:713 ../fsm.c:725 ../fsm.c:742
-#: ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1341 ../fsm.c:1595 ../layout2.c:294 ../layout2.c:318
-#: ../layout2.c:337 ../layout2.c:354 ../layout2.c:366 ../layout2.c:375 ../layout2.c:386
-#: ../layout2.c:395 ../layout2.c:407 ../layout2.c:620 ../layout2.c:666 ../layout2.c:730
-#: ../layout2.c:921 ../nem2.c:238 ../recovery.c:157 ../recovery.c:182 ../recovery.c:189
+#: ../fsm.c:750 ../fsm.c:1311 ../fsm.c:1344 ../fsm.c:1598 ../layout2.c:292 ../layout2.c:316
+#: ../layout2.c:335 ../layout2.c:352 ../layout2.c:364 ../layout2.c:373 ../layout2.c:384
+#: ../layout2.c:393 ../layout2.c:405 ../layout2.c:618 ../layout2.c:664 ../layout2.c:728
+#: ../layout2.c:922 ../nem2.c:238 ../recovery.c:157 ../recovery.c:182 ../recovery.c:189
 #: ../recovery.c:204
 msgid "Confirm"
 msgstr "Confirmer"
@@ -191,7 +191,7 @@ msgstr "Signature incorrecte"
 msgid "Process error"
 msgstr "Erreur de process"
 
-#: ../fsm.c:160 ../signing.c:603
+#: ../fsm.c:160 ../signing.c:607
 msgid "Not enough funds"
 msgstr "Pas assez de fonds"
 
@@ -286,7 +286,7 @@ msgstr "Appareil effacé"
 msgid "Do you really want to send entropy?"
 msgstr "Voulez-vous vraiment envoyer l'entropie?"
 
-#: ../fsm.c:542 ../layout2.c:782 ../nem2.c:191
+#: ../fsm.c:542 ../layout2.c:780 ../nem2.c:191
 msgid "I take the risk"
 msgstr "Je prend le risque"
 
@@ -315,11 +315,11 @@ msgstr "La transaction doit avoir au moins une entrée"
 msgid "Transaction must have at least one output"
 msgstr "La transaction doit avoir au moins une sortie"
 
-#: ../fsm.c:605 ../signing.c:576 ../signing.c:834 ../signing.c:861 ../signing.c:896 ../signing.c:934
+#: ../fsm.c:605 ../signing.c:580 ../signing.c:838 ../signing.c:865 ../signing.c:900 ../signing.c:938
 msgid "Value overflow"
 msgstr "Dépassement de valeur"
 
-#: ../fsm.c:619 ../fsm.c:1405
+#: ../fsm.c:619 ../fsm.c:1408
 msgid "No transaction provided"
 msgstr "Aucune transaction fournie"
 
@@ -396,7 +396,7 @@ msgstr "Adresse:"
 msgid "Abort"
 msgstr "Abandonner"
 
-#: ../fsm.c:902 ../layout2.c:538 ../layout2.c:558 ../reset.c:60
+#: ../fsm.c:902 ../layout2.c:536 ../layout2.c:556 ../reset.c:60
 msgid "Continue"
 msgstr "Continuer"
 
@@ -452,63 +452,69 @@ msgid "Invalid word count"
 msgstr "Nombre de mots incorrect"
 
 #. DISPLAY: 5 lines
-#: ../fsm.c:1313
+#: ../fsm.c:1314
+#, fuzzy
+msgid "Do you really want to check your recovery seed?"
+msgstr "Voulez-vous vraiment vérifier la graine de récupération?"
+
+#. DISPLAY: 5 lines
+#: ../fsm.c:1316
 #, fuzzy
 msgid "Do you really want to recover the device?"
 msgstr "Voulez-vous vraiment récupérer l'appareil?"
 
 #. DISPLAY: 5 lines
-#: ../fsm.c:1343
+#: ../fsm.c:1346
 #, fuzzy
 msgid "Do you want to set the U2F counter?"
 msgstr "Voulez-vous vraiment configurer le compteur U2F?"
 
-#: ../fsm.c:1352
+#: ../fsm.c:1355
 msgid "U2F counter set"
 msgstr "Compteur U2F armé"
 
-#: ../fsm.c:1363 ../fsm.c:1584 ../nem2.c:37
+#: ../fsm.c:1366 ../fsm.c:1587 ../nem2.c:37
 msgid "Invalid NEM network"
 msgstr "Réseau NEM incorrect"
 
-#: ../fsm.c:1396
+#: ../fsm.c:1399
 msgid "No common provided"
 msgstr "Pas de commun fourni"
 
-#: ../fsm.c:1406
+#: ../fsm.c:1409
 msgid "More than one transaction provided"
 msgstr "Plus d'une transaction fournie"
 
-#: ../fsm.c:1420
+#: ../fsm.c:1423
 msgid "Inner transaction network is different"
 msgstr "réseau de transaction interne différent"
 
-#: ../fsm.c:1422
+#: ../fsm.c:1425
 msgid "No multisig transaction to cosign"
 msgstr "Pas de transaction multisig à cosigner"
 
-#: ../fsm.c:1435 ../fsm.c:1458 ../fsm.c:1464 ../fsm.c:1470 ../fsm.c:1476 ../fsm.c:1482 ../fsm.c:1488
+#: ../fsm.c:1438 ../fsm.c:1461 ../fsm.c:1467 ../fsm.c:1473 ../fsm.c:1479 ../fsm.c:1485 ../fsm.c:1491
 msgid "Signing cancelled by user"
 msgstr "Signature annulée par l'utilisateur"
 
-#: ../fsm.c:1585
+#: ../fsm.c:1588
 msgid "No payload provided"
 msgstr "Aucune charge utile fournie"
 
-#: ../fsm.c:1586
+#: ../fsm.c:1589
 msgid "Invalid encrypted payload"
 msgstr "Charge utile cryptée invalide"
 
-#: ../fsm.c:1587
+#: ../fsm.c:1590
 msgid "No public key provided"
 msgstr "Aucune clé publique fournie"
 
-#: ../fsm.c:1588
+#: ../fsm.c:1591
 msgid "Invalid public key"
 msgstr "Clé publique incorrecte"
 
 #. DISPLAY: 1 line
-#: ../fsm.c:1597
+#: ../fsm.c:1600
 msgid "Decrypt message"
 msgstr "Décrypter le message"
 
@@ -516,58 +522,58 @@ msgstr "Décrypter le message"
 #. DISPLAY: 1 line
 #. #-#-#-#-#  layout2.pot (PACKAGE VERSION)  #-#-#-#-#
 #. DISPLAY : 1 line
-#: ../fsm.c:1599 ../layout2.c:377
+#: ../fsm.c:1602 ../layout2.c:375
 msgid "Confirm address?"
 msgstr "Confirmer l'adresse?"
 
-#: ../fsm.c:1627
+#: ../fsm.c:1630
 msgid "Failed to decrypt payload"
 msgstr "Déchiffrement de la charge utile échoué"
 
-#: ../fsm.c:1652 ../fsm.c:1690
+#: ../fsm.c:1655 ../fsm.c:1693
 msgid "No data provided"
 msgstr "Aucune donnée fournie"
 
-#: ../fsm.c:1691
+#: ../fsm.c:1694
 msgid "Invalid global commitment"
 msgstr "Engagement global invalide"
 
-#: ../fsm.c:1692
+#: ../fsm.c:1695
 msgid "Invalid global pubkey"
 msgstr "Clé publique globale invalide"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:67
+#: ../layout2.c:65
 msgid "Unknown long path"
 msgstr "Long chemin inconnu"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:71
+#: ../layout2.c:69
 msgid "Path: m"
 msgstr "Chemin: m"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:225 ../layout2.c:251
+#: ../layout2.c:223 ../layout2.c:249
 msgid "Go to safe-t.io/start"
 msgstr "Allez sur safe-t.io/start"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:247
+#: ../layout2.c:245
 msgid "NEEDS BACKUP!"
 msgstr "SAUVEGARDE REQUISE!"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:277
+#: ../layout2.c:275
 msgid "Confirm sending"
 msgstr "Confirmer l'envoi"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:321
+#: ../layout2.c:319
 msgid "Confirm OP_RETURN:"
 msgstr "Confirmer OP_RETURN:"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:340
+#: ../layout2.c:338
 #, fuzzy, c-format
 msgid ""
 "Really send %s from your wallet?\n"
@@ -577,7 +583,7 @@ msgstr ""
 "Frais: %s"
 
 #. DISPLAY : 5 lines USE CASE : Fee 0.010025 is unexpectedly high.\n\nSend Anyway?
-#: ../layout2.c:357
+#: ../layout2.c:355
 #, fuzzy, c-format
 msgid ""
 "Fee %s is unexpectedly high.\n"
@@ -589,245 +595,245 @@ msgstr ""
 "Envoyer quand même?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:368
+#: ../layout2.c:366
 msgid "Sign message?"
 msgstr "Signer le message?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:379
+#: ../layout2.c:377
 msgid "Message signed by:"
 msgstr "Message signé par:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:388
+#: ../layout2.c:386
 msgid "Verified message"
 msgstr "Message vérifié"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:398
+#: ../layout2.c:396
 msgid "Encrypt value of this key?"
 msgstr "Chiffrer la clé?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:400
+#: ../layout2.c:398
 msgid "Decrypt value of this key?"
 msgstr "Déchiffrer la clé?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:410
+#: ../layout2.c:408
 msgid "Encrypt+Sign message?"
 msgstr "Chiffrer+Signer le message?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:412
+#: ../layout2.c:410
 msgid "Encrypt message?"
 msgstr "Chiffrer le message?"
 
-#: ../layout2.c:419 ../u2f.c:564
+#: ../layout2.c:417 ../u2f.c:564
 msgid "OK"
 msgstr "OK"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:422
+#: ../layout2.c:420
 msgid "Decrypted signed message"
 msgstr "Message signé déchiffré"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:424
+#: ../layout2.c:422
 msgid "Decrypted message"
 msgstr "Message déchiffré"
 
-#: ../layout2.c:436
+#: ../layout2.c:434
 msgid "Finish"
 msgstr "Terminer"
 
-#: ../layout2.c:438
+#: ../layout2.c:436
 msgid "Again"
 msgstr "Encore"
 
-#: ../layout2.c:441 ../layout2.c:712 ../layout2.c:730 ../layout2.c:750 ../layout2.c:760
-#: ../layout2.c:797 ../layout2.c:806 ../layout2.c:818 ../layout2.c:845 ../layout2.c:862
-#: ../layout2.c:874 ../nem2.c:324 ../nem2.c:334 ../nem2.c:378 ../nem2.c:407 ../nem2.c:437
+#: ../layout2.c:439 ../layout2.c:710 ../layout2.c:728 ../layout2.c:748 ../layout2.c:758
+#: ../layout2.c:795 ../layout2.c:804 ../layout2.c:816 ../layout2.c:843 ../layout2.c:860
+#: ../layout2.c:872 ../nem2.c:324 ../nem2.c:334 ../nem2.c:378 ../nem2.c:407 ../nem2.c:437
 #: ../nem2.c:445 ../nem2.c:500 ../nem2.c:515 ../nem2.c:553 ../nem2.c:571 ../nem2.c:598 ../nem2.c:654
 #: ../nem2.c:688
 msgid "Next"
 msgstr "Suivant"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:447
+#: ../layout2.c:445
 msgid "Please check the seed"
 msgstr "Vérifiez la graine"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:450
+#: ../layout2.c:448
 msgid "Write down the seed"
 msgstr "Ecrivez la graine"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:453
+#: ../layout2.c:451
 #, fuzzy
 msgid "Word number ## is:"
 msgstr "Le mot numéro ##"
 
-#: ../layout2.c:537
+#: ../layout2.c:535
 msgid "QR Code"
 msgstr "QR Code"
 
-#: ../layout2.c:540
+#: ../layout2.c:538
 msgid "Brightness"
 msgstr "Luminosité"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:573
+#: ../layout2.c:571
 msgid "Web sign in to:"
 msgstr "Connexion Web à:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:576
+#: ../layout2.c:574
 msgid "GPG sign for:"
 msgstr "Signature GPG pour:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:582
+#: ../layout2.c:580
 msgid " login to:"
 msgstr " se connecter à:"
 
-#: ../layout2.c:585
+#: ../layout2.c:583
 msgid "Login to:"
 msgstr "Se connecter à:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:599 ../layout2.c:660
+#: ../layout2.c:597 ../layout2.c:658
 msgid "user: "
 msgstr "utilisateur: "
 
 #. DISPLAY : 1 line
-#: ../layout2.c:622
+#: ../layout2.c:620
 msgid "Do you want to sign in?"
 msgstr "Voulez-vous vous connecter?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:642
+#: ../layout2.c:640
 msgid " decrypt for:"
 msgstr " décrypter pour:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:645
+#: ../layout2.c:643
 msgid "Decrypt for:"
 msgstr "Décrypter pour:"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:668
+#: ../layout2.c:666
 msgid "Do you want to decrypt?"
 msgstr "Voulez-vous déchiffrer?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:682
+#: ../layout2.c:680
 msgid "U2F security key?"
 msgstr "Clé de sécurité U2F?"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:714
+#: ../layout2.c:712
 #, c-format
 msgid "Confirm transfer of %s and network fee of %s"
 msgstr "Confirmer l'envoi de %s et des frais réseau de %s"
 
-#: ../layout2.c:751 ../layout2.c:761
+#: ../layout2.c:749 ../layout2.c:759
 msgid "Mosaic"
 msgstr "Mosaïque"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:753
+#: ../layout2.c:751
 #, c-format
 msgid "Confirm transfer of %s and levy of %s"
 msgstr "Confirmer le transfert de %s et le prélèvement de %s"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:763
+#: ../layout2.c:761
 #, c-format
 msgid "Confirm transfer of %s"
 msgstr "Confirmer le transfert de %s"
 
-#: ../layout2.c:783
+#: ../layout2.c:781
 msgid "Unknown Mosaic"
 msgstr "Mosaïque inconnue"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:785
+#: ../layout2.c:783
 #, c-format
 msgid "Confirm transfer of %s raw units of %s"
 msgstr "Confirmer le transfert de %s d'unités brutes de %s"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:800
+#: ../layout2.c:798
 msgid "Encrypted hex data"
 msgstr "Données hexa cryptées"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:802
+#: ../layout2.c:800
 msgid "Unencrypted hex data"
 msgstr "Données hexa en clair"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:809
+#: ../layout2.c:807
 msgid "Encrypted message"
 msgstr "Message crypté"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:811
+#: ../layout2.c:809
 msgid "Unencrypted message"
 msgstr "Message non crypté"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:820
+#: ../layout2.c:818
 msgid "Mosaic Description"
 msgstr "Description de la mosaïque"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:847
+#: ../layout2.c:845
 msgid "Percentile Levy"
 msgstr "Impôt de centile"
 
 #. DISPLAY : 5 line
-#: ../layout2.c:849
+#: ../layout2.c:847
 #, fuzzy, c-format
 msgid "Raw levy value is %s in %s"
 msgstr "La valeur du prélèvement brut est %s dans %s"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:852
+#: ../layout2.c:850
 msgid "the same mosaic"
 msgstr "la même mosaïque"
 
-#: ../layout2.c:863 ../layout2.c:875
+#: ../layout2.c:861 ../layout2.c:873
 msgid "Absolute Levy"
 msgstr "Prélèvement absolu"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:866
+#: ../layout2.c:864
 #, c-format
 msgid "Levy is %s in the same mosaic"
 msgstr "Le prélèvement est de %s dans la même mosaïque"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:868
+#: ../layout2.c:866
 #, c-format
 msgid "Levy is %s"
 msgstr "Le prélèvement est de %s"
 
 #. DISPLAY : 5 lines
-#: ../layout2.c:877
+#: ../layout2.c:875
 #, c-format
 msgid "Levy is %s in raw units of %s"
 msgstr "Le prélèvement est de %s en unités brutes de %s"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:895
+#: ../layout2.c:893
 msgid "CoSi sign message?"
 msgstr "Signer le message CoSi?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:897
+#: ../layout2.c:895
 msgid "CoSi commit message?"
 msgstr "Valider le message CoSi?"
 
@@ -838,7 +844,7 @@ msgid "CoSi sign index %c?"
 msgstr "Signer le message CoSi?"
 
 #. DISPLAY : 1 line
-#: ../layout2.c:905
+#: ../layout2.c:906
 #, fuzzy, c-format
 msgid "CoSi commit index %c?"
 msgstr "Valider le message CoSi?"
@@ -1288,7 +1294,7 @@ msgstr "1 seul essai restant"
 #. Display : 1 line
 #: ../protect.c:205
 msgid "   0 attempts left"
-msgstr "   0 essai restant"
+msgstr "   0 essais restants"
 
 #. DISPLAY : 6 lines
 #: ../protect.c:209
@@ -1346,7 +1352,7 @@ msgstr "Veuillez entrer votre phrase secrète sur votre clavier."
 #: ../recovery.c:159
 #, fuzzy
 msgid "Seed could not be stored on the device."
-msgstr "Voulez-vous vraiment récupérer l'appareil?"
+msgstr "La graine n'a pas pu être enregistrée."
 
 #: ../recovery.c:163
 msgid "The seed is valid but could not be stored on the device."
@@ -1461,84 +1467,84 @@ msgid "Seed successfully backed up"
 msgstr ""
 
 #. DISPLAY : 1 line
-#: ../signing.c:474 ../signing.c:584 ../signing.c:648 ../signing.c:805 ../signing.c:1043
-#: ../signing.c:1087 ../signing.c:1157
+#: ../signing.c:478 ../signing.c:588 ../signing.c:652 ../signing.c:809 ../signing.c:1047
+#: ../signing.c:1091 ../signing.c:1161
 msgid "Signing transaction"
 msgstr "Signature"
 
-#: ../signing.c:487
+#: ../signing.c:491
 msgid "Error computing multisig fingerprint"
 msgstr ""
 
-#: ../signing.c:519
+#: ../signing.c:523
 msgid "Encountered invalid prevhash"
 msgstr ""
 
-#: ../signing.c:536
+#: ../signing.c:540
 msgid "Address in change output"
 msgstr ""
 
-#: ../signing.c:591 ../signing.c:1021 ../signing.c:1131
+#: ../signing.c:595 ../signing.c:1025 ../signing.c:1135
 msgid "Failed to compile output"
 msgstr ""
 
-#: ../signing.c:687
+#: ../signing.c:691
 msgid "Pubkey not found in multisig script"
 msgstr ""
 
-#: ../signing.c:695
+#: ../signing.c:699
 msgid "Failed to serialize multisig script"
 msgstr ""
 
-#: ../signing.c:709 ../signing.c:736 ../signing.c:1009 ../signing.c:1063 ../signing.c:1073
+#: ../signing.c:713 ../signing.c:740 ../signing.c:1013 ../signing.c:1067 ../signing.c:1077
 msgid "Transaction has changed during signing"
 msgstr ""
 
-#: ../signing.c:731 ../signing.c:982 ../signing.c:1068 ../signing.c:1092 ../signing.c:1111
+#: ../signing.c:735 ../signing.c:986 ../signing.c:1072 ../signing.c:1096 ../signing.c:1115
 msgid "Failed to compile input"
 msgstr ""
 
-#: ../signing.c:797
+#: ../signing.c:801
 msgid "Not in Signing mode"
 msgstr ""
 
-#: ../signing.c:821 ../signing.c:873
+#: ../signing.c:825 ../signing.c:877
 msgid "Mixing segwit and non-segwit inputs is not allowed"
 msgstr ""
 
-#: ../signing.c:829
+#: ../signing.c:833
 msgid "BIP 143 input without amount"
 msgstr ""
 
-#: ../signing.c:851
+#: ../signing.c:855
 msgid "Segwit not enabled on this coin"
 msgstr ""
 
-#: ../signing.c:856
+#: ../signing.c:860
 msgid "Segwit input without amount"
 msgstr ""
 
-#: ../signing.c:884
+#: ../signing.c:888
 msgid "Wrong input script type"
 msgstr ""
 
-#: ../signing.c:891
+#: ../signing.c:895
 msgid "Not enough outputs in previous transaction."
 msgstr ""
 
-#: ../signing.c:913 ../signing.c:998
+#: ../signing.c:917 ../signing.c:1002
 msgid "Failed to serialize input"
 msgstr ""
 
-#: ../signing.c:928 ../signing.c:1028
+#: ../signing.c:932 ../signing.c:1032
 msgid "Failed to serialize output"
 msgstr ""
 
-#: ../signing.c:954
+#: ../signing.c:958
 msgid "Failed to serialize extra data"
 msgstr ""
 
-#: ../signing.c:1169
+#: ../signing.c:1173
 msgid "Signing error"
 msgstr ""
 
