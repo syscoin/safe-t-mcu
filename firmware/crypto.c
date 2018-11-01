@@ -20,7 +20,6 @@
 #include <string.h>
 #include "crypto.h"
 #include "sha2.h"
-#include "ripemd160.h"
 #include "pbkdf2.h"
 #include "aes/aes.h"
 #include "hmac.h"
@@ -163,7 +162,7 @@ int cryptoMessageVerify(const CoinInfo *coin, const uint8_t *message, size_t mes
 
 	// check if signature verifies the digest and recover the public key
 	uint8_t pubkey[65];
-	if (ecdsa_verify_digest_recover(coin->curve->params, pubkey, signature + 1, hash, recid) != 0) {
+	if (ecdsa_recover_pub_from_sig(coin->curve->params, pubkey, signature + 1, hash, recid) != 0) {
 		return 3;
 	}
 	// convert public key to compressed pubkey if necessary

@@ -283,7 +283,7 @@ static void layoutEthereumConfirmTx(const uint8_t *to, uint32_t to_len, const ui
 
 	if (to_len) {
 		char to_str[41];
-		ethereum_address_checksum(to, to_str);
+		ethereum_address_checksum(to, to_str, false, 0);
 		memcpy(_to1 + 5, to_str, 10);
 		memcpy(_to2, to_str + 10, 15);
 		memcpy(_to3, to_str + 25, 15);
@@ -658,7 +658,7 @@ int ethereum_message_verify(EthereumVerifyMessage *msg)
 		v -= 27;
 	}
 	if (v >= 2 ||
-		ecdsa_verify_digest_recover(&secp256k1, pubkey, msg->signature.bytes, hash, v) != 0) {
+		ecdsa_recover_pub_from_sig(&secp256k1, pubkey, msg->signature.bytes, hash, v) != 0) {
 		return 2;
 	}
 
