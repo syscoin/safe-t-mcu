@@ -3,6 +3,9 @@ Version 1.1.3
 * Fix 2 french translations
 * Add a new translation when checking the recovery seed
 * Add segwit option for Fujicoin
+* Add Groestlcoin (GRS) support
+* Add Bitcore (BTX) support
+* Switch to a recent version of trezor-crypto (fixing recent buffer overflow vulnerabilities)
 
 Version 1.1.2
 Version 1.1.1
