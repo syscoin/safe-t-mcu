@@ -15,22 +15,22 @@ FIRMWARE_ELFFILE=build/safet-$FIRMWARE_TAG.elf
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd /tmp && \
-	git clone https://github.com/archos-safe-t/safe-t-mcu.git safe-t-mcu-bl && \
+	git clone https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl && \
 	cd safe-t-mcu-bl && \
 	git checkout $BOOTLOADER_TAG && \
 	git submodule update --init --recursive && \
-	make bootloader MEMORY_PROTECT=1 && \
-	make -C bootloader align && \
+	make -j16 bootloader MEMORY_PROTECT=1 && \
+	make -j16 -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
-	git clone https://github.com/archos-safe-t/safe-t-mcu.git archos-safe-t-mcu-fw && \
+	git clone https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw && \
 	cd archos-safe-t-mcu-fw && \
 	git checkout $FIRMWARE_TAG && \
 	git submodule update --init --recursive && \
-	make firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
+	make -j16 firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
-	make -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
+	make -j16 -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp firmware/trezor.bin /$FIRMWARE_BINFILE && \
 	cp firmware/trezor.elf /$FIRMWARE_ELFFILE
 	"
