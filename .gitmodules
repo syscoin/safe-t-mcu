@@ -11,3 +11,6 @@
 	path = vendor/libopencm3
 	url = https://github.com/libopencm3/libopencm3.git
 
+[submodule "vendor/nanopb"]
+	path = vendor/nanopb
+	url = https://github.com/syscoin/nanopb.git
