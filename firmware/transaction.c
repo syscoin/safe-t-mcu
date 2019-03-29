@@ -178,9 +178,9 @@ int compile_output(const CoinInfo *coin, const HDNode *root, TxOutputType *in, T
 
 	if (in->script_type == OutputScriptType_PAYTOOPRETURN) {
 		// only 0 satoshi allowed for OP_RETURN
-		if (in->amount != 0) {
-			return 0; // failed to compile output
-		}
+		// if (in->amount != 0) {
+		// 	return 0; // failed to compile output
+		// }
 		if (needs_confirm) {
 			layoutConfirmOpReturn(in->op_return_data.bytes, in->op_return_data.size);
 			if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
