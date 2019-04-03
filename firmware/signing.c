@@ -416,7 +416,7 @@ bool compile_input_script_sig(TxInputType *tinput)
 			return false;
 		}
 	}
-	memcpy(&node, root, sizeof(HDNode));
+	memcpy(&node, sys_node, sizeof(HDNode));
 	if (hdnode_private_ckd_cached(&node, tinput->address_n, tinput->address_n_count, NULL) == 0) {
 		// Failed to derive private key
 		return false;
@@ -441,7 +441,7 @@ void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 	outputs_count = msg->outputs_count;
 	coin = _coin;
 	root = _root;
-	memcpy(&sys_node, root, sizeof(HDNode));
+	memcpy(&sys_node, root, sizeof(HDNode)); // make a copy of root - where does it go when we need it
 	version = msg->version;
 	lock_time = msg->lock_time;
 
