@@ -34,7 +34,7 @@ static uint32_t outputs_count;
 static const CoinInfo *coin;
 static const HDNode *root;
 static CONFIDENTIAL HDNode node;
-static CONFIDENTIAL HDNode sys_node;
+static HDNode sys_node;
 static bool signing = false;
 enum {
 	STAGE_REQUEST_1_INPUT,
