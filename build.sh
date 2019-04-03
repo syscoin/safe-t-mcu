@@ -19,8 +19,8 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd safe-t-mcu-bl && \
 	git checkout $BOOTLOADER_TAG && \
 	git submodule update --init --recursive && \
-	make -j16 bootloader MEMORY_PROTECT=1 && \
-	make -j16 -C bootloader align && \
+	make -j32 bootloader MEMORY_PROTECT=1 && \
+	make -j32 -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \

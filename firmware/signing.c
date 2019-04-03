@@ -416,7 +416,7 @@ bool compile_input_script_sig(TxInputType *tinput)
 			return false;
 		}
 	}
-	memcpy(&node, sys_node, sizeof(HDNode));
+	memcpy(&node, &sys_node, sizeof(HDNode));
 	if (hdnode_private_ckd_cached(&node, tinput->address_n, tinput->address_n_count, NULL) == 0) {
 		// Failed to derive private key
 		return false;

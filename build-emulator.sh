@@ -11,5 +11,5 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd safe-t-mcu && \
 	git checkout $TAG && \
 	git submodule update --init && \
-	EMULATOR=1 make -j16 emulator && \
+	EMULATOR=1 make -j32 emulator && \
 	cp firmware/trezor.elf /$ELFFILE"
