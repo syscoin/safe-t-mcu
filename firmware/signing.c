@@ -34,7 +34,6 @@ static uint32_t outputs_count;
 static const CoinInfo *coin;
 static const HDNode *root;
 static CONFIDENTIAL HDNode node;
-static HDNode sys_node;
 static bool signing = false;
 enum {
 	STAGE_REQUEST_1_INPUT,
@@ -416,7 +415,7 @@ bool compile_input_script_sig(TxInputType *tinput)
 			return false;
 		}
 	}
-	memcpy(&node, &sys_node, sizeof(HDNode));
+	memcpy(&node, root, sizeof(HDNode));
 	if (hdnode_private_ckd_cached(&node, tinput->address_n, tinput->address_n_count, NULL) == 0) {
 		// Failed to derive private key
 		return false;
@@ -441,7 +440,6 @@ void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 	outputs_count = msg->outputs_count;
 	coin = _coin;
 	root = _root;
-	memcpy(&sys_node, root, sizeof(HDNode)); // make a copy of root - where does it go when we need it
 	version = msg->version;
 	lock_time = msg->lock_time;
 
@@ -584,7 +582,7 @@ static bool signing_check_output(TxOutputType *txoutput) {
 		return false;
 	}
 	spending += txoutput->amount;
-	int co = compile_output(coin, &sys_node, txoutput, &bin_output, !is_change);
+	int co = compile_output(coin, root, txoutput, &bin_output, !is_change);
 	if (!is_change) {
 		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
@@ -1023,7 +1021,7 @@ void signing_txack(TransactionType *tx)
 			return;
 		case STAGE_REQUEST_4_OUTPUT:
 			progress = 500 + ((signatures * progress_step + (inputs_count + idx2) * progress_meta_step) >> PROGRESS_PRECISION);
-			if (compile_output(coin, &sys_node, tx->outputs, &bin_output, false) <= 0) {
+			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;
@@ -1133,7 +1131,7 @@ void signing_txack(TransactionType *tx)
 			return;
 
 		case STAGE_REQUEST_5_OUTPUT:
-			if (compile_output(coin, &sys_node, tx->outputs, &bin_output,false) <= 0) {
+			if (compile_output(coin, root, tx->outputs, &bin_output,false) <= 0) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;
