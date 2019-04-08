@@ -18,17 +18,17 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	git clone https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl -b sys_revert && \
 	cd safe-t-mcu-bl && \
 	git submodule update --init --recursive && \
-	make bootloader MEMORY_PROTECT=1 && \
-	make -C bootloader align && \
+	make -j32 bootloader MEMORY_PROTECT=1 && \
+	make -j32 -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
 	git clone https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw -b sys_revert && \
 	cd archos-safe-t-mcu-fw && \
 	git submodule update --init --recursive && \
-	make firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
+	make -j32 firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
-	make -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
+	make -j32 -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp firmware/trezor.bin /$FIRMWARE_BINFILE && \
 	cp firmware/trezor.elf /$FIRMWARE_ELFFILE
 	"

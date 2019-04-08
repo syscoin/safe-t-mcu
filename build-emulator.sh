@@ -10,5 +10,5 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	git clone https://github.com/syscoin/safe-t-mcu.git -b sys_revert && \
 	cd safe-t-mcu && \
 	git submodule update --init && \
-	EMULATOR=1 make emulator && \
+	EMULATOR=1 make -j32 emulator && \
 	cp firmware/trezor.elf /$ELFFILE"
