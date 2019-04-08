@@ -7,9 +7,8 @@ ELFFILE=build/safet-emulator64-$TAG
 
 docker build -f Dockerfile.emulator -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
-	git clone https://github.com/syscoin/safe-t-mcu.git && \
+	git clone https://github.com/syscoin/safe-t-mcu.git -b sys_revert && \
 	cd safe-t-mcu && \
-	git checkout $TAG && \
 	git submodule update --init && \
 	EMULATOR=1 make emulator && \
 	cp firmware/trezor.elf /$ELFFILE"
