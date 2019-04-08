@@ -15,7 +15,7 @@ FIRMWARE_ELFFILE=build/safet-$FIRMWARE_TAG.elf
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd /tmp && \
-	git clone https://github.com/archos-safe-t/safe-t-mcu.git safe-t-mcu-bl && \
+	git clone https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl && \
 	cd safe-t-mcu-bl && \
 	git checkout $BOOTLOADER_TAG && \
 	git submodule update --init --recursive && \
@@ -24,7 +24,7 @@ docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
-	git clone https://github.com/archos-safe-t/safe-t-mcu.git archos-safe-t-mcu-fw && \
+	git clone https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw && \
 	cd archos-safe-t-mcu-fw && \
 	git checkout $FIRMWARE_TAG && \
 	git submodule update --init --recursive && \
