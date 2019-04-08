@@ -77,7 +77,7 @@ LDFLAGS  += -L$(TOP_DIR) \
 ifeq ($(EMULATOR),1)
 CFLAGS   += -DEMULATOR=1
 
-CFLAGS	 += -DCRYPTOMEM=0 -DMEMORY_PROTECT=0
+CFLAGS	 += -DCRYPTOMEM=0
 
 CFLAGS   += -include $(TOP_DIR)emulator/emulator.h
 CFLAGS   += -include stdio.h
@@ -106,7 +106,7 @@ endif
 
 CFLAGS   += -DEMULATOR=0
 
-CFLAGS	 += -DCRYPTOMEM=0 -DMEMORY_PROTECT=0
+CFLAGS	 += -DCRYPTOMEM=0
 
 LDFLAGS  += --static \
             -Wl,--start-group \
