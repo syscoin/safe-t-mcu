@@ -3,6 +3,7 @@
 _attic/
 .settings
 build/
+.idea/
 *.o
 *.a
 *.d
