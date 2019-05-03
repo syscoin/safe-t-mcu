@@ -15,17 +15,15 @@ FIRMWARE_ELFFILE=build/safet-$FIRMWARE_TAG.elf
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd /tmp && \
-	git clone https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl -b sys_revert && \
+	git clone --recursive https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl -b syscoin4 && \
 	cd safe-t-mcu-bl && \
-	git submodule update --init --recursive && \
 	make -j32 bootloader MEMORY_PROTECT=1 && \
 	make -j32 -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
-	git clone https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw -b sys_revert && \
+	git clone --recursive https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw -b syscoin4 && \
 	cd archos-safe-t-mcu-fw && \
-	git submodule update --init --recursive && \
 	make -j32 firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
 	make -j32 -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
