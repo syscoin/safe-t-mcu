@@ -189,7 +189,7 @@ int compile_output(const CoinInfo *coin, const HDNode *root, TxOutputType *in, T
 		}
 		uint32_t r = 0;
 		out->script_pubkey.bytes[0] = 0x6A; r++; // OP_RETURN
-		out->script_pubkey.bytes[1] = 0x4C; r++; // ONLY DO THIS IF IS A SYS TX - USE OP_PUSHDATA1
+		//out->script_pubkey.bytes[1] = 0x4C; r++; // ONLY DO THIS IF IS A SYS TX - USE OP_PUSHDATA1
 		r += op_push(in->op_return_data.size, out->script_pubkey.bytes + r);
 		memcpy(out->script_pubkey.bytes + r, in->op_return_data.bytes, in->op_return_data.size); r += in->op_return_data.size;
 		out->script_pubkey.size = r;
