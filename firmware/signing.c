@@ -1021,7 +1021,7 @@ void signing_txack(TransactionType *tx)
 			return;
 		case STAGE_REQUEST_4_OUTPUT:
 			progress = 500 + ((signatures * progress_step + (inputs_count + idx2) * progress_meta_step) >> PROGRESS_PRECISION);
-			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0, tx->version) {
+			if (compile_output(coin, root, tx->outputs, &bin_output, false, tx->version) <= 0) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;
