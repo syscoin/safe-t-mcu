@@ -35,6 +35,17 @@
 
 #define SEGWIT_VERSION_0 0
 
+const int SYSCOIN_TX_VERSION_MINT = 0x7400;
+const int SYSCOIN_TX_VERSION_BURN = 0x7401;
+const int SYSCOIN_TX_VERSION_ASSET_ACTIVATE = 0x7402;
+const int SYSCOIN_TX_VERSION_ASSET_UPDATE = 0x7403;
+const int SYSCOIN_TX_VERSION_ASSET_TRANSFER = 0x7404;
+const int SYSCOIN_TX_VERSION_ASSET_SEND = 0x7405;
+const int SYSCOIN_TX_VERSION_ASSET_ALLOCATION_MINT = 0x7406;
+const int SYSCOIN_TX_VERSION_ASSET_ALLOCATION_BURN = 0x7407;
+const int SYSCOIN_TX_VERSION_ASSET_ALLOCATION_SEND = 0x7408;
+const int SYSCOIN_TX_VERSION_ASSET_ALLOCATION_LOCK = 0x7409;
+
 /* transaction input size (without script): 32 prevhash, 4 idx, 4 sequence */
 #define TXSIZE_INPUT 40
 /* transaction output size (without script): 8 amount */
@@ -177,16 +188,24 @@ int compile_output(const CoinInfo *coin, const HDNode *root, TxOutputType *in, T
 	size_t addr_raw_len;
 
 	if (in->script_type == OutputScriptType_PAYTOOPRETURN) {
-		// only 0 satoshi allowed for OP_RETURN
 		// if (in->amount != 0) {
 		// 	return 0; // failed to compile output
 		// }
-		// if (needs_confirm) {
-		// 	layoutConfirmOpReturn(in->op_return_data.bytes, in->op_return_data.size);
-		// 	if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
-		// 		return -1; // user aborted
-		// 	}
-		// }
+		if (needs_confirm) {
+			//matches on SYS
+
+			if(version == SYSCOIN_TX_VERSION_ASSET_SEND || version == SYSCOIN_TX_VERSION_ASSET_ALLOCATION_SEND) {
+				layoutConfirmAssetSend(in->op_return_data.bytes, in->op_return_data.size);
+				if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
+					return -1; // user aborted
+				}
+			} else {
+				layoutConfirmOpReturn(in->op_return_data.bytes, in->op_return_data.size);
+				if (!protectButton(ButtonRequestType_ButtonRequest_ConfirmOutput, false)) {
+					return -1; // user aborted
+				}
+			}
+		}
 		uint32_t r = 0;
 		out->script_pubkey.bytes[0] = 0x6A; r++; // OP_RETURN
 		//out->script_pubkey.bytes[1] = 0x4C; r++; // ONLY DO THIS IF IS A SYS TX - USE OP_PUSHDATA1

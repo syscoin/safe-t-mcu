@@ -325,6 +325,38 @@ void layoutConfirmOpReturn(const uint8_t *data, uint32_t size)
 	);
 }
 
+void layoutConfirmAssetSend(const uint8_t *data, uint32_t size)
+{
+	bool ascii_only = true;
+	for (uint32_t i = 0; i < size; i++) {
+		if (data[i] < ' ' || data[i] > '~') {
+			ascii_only = false;
+			break;
+		}
+	}
+	const char **str;
+	if (!ascii_only) {
+		char hex[65];
+		memset(hex, 0, sizeof(hex));
+		data2hex(data, (size > 32) ? 32 : size, hex);
+		str = split_message((const uint8_t *)hex, size * 2, 16);
+	} else {
+		str = split_message(data, size, 20);
+	}
+	layoutDialogSwipe(&bmp_icon_question,
+		_("Cancel"),
+		_("Confirm"),
+		NULL,
+		// DISPLAY : 1 line
+		_("Confirm Asset Send:"),
+		str[0],
+		str[1],
+		str[2],
+		str[3],
+		NULL
+	);
+}
+
 void layoutConfirmTx(const CoinInfo *coin, uint64_t amount_out, uint64_t amount_fee)
 {
 	char str_out[32], str_fee[32];

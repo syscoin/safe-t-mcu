@@ -1131,7 +1131,7 @@ void signing_txack(TransactionType *tx)
 			return;
 
 		case STAGE_REQUEST_5_OUTPUT:
-			if (compile_output(coin, root, tx->outputs, &bin_output,false) <= 0) {
+			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;
