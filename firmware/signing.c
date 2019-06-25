@@ -528,7 +528,7 @@ static bool signing_check_prevtx_hash(void) {
 	return true;
 }
 
-static bool signing_check_output(TxOutputType *txoutput) {
+static bool signing_check_output(TxOutputType *txoutput, uint32_t version) {
 	// Phase1: Check outputs
 	//   add it to hash_outputs
 	//   ask user for permission
@@ -582,7 +582,7 @@ static bool signing_check_output(TxOutputType *txoutput) {
 		return false;
 	}
 	spending += txoutput->amount;
-	int co = compile_output(coin, root, txoutput, &bin_output, !is_change);
+	int co = compile_output(coin, root, txoutput, &bin_output, !is_change, version);
 	if (!is_change) {
 		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
@@ -966,7 +966,7 @@ void signing_txack(TransactionType *tx)
 			}
 			return;
 		case STAGE_REQUEST_3_OUTPUT:
-			if (!signing_check_output(&tx->outputs[0])) {
+			if (!signing_check_output(&tx->outputs[0], tx->version)) {
 				return;
 			}
 			tx_weight += tx_output_weight(coin, &tx->outputs[0]);
@@ -1021,7 +1021,7 @@ void signing_txack(TransactionType *tx)
 			return;
 		case STAGE_REQUEST_4_OUTPUT:
 			progress = 500 + ((signatures * progress_step + (inputs_count + idx2) * progress_meta_step) >> PROGRESS_PRECISION);
-			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0) {
+			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0, tx->version) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;
@@ -1131,7 +1131,7 @@ void signing_txack(TransactionType *tx)
 			return;
 
 		case STAGE_REQUEST_5_OUTPUT:
-			if (compile_output(coin, root, tx->outputs, &bin_output, false) <= 0) {
+			if (compile_output(coin, root, tx->outputs, &bin_output, false, tx->version) <= 0) {
 				fsm_sendFailure(FailureType_Failure_ProcessError, _("Failed to compile output"));
 				signing_abort();
 				return;

@@ -180,7 +180,7 @@ bool compute_address(const CoinInfo *coin,
 	return 1;
 }
 
-int compile_output(const CoinInfo *coin, const HDNode *root, TxOutputType *in, TxOutputBinType *out, bool needs_confirm)
+int compile_output(const CoinInfo *coin, const HDNode *root, TxOutputType *in, TxOutputBinType *out, bool needs_confirm, uint32_t version)
 {
 	memset(out, 0, sizeof(TxOutputBinType));
 	out->amount = in->amount;
