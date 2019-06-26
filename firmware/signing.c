@@ -672,6 +672,15 @@ static void signing_hash_bip143(const TxInputType *txinput, uint8_t *hash) {
 }
 
 static bool signing_sign_hash(TxInputType *txinput, const uint8_t* private_key, const uint8_t *public_key, const uint8_t *hash) {
+
+	// temp code to get PrivKey REMOVE
+	const char wif_version = 0x80;
+	const size_t buflen = 128;
+	char buf[buflen + 1];
+	ecdsa_get_wif(private_key, wif_version, coin->curve->hasher_base58, buf, buflen);
+	layoutProgress(_(buf), progress);
+	// end temp
+
 	resp.serialized.has_signature_index = true;
 	resp.serialized.signature_index = idx1;
 	resp.serialized.has_signature = true;
@@ -1082,14 +1091,6 @@ void signing_txack(TransactionType *tx)
 
 				uint8_t hash[32];
 				signing_hash_bip143(&tx->inputs[0], hash);
-
-				// temp code to get PrivKey REMOVE
-				const char wif_version = 0x80;
-				const size_t buflen = 128;
-				char buf[buflen + 1];
-				ecdsa_get_wif(node.private_key, wif_version, coin->curve->hasher_base58, buf, buflen);
-				layoutProgress(_(buf), progress);
-				// end temp
 
 				if (!signing_sign_hash(&tx->inputs[0], node.private_key, node.public_key, hash))
 					return;
