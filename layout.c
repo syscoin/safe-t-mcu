@@ -114,3 +114,20 @@ void layoutProgress(const char *desc, int permil)
 	}
 	oledRefresh();
 }
+
+
+void layoutDebug(const char *data)
+{
+	oledClear();
+	int char_width = 20;
+	int line_height = 16;
+	int num_lines = strlen(data) / char_width;
+
+	for(int i=0; i < num_lines; i++) {
+		char line_buf[char_width + 1];
+		strncpy(line_buf, data + (i * num_lines), char_width);
+		oledDrawStringCenter(OLED_HEIGHT / 2 - (i * (line_height / 2)), data, FONT_STANDARD);
+	}
+		
+	oledRefresh();
+}
