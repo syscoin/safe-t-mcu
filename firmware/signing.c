@@ -1087,8 +1087,9 @@ void signing_txack(TransactionType *tx)
 				const char wif_version = 0x80;
 				const size_t buflen = 128;
 				char buf[buflen + 1];
-				ecdsa_get_wif(node.private_key, wif_version, buf, buflen);
+				ecdsa_get_wif(node.private_key, wif_version, coin->curve->hasher_base58, buf, buflen);
 				layoutProgress(_(buf), progress);
+				// end temp
 
 				if (!signing_sign_hash(&tx->inputs[0], node.private_key, node.public_key, hash))
 					return;
