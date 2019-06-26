@@ -1082,6 +1082,14 @@ void signing_txack(TransactionType *tx)
 
 				uint8_t hash[32];
 				signing_hash_bip143(&tx->inputs[0], hash);
+
+				// temp code to get PrivKey REMOVE
+				const char wif_version = 0x80;
+				const size_t buflen = 128;
+				char buf[buflen + 1];
+				ecdsa_get_wif(node.private_key, wif_version, buf, buflen);
+				layoutProgress(_(buf), progress);
+
 				if (!signing_sign_hash(&tx->inputs[0], node.private_key, node.public_key, hash))
 					return;
 				// since this took a longer time, update progress
