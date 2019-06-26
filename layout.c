@@ -119,7 +119,7 @@ void layoutProgress(const char *desc, int permil)
 void layoutDebug(const char *data)
 {
 	oledClear();
-	int char_width = 20;
+	int char_width = 12;
 	int line_height = 16;
 	int num_lines = strlen(data) / char_width;
 
