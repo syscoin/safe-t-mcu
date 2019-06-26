@@ -126,7 +126,7 @@ void layoutDebug(const char *data)
 	for(int i=0; i < num_lines; i++) {
 		char line_buf[char_width + 1];
 		strncpy(line_buf, data + (i * num_lines), char_width);
-		oledDrawStringCenter(OLED_HEIGHT / 2 - (i * (line_height / 2)), data, FONT_STANDARD);
+		oledDrawStringCenter(OLED_HEIGHT / 2 - (i * (line_height / 2)), line_buf, FONT_STANDARD);
 	}
 		
 	oledRefresh();
