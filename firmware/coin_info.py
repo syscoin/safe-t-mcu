@@ -94,7 +94,6 @@ def coin_to_struct(coin):
         ("coin_type",             "({} | 0x80000000)".format(format_number(coin["bip44"]))),  # noqa: E501
         ("curve_name",            "{}_NAME".format(coin["curve_name"].upper())),              # noqa: E501
         ("curve",                 "&{}_info".format(coin["curve_name"])),
-        ("tx_version",            format_number(coin["tx_version"] if coin["tx_version"] is not None else 0)),
     ))
 
 

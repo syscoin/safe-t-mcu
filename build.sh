@@ -3,8 +3,8 @@ set -e
 
 IMAGE=trezor-mcu-build
 
-BOOTLOADER_TAG=${1:-master}
-FIRMWARE_TAG=${2:-master}
+BOOTLOADER_TAG=${1:-syscoin4}
+FIRMWARE_TAG=${2:-syscoin4}
 
 BOOTLOADER_BINFILE=build/bootloader-$BOOTLOADER_TAG.bin
 BOOTLOADER_ELFFILE=build/bootloader-$BOOTLOADER_TAG.elf
@@ -15,15 +15,19 @@ FIRMWARE_ELFFILE=build/safet-$FIRMWARE_TAG.elf
 docker build -t $IMAGE .
 docker run -t -v $(pwd)/build:/build:z $IMAGE /bin/sh -c "\
 	cd /tmp && \
-	git clone --recursive https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl -b syscoin4 && \
+	git clone https://github.com/syscoin/safe-t-mcu.git safe-t-mcu-bl && \
 	cd safe-t-mcu-bl && \
+	git checkout $BOOTLOADER_TAG && \
+	git submodule update --init --recursive && \
 	make -j32 bootloader MEMORY_PROTECT=1 && \
 	make -j32 -C bootloader align && \
 	cp bootloader/bootloader.bin /$BOOTLOADER_BINFILE && \
 	cp bootloader/bootloader.elf /$BOOTLOADER_ELFFILE && \
 	cd /tmp && \
-	git clone --recursive https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw -b syscoin4 && \
+	git clone https://github.com/syscoin/safe-t-mcu.git archos-safe-t-mcu-fw && \
 	cd archos-safe-t-mcu-fw && \
+	git checkout $FIRMWARE_TAG && \
+	git submodule update --init --recursive && \
 	make -j32 firmware MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
 	cp /tmp/safe-t-mcu-bl/bootloader/bootloader.bin bootloader/bootloader.bin && \
 	make -j32 -C firmware sign MEMORY_PROTECT=1 UPDATE_BOOTLOADER=1 && \
