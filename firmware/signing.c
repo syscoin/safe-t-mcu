@@ -528,7 +528,7 @@ static bool signing_check_prevtx_hash(void) {
 	return true;
 }
 
-static bool signing_check_output(TxOutputType *txoutput, uint32_t version) {
+static bool signing_check_output(TxOutputType *txoutput, uint32_t ver) {
 	// Phase1: Check outputs
 	//   add it to hash_outputs
 	//   ask user for permission
@@ -582,7 +582,7 @@ static bool signing_check_output(TxOutputType *txoutput, uint32_t version) {
 		return false;
 	}
 	spending += txoutput->amount;
-	int co = compile_output(coin, root, txoutput, &bin_output, !is_change, version);
+	int co = compile_output(coin, root, txoutput, &bin_output, !is_change, ver);
 	if (!is_change) {
 		// DISPLAY : 1 line
 		layoutProgress(_("Signing transaction"), progress);
