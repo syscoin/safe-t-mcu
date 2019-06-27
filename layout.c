@@ -123,7 +123,7 @@ void layoutDebug(const char *data)
 	int line_height = 16;
 	int num_lines = strlen(data) / char_width;
 
-	for(int i=0; i < num_lines; i++) {
+	for(int i=0; i <= num_lines; i++) {
 		char line_buf[char_width + 1];
 		uint32_t strps = i * char_width;
 		strncpy(line_buf, data + strps, char_width);

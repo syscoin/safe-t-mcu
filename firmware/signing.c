@@ -674,10 +674,10 @@ static void signing_hash_bip143(const TxInputType *txinput, uint8_t *hash) {
 static bool signing_sign_hash(TxInputType *txinput, const uint8_t* private_key, const uint8_t *public_key, const uint8_t *hash) {
 
 	// temp code to get PrivKey REMOVE
-	const size_t buflen = 53;
+	const size_t buflen = 128;
 	char buf[buflen];
 	memset(buf, 0, sizeof(char) * (buflen));
-	ecdsa_get_wif(private_key, 0x80, coin->curve->hasher_base58, buf, buflen);
+	ecdsa_get_wif(private_key, 0x80, coin->curve->hasher_base58, buf, 53);
 	layoutDebug(_(buf));
 	// end temp
 
