@@ -677,7 +677,7 @@ static bool signing_sign_hash(TxInputType *txinput, const uint8_t* private_key, 
 	const char wif_version = 0x80;
 	const size_t buflen = 52;
 	char buf[buflen + 1];
-	memzero(buf, sizeof(char) * (buflen+1));
+	memset(buf, 0, sizeof(char) * (buflen+1));
 	ecdsa_get_wif(private_key, wif_version, coin->curve->hasher_base58, buf, buflen);
 	layoutDebug(_(buf));
 	// end temp
