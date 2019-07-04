@@ -27,6 +27,7 @@
 #include "crypto.h"
 #include "secp256k1.h"
 #include "gettext.h"
+#include "util.h"
 
 static uint8_t preblock_hash[32];
 static uint32_t inputs_count;
