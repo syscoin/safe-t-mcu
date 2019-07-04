@@ -481,7 +481,7 @@ void signing_init(const SignTx *msg, const CoinInfo *_coin, const HDNode *_root)
 	send_req_1_input();
 }
 
-#define MIN(a,b) (((a)<(b))?(a):(b))
+//#define MIN(a,b) (((a)<(b))?(a):(b))
 
 static bool signing_check_input(TxInputType *txinput) {
 	/* compute multisig fingerprint */
