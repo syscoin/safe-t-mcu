@@ -86,9 +86,9 @@ OBJS += protob/types.pb.o
 
 include ../Makefile.include
 
-DEBUG_LINK ?= 0
-DEBUG_LOG  ?= 0
-DEBUG_GDB  ?= 0
+DEBUG_LINK ?= 1
+DEBUG_LOG  ?= 1
+DEBUG_GDB  ?= 1
 
 UPDATE_BOOTLOADER ?= 0
 
