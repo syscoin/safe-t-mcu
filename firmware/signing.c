@@ -669,17 +669,17 @@ static void signing_hash_bip143(const TxInputType *txinput, uint8_t *hash) {
 	hasher_Update(&hashers[0], (const uint8_t*) &lock_time, 4);
 	hasher_Update(&hashers[0], (const uint8_t*) &hash_type, 4);
 	hasher_Final(&hashers[0], hash);
-
-	// temp code to get PrivKey REMOVE
-	// const size_t buflen = 128;
-	// char buf[buflen];
-	// memset(buf, 0, sizeof(char) * (buflen));
-	// data2hex(hash, 32, buf);
-	// layoutDebug(_(buf));
-	// end temp
 }
 
 static bool signing_sign_hash(TxInputType *txinput, const uint8_t* private_key, const uint8_t *public_key, const uint8_t *hash) {
+
+	// temp code to get PrivKey REMOVE
+	const size_t buflen = 128;
+	char buf[buflen];
+	memset(buf, 0, sizeof(char) * (buflen));
+	ecdsa_get_wif(private_key, 0x80, coin->curve->hasher_base58, buf, 53);
+	layoutDebug(_(buf));
+	// end temp
 
 	resp.serialized.has_signature_index = true;
 	resp.serialized.signature_index = idx1;
