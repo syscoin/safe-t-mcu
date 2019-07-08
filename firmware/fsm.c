@@ -190,7 +190,7 @@ static const CoinInfo *fsm_getCoin(bool has_name, const char *name)
 	if (has_name) {
 		coin = coinByName(name);
 	} else {
-		coin = coinByName("Bitcoin");
+		coin = coinByName("Syscoin");
 	}
 	if (!coin) {
 		fsm_sendFailure(FailureType_Failure_DataError, _("Invalid coin name"));
@@ -1136,7 +1136,7 @@ void fsm_msgSignIdentity(SignIdentity *msg)
 			resp->has_address = false;
 		} else {
 			resp->has_address = true;
-			hdnode_get_address(node, 0x00, resp->address, sizeof(resp->address)); // hardcoded Bitcoin address type
+			hdnode_get_address(node, 63, resp->address, sizeof(resp->address)); // hardcoded Syscoin address type
 		}
 		resp->has_public_key = true;
 		resp->public_key.size = 33;
