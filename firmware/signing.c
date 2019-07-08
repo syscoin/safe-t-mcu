@@ -27,19 +27,6 @@
 #include "crypto.h"
 #include "secp256k1.h"
 #include "gettext.h"
-#include "debug.h"
-
-// static const char *hexdigits = "0123456789ABCDEF";
-// // converts data to hexa
-// void data2hex(const void *data, uint32_t len, char *str)
-// {
-// 	const uint8_t *cdata = (uint8_t *)data;
-// 	for (uint32_t i = 0; i < len; i++) {
-// 		str[i * 2    ] = hexdigits[(cdata[i] >> 4) & 0xF];
-// 		str[i * 2 + 1] = hexdigits[cdata[i] & 0xF];
-// 	}
-// 	str[len * 2] = 0;
-// }
 
 static uint8_t preblock_hash[32];
 static uint32_t inputs_count;
